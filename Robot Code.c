@@ -11,13 +11,20 @@ task main()
 {
   while(true) {
 
+    //Drive Train
     motor[rightWheelFront] = vexRT[Ch2];
     motor[rightWheelBack] = vexRT[Ch2];
     motor[leftWheelFront] = vexRT[Ch3];
     motor[leftWheelBack] = vexRT[Ch3];
     motor[middleWheel] = vexRT[Ch4];
+
+
+
+    //Whichever launching mechanism we decide on
     motor[fourBar] = vexRT[Btn6U];
     motor[catapult] = vexRT[Btn6D];
+
+
   }
 
 }
