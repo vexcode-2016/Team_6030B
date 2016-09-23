@@ -20,9 +20,9 @@ task main()
 
 
 
-    //Whichever launching mechanism we decide on
+    //Launching Mechanism
     motor[fourBar] = vexRT[Btn6U];
-    motor[catapult] = vexRT[Btn6D];
+
 
 
   }
