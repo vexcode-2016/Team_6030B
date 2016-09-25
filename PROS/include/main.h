@@ -57,6 +57,19 @@ extern "C" {
 
 // Prototypes for initialization, operator control and autonomous
 
+// PROS equivalent of RobotC pragma statements
+// #define token value
+#define motorWheelLeftFront 2
+#define motorWheelLeftBack 3
+#define motorWheelRightFront 4
+#define motorWheelRightBack 5
+#define motorWheelMiddle 6
+#define servoFourBarLeft 7
+#define servoFourBarRight 8
+
+// 'Externalize' variables (make them exist across files)
+    extern int fourBarHeight;
+
 /**
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
