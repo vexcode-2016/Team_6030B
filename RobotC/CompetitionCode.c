@@ -23,6 +23,8 @@
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
 
+bool presetHigh;
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -35,7 +37,7 @@
 
 void pre_auton()
 {
-  // Set bStopTasksBetweenModes to false if you want to keep user created tasks
+  // Set bStopTasksBewtweenModes to false if you want to keep user created tasks
   // running between Autonomous and Driver controlled modes. You will need to
   // manage all user created tasks if set to false.
   bStopTasksBetweenModes = true;
@@ -47,6 +49,7 @@ void pre_auton()
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  slaveMotor(fourbarRight, fourbarLeft);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -59,7 +62,7 @@ void pre_auton()
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void drivestraight(int distance){
+void drivestraight(intw distance){
 while(true){
   while (SensorValue[drivestraight] < distance){
 
@@ -76,6 +79,7 @@ while(true){
     motor[leftFrontWheel] = 0;
     motor[leftBackWheel] = 0;
     motor[middleWheel] = 0;
+
   }
 }
 }
@@ -100,22 +104,9 @@ task autonomous(){
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
- while(true)
-  if(vexRT[Btn7U] == 1){
-    bool preset = true;
-    if (preset = true && SensorValue[potentiometer] < 100) {
 
 
 
-
-
-
-
-
-    motor[fourbarLeft] = 127;
-    motor[fourbarRight] = 127;
-      if(SensorValue[potentiometer] = 900)
-        motor[fourbarLeft] = 127
 
 
 
@@ -139,6 +130,25 @@ task usercontrol()
    else {
      motor[fourbarLeft] = 0;
      motor[fourbarRight] = 0;
+  }
+  if(vexRT[Btn7U] == 1){
+    presetHigh = true;
+  }
+
+  if(presetHigh == true){
+    //once the button is pressed if the angle is below 875 it runs the motor
+    if(SensorValue[potentiometer] < 875){
+      motor[fourbarLeft] = 127;
+    //if the angle is above 925 it runs the motor in the negative direction
+      }
+    else if(SensorValue[potentiometer] > 925){
+      motor[fourbarLeft] = -127;
+    // if the potentiometer reads between 875 and 925 it will stop the motor and set preset to false
+      }
+    else {
+      motor[fourbarLeft] = 0;
+      presetHigh = false;
+    }
   }
 
   //Drive Train
