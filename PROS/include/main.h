@@ -44,6 +44,7 @@
 #define MAIN_H_
 
 #include <API.h>
+#include <library.h>
 
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
@@ -56,19 +57,6 @@ extern "C" {
 // actual code. If a function does not match a prototype, compile errors will occur.
 
 // Prototypes for initialization, operator control and autonomous
-
-// PROS equivalent of RobotC pragma statements
-// #define token value
-#define motorWheelLeftFront 2
-#define motorWheelLeftBack 3
-#define motorWheelRightFront 4
-#define motorWheelRightBack 5
-#define motorWheelMiddle 6
-#define servoFourBarLeft 7
-#define servoFourBarRight 8
-
-// 'Externalize' variables (make them exist across files)
-    extern int fourBarHeight;
 
 /**
  * Runs the user autonomous code. This function will be started in its own task with the default

@@ -15,19 +15,6 @@
  * Purdue Robotics OS contains FreeRTOS (http://www.freertos.org) whose source code may be obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  ********************************************************************************/
 
-// Variable Declarations
-   /**
-    * Height of the four-bar
-    * -127 (lowest) to 127 (highest)
-    */
-    int fourBarHeight = -127;
-
-    /**
-     * Boolean integer indicating whether buttons
-     * 5U, 5D, 6U, and/or 6D are pressed
-     */
-    int pressed = 0;
-
 #include "main.h"
 
 /**
@@ -43,61 +30,74 @@
  */
 void operatorControl() {
     while (1) {
-
+        
         //Drivetrain
         if (abs(joystickGetAnalog(1, 1)) > 15) {
-            motorSet(motorWheelMiddle, joystickGetAnalog(1, 1));
+            motorSet(motorWheelM, joystickGetAnalog(1, 1));
             if (abs(joystickGetAnalog(1, 3)) > 15) {
-                motorSet(motorWheelLeftFront, joystickGetAnalog(1, 3));
-                motorSet(motorWheelLeftBack, joystickGetAnalog(1, 3));
-                motorSet(motorWheelRightFront, joystickGetAnalog(1, 3));
-                motorSet(motorWheelRightBack, joystickGetAnalog(1, 3));
+                motorGroupSet("wheelsL", joystickGetAnalog(1, 3));
+                motorGroupSet("wheelsR", joystickGetAnalog(1, 3));
             }
             else {
-                motorStop(motorWheelLeftFront);
-                motorStop(motorWheelLeftBack);
-                motorStop(motorWheelRightFront);
-                motorStop(motorWheelRightBack);
+                motorGroupSet("wheelsL", 0);
+                motorGroupSet("wheelsR", 0);
             }
         }
         else {
-            motorStop(motorWheelMiddle);
+            motorStop(motorWheelM);
             if (abs(joystickGetAnalog(1, 3)) > 15) {
-                motorSet(motorWheelLeftFront, joystickGetAnalog(1, 3));
-                motorSet(motorWheelLeftBack, joystickGetAnalog(1, 3));
+                motorGroupSet("wheelsL", joystickGetAnalog(1, 3));
             }
             else {
-                motorStop(motorWheelLeftFront);
-                motorStop(motorWheelLeftBack);
+                motorGroupSet("wheelsL", 0);
             }
             if (abs(joystickGetAnalog(1, 2)) > 15) {
-                motorSet(motorWheelRightFront, joystickGetAnalog(1, 2));
-                motorSet(motorWheelRightBack, joystickGetAnalog(1, 2));
+                motorGroupSet("wheelsR", joystickGetAnalog(1, 2));
             }
             else {
-                motorStop(motorWheelRightFront);
-                motorStop(motorWheelRightBack);
+                motorGroupSet("wheelsR", 0);
             }
         }
 
-        //Basis for four-bar control
-        motorSet(servoFourBarLeft, fourBarHeight);
-        motorSet(servoFourBarRight, fourBarHeight);
-
         //Four-bar height presets
-        /// Code not written yet
+        /* if (joystickGetDigital(2, 8, JOY_UP)) {
+            fourBarPreset = fourBarMax;
+        }
+        else if (joystickGetDigital(2, 8, JOY_RIGHT)) {
+            fourBarPreset = fourBarFenceHigh;
+        }
+        else if (joystickGetDigital(2, 8, JOY_LEFT)) {
+            fourBarPreset = fourBarFenceLow;
+        }
+        else if (joystickGetDigital(2, 8, JOY_DOWN)) {
+            fourBarPreset = fourBarMin;
+        } */
 
-        //Four-bar manual control
-        if ((joystickGetDigital(1, 5, JOY_UP) || joystickGetDigital(1, 6, JOY_UP)) && !pressed && fourBarHeight < 127) {
-            fourBarHeight += 1;
-            pressed = true;
+        //Four-bar control
+        if (joystickGetDigital(2, 5, JOY_UP) || joystickGetDigital(2, 6, JOY_UP)) {
+            motorGroupSet("fourBar", 63);
+            fourBarToHeight(-1);
+            fourBarPreset = analogRead(sensorFourBarPot);
         }
-        else if ((joystickGetDigital(1, 5, JOY_DOWN) || joystickGetDigital(1, 6, JOY_DOWN)) && !pressed && fourBarHeight > -127) {
-            fourBarHeight -= 1;
-            pressed = true;
+        else if (joystickGetDigital(2, 5, JOY_DOWN) || joystickGetDigital(2, 6, JOY_DOWN)) {
+            motorGroupSet("fourBar", -63);
+            fourBarToHeight(-1);
+            fourBarPreset = analogRead(sensorFourBarPot);
         }
-        if (pressed && !joystickGetDigital(1, 5, JOY_UP) && !joystickGetDigital(1, 5, JOY_DOWN) && !joystickGetDigital(1, 6, JOY_UP) && !joystickGetDigital(1, 6, JOY_DOWN))
-            pressed = false;
+        else {
+            fourBarToHeight(fourBarPreset);
+        }
+
+        //Grabber
+        if (joystickGetDigital(2, 7, JOY_DOWN)) {
+            motorGroupSet("grabber", 127);
+        }
+        else if (joystickGetDigital(2, 7, JOY_UP)) {
+            motorGroupSet("grabber", -127);
+        }
+        else {
+            motorGroupSet("grabber", 0);
+        }
 
         delay(25);
     }
