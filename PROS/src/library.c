@@ -21,7 +21,7 @@ int fourBarD = 0;
 
 //Equivalency to RobotC slaving and reversing of motors
 void motorGroupSet(char motorGroup[], int speed) {
-    print(motorGroup);
+    print( strcat("Setting motors in ", motorGroup) );
     if (motorGroup == "wheelsL") {
         motorSet(motorWheelLF, speed);
         motorSet(motorWheelLB, speed);
@@ -48,7 +48,7 @@ void fourBarToHeight(int height) {
         fourBarPotHist[i] = fourBarPotHist[i - 1];
     }
     fourBarPotHist[0] = analogRead(sensorFourBarPot);
-    print(fourBarPotHist[0]);
+    print( strcat("Pot reading:", fourBarPotHist[0]) );
 
     //Actual PID control code
     if (height != -1) {
