@@ -21,6 +21,7 @@ int fourBarD = 0;
 
 //Equivalency to RobotC slaving and reversing of motors
 void motorGroupSet(char motorGroup[], int speed) {
+    print(motorGroup);
     if (motorGroup == "wheelsL") {
         motorSet(motorWheelLF, speed);
         motorSet(motorWheelLB, speed);
