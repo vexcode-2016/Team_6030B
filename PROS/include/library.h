@@ -4,8 +4,8 @@
 ///////////////////////////////
 
 //Motor
-#define motorFourBarL     2
-#define motorFourBarR     3
+#define motorFourBarR     2
+#define motorFourBarL     3
 #define motorWheelLF      4
 #define motorWheelRF      5
 #define motorWheelLB      6
@@ -40,15 +40,15 @@ extern int fourBarPreset;
 
 /**
  * Sets a group of motors to the same power and in the correct directions
- * @param motorGroup "wheelsL", "wheelsR", "fourBar", or "grabber"
+ * @param motorGroup 1 for wheelsL, 2 for wheelsR, 3 for fourBar", or 4 for grabber
  * @param speed the new signed speed; -127 is fully in the negative direction and
  * 127 is fully in the positive direction, with 0 being off
  */
-void motorGroupSet(char motorGroup[], int speed);
+void motorGroupSet(int motorGroup, int speed);
 
 /**
  * Runs four-bar with PID to reach/maintain target height
- * @param height the potentiometer reading that corresponds to the target height; -1 will
- * disable PID control but will continue recording sensor readings for derivative calculation
+ * @param target the potentiometer reading that corresponds to the target height, divided by 10; -1
+ * will disable PID control but will continue recording sensor readings for derivative calculation
  */
-void fourBarToHeight(int height);
+void fourBarToHeight(int target);
