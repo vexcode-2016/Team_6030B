@@ -11,8 +11,7 @@
 #define motorWheelLB      6
 #define motorWheelRB      7
 #define motorWheelM       8
-#define motorGrabberL     9
-#define motorGrabberR    10
+#define motorClaw         9
 
 //Analog
 #define sensorFourBarPot    1

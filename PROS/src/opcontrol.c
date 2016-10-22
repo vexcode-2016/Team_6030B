@@ -32,31 +32,32 @@ void operatorControl() {
     while (1) {
         
         //Drivetrain
-        if (abs(joystickGetAnalog(1, 1)) > 15) {
-            motorSet(motorWheelM, -joystickGetAnalog(1, 1));
-            if (abs(joystickGetAnalog(1, 3)) > 15) {
-                motorGroupSet(1, joystickGetAnalog(1, 3));
-                motorGroupSet(2, joystickGetAnalog(1, 3));
-            }
-            else {
-                motorGroupSet(1, 0);
-                motorGroupSet(2, 0);
-            }
+        if (abs(joystickGetAnalog(2, 3)) > 15) {
+            motorGroupSet(1, joystickGetAnalog(2, 3)*0.25);
+        }
+        else if (abs(joystickGetAnalog(1, 3)) > 15) {
+            motorGroupSet(1, joystickGetAnalog(1, 3));
         }
         else {
-            motorStop(motorWheelM);
-            if (abs(joystickGetAnalog(1, 3)) > 15) {
-                motorGroupSet(1, joystickGetAnalog(1, 3));
-            }
-            else {
-                motorGroupSet(1, 0);
-            }
-            if (abs(joystickGetAnalog(1, 2)) > 15) {
-                motorGroupSet(2, joystickGetAnalog(1, 2));
-            }
-            else {
-                motorGroupSet(2, 0);
-            }
+            motorGroupSet(1, 0);
+        }
+        if (abs(joystickGetAnalog(2, 2)) > 15) {
+            motorGroupSet(2, joystickGetAnalog(2, 2)*0.25);
+        }
+        else if (abs(joystickGetAnalog(1, 2)) > 15) {
+            motorGroupSet(2, joystickGetAnalog(1, 2));
+        }
+        else {
+            motorGroupSet(2, 0);
+        }
+        if (joystickGetDigital(1, 5, JOY_UP) || joystickGetDigital(1, 5, JOY_DOWN) || joystickGetDigital(2, 7, JOY_LEFT)) {
+            motorSet(motorWheelM, 127);
+        }
+        else if (joystickGetDigital(1, 6, JOY_UP) || joystickGetDigital(1, 6, JOY_DOWN) || joystickGetDigital(2, 7, JOY_RIGHT)) {
+            motorSet(motorWheelM, -127);
+        }
+        else {
+            motorSet(motorWheelM, 0);
         }
 
         //Four-bar height presets
@@ -94,15 +95,16 @@ void operatorControl() {
 
         //Grabber
         if (joystickGetDigital(2, 7, JOY_DOWN)) {
-            motorGroupSet(4, 127);
+            motorSet(motorClaw, -127);
         }
         else if (joystickGetDigital(2, 7, JOY_UP)) {
-            motorGroupSet(4, -127);
+            motorSet(motorClaw, 127);
         }
         else {
-            motorGroupSet(4, 0);
+            motorStop(motorClaw);
         }
 
+        printf("\n%f", powerLevelMain()/1000);
         delay(25);
     }
 }

@@ -5,10 +5,10 @@
 ///////////////////
 
 //Four-Bar
-const int fourBarMax = 25;
-const int fourBarFenceHigh = 100;
-const int fourBarFenceLow = 150;
-const int fourBarMin = 190;
+const int fourBarMax = 10;
+const int fourBarFenceHigh = 50;
+const int fourBarFenceLow = 75;
+const int fourBarMin = 144;
 int fourBarPreset = -1;
 int fourBarPotHist[6] = { -1, -1, -1, -1, -1, -1 };
 int fourBarP = 0;
@@ -33,10 +33,6 @@ void motorGroupSet(int motorGroup, int speed) {
         motorSet(motorFourBarL, -speed);
         motorSet(motorFourBarR, speed);
     }
-    if (motorGroup == 4) {
-        motorSet(motorGrabberL, speed);
-        motorSet(motorGrabberR, -speed);
-    }
 }
 
 //Four-bar PID control
@@ -47,7 +43,7 @@ void fourBarToHeight(int target) {
         fourBarPotHist[i] = fourBarPotHist[i - 1];
     }
     fourBarPotHist[0] = analogRead(sensorFourBarPot)/10;
-    printf("\n%d", fourBarPotHist[0]);
+    printf(",%d", fourBarPotHist[0]);
 
     //Actual PID control code
     if (target != -1) {
