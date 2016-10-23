@@ -27,6 +27,18 @@
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-
-    //TODO: Write autonomous code
+    delay(5000);
+    motorGroupSet(1, -127);
+    motorGroupSet(2, -127);
+    delay(2000);
+    motorGroupSet(1, 0);
+    motorGroupSet(2, 0);
+    for (int i; i < 100; 1) {
+        fourBarToHeight(fourBarMax);
+    }
+    delay(1000);
+    for (int i; i < 100; 1) {
+        fourBarToHeight(fourBarMin);
+    }
+    delay(1000);
 }

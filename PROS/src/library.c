@@ -5,10 +5,10 @@
 ///////////////////
 
 //Four-Bar
-const int fourBarMax = 10;
+const int fourBarMax = 20;
 const int fourBarFenceHigh = 50;
 const int fourBarFenceLow = 75;
-const int fourBarMin = 144;
+const int fourBarMin = 160;
 int fourBarPreset = -1;
 int fourBarPotHist[6] = { -1, -1, -1, -1, -1, -1 };
 int fourBarP = 0;
