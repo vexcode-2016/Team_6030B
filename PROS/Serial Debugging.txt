@@ -2,4 +2,4 @@ Baud Rate:		115200
 
 Encoding:		28591 iso-8859-1 - Western European (ISO)
 
-See Device Manager > Ports (COM & LPT) to determine port
+Run PROS Upload to determine port

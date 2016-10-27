@@ -33,31 +33,31 @@ void operatorControl() {
         
         //Drivetrain
         if (abs(joystickGetAnalog(2, 3)) > 15) {
-            motorGroupSet(1, joystickGetAnalog(2, 3)*0.25);
+            motorGroupSet(MOTORGROUP_WHEELS_L, joystickGetAnalog(2, 3)*0.25);
         }
         else if (abs(joystickGetAnalog(1, 3)) > 15) {
-            motorGroupSet(1, joystickGetAnalog(1, 3));
+            motorGroupSet(MOTORGROUP_WHEELS_L, joystickGetAnalog(1, 3));
         }
         else {
-            motorGroupSet(1, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_L, 0);
         }
         if (abs(joystickGetAnalog(2, 2)) > 15) {
-            motorGroupSet(2, joystickGetAnalog(2, 2)*0.25);
+            motorGroupSet(MOTORGROUP_WHEELS_R, joystickGetAnalog(2, 2)*0.25);
         }
         else if (abs(joystickGetAnalog(1, 2)) > 15) {
-            motorGroupSet(2, joystickGetAnalog(1, 2));
+            motorGroupSet(MOTORGROUP_WHEELS_R, joystickGetAnalog(1, 2));
         }
         else {
-            motorGroupSet(2, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_R, 0);
         }
         if (joystickGetDigital(1, 5, JOY_UP) || joystickGetDigital(1, 5, JOY_DOWN) || joystickGetDigital(2, 7, JOY_LEFT)) {
-            motorSet(motorWheelM, 127);
+            motorSet(MOTOR_WHEEL_M, 127);
         }
         else if (joystickGetDigital(1, 6, JOY_UP) || joystickGetDigital(1, 6, JOY_DOWN) || joystickGetDigital(2, 7, JOY_RIGHT)) {
-            motorSet(motorWheelM, -127);
+            motorSet(MOTOR_WHEEL_M, -127);
         }
         else {
-            motorSet(motorWheelM, 0);
+            motorSet(MOTOR_WHEEL_M, 0);
         }
 
         //Four-bar height presets
@@ -76,17 +76,17 @@ void operatorControl() {
 
         //Four-bar control
         if (joystickGetDigital(2, 5, JOY_UP) || joystickGetDigital(2, 6, JOY_UP)) {
-            motorGroupSet(3, 64);
+            motorGroupSet(MOTORGROUP_FOURBAR, 64);
             fourBarToHeight(-1);
-            fourBarPreset = analogRead(sensorFourBarPot)/10;
+            fourBarPreset = analogRead(SENSOR_FOURBAR_POT)/10;
         }
         else if (joystickGetDigital(2, 5, JOY_DOWN) || joystickGetDigital(2, 6, JOY_DOWN)) {
-            motorGroupSet(3, -64);
+            motorGroupSet(MOTORGROUP_FOURBAR, -64);
             fourBarToHeight(-1);
-            fourBarPreset = analogRead(sensorFourBarPot)/10;
+            fourBarPreset = analogRead(SENSOR_FOURBAR_POT)/10;
         }
         else if (joystickGetDigital(1, 8, JOY_UP)) {
-            motorGroupSet(3, 0);
+            motorGroupSet(MOTORGROUP_FOURBAR, 0);
             fourBarToHeight(-1);
         }
         else {
@@ -95,13 +95,13 @@ void operatorControl() {
 
         //Grabber
         if (joystickGetDigital(2, 7, JOY_DOWN)) {
-            motorSet(motorClaw, -127);
+            motorSet(MOTOR_CLAW, -127);
         }
         else if (joystickGetDigital(2, 7, JOY_UP)) {
-            motorSet(motorClaw, 127);
+            motorSet(MOTOR_CLAW, 127);
         }
         else {
-            motorStop(motorClaw);
+            motorStop(MOTOR_CLAW);
         }
 
         printf("\n%f", powerLevelMain()/1000);

@@ -20,18 +20,18 @@ int fourBarD = 0;
 ///////////////////
 
 //Equivalency to RobotC slaving and reversing of motors
-void motorGroupSet(int motorGroup, int speed) {
+void motorGroupSet(unsigned char motorGroup, int speed) {
     if (motorGroup == 1) {
-        motorSet(motorWheelLF, speed);
-        motorSet(motorWheelLB, speed);
+        motorSet(MOTOR_WHEEL_LF, speed);
+        motorSet(MOTOR_WHEEL_LB, speed);
     }
     if (motorGroup == 2) {
-        motorSet(motorWheelRF, -speed);
-        motorSet(motorWheelRB, -speed);
+        motorSet(MOTOR_WHEEL_RF, -speed);
+        motorSet(MOTOR_WHEEL_RB, -speed);
     }
     if (motorGroup == 3) {
-        motorSet(motorFourBarL, -speed);
-        motorSet(motorFourBarR, speed);
+        motorSet(MOTOR_FOURBAR_L, -speed);
+        motorSet(MOTOR_FOURBAR_R, speed);
     }
 }
 
@@ -42,7 +42,7 @@ void fourBarToHeight(int target) {
     for (int i = 5; i > 0; i -= 1) {
         fourBarPotHist[i] = fourBarPotHist[i - 1];
     }
-    fourBarPotHist[0] = analogRead(sensorFourBarPot)/10;
+    fourBarPotHist[0] = analogRead(SENSOR_FOURBAR_POT)/10;
     printf(",%d", fourBarPotHist[0]);
 
     //Actual PID control code
@@ -73,6 +73,6 @@ void fourBarToHeight(int target) {
         else if (target > fourBarPotHist[0]) { //Needing to go down
             motorGroupSet(3, (pDown * fourBarP) - (i * fourBarI) - (d * fourBarD));
         }
-        printf(",%d", motorGet(motorFourBarR));
+        printf(",%d", motorGet(MOTOR_FOURBAR_R));
     }
 }

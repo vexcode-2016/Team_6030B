@@ -28,11 +28,11 @@
 */
 void autonomous() {
     delay(5000);
-    motorGroupSet(1, -127);
-    motorGroupSet(2, -127);
+    motorGroupSet(MOTORGROUP_WHEELS_L, -127);
+    motorGroupSet(MOTORGROUP_WHEELS_R, -127);
     delay(2000);
-    motorGroupSet(1, 0);
-    motorGroupSet(2, 0);
+    motorGroupSet(MOTORGROUP_WHEELS_L, 0);
+    motorGroupSet(MOTORGROUP_WHEELS_R, 0);
     for (int i; i < 100; 1) {
         fourBarToHeight(fourBarMax);
     }

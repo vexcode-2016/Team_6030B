@@ -1,20 +1,25 @@
-///////////////////////////////
-//// Ports                 ////
-//// #define <name> <port> ////
-///////////////////////////////
+////////////////////////////////////////////
+//// Commonly Used Tokens               ////
+//// #define <identifier> <token>       ////
+////////////////////////////////////////////
 
-//Motor
-#define motorFourBarR     2
-#define motorFourBarL     3
-#define motorWheelLF      4
-#define motorWheelRF      5
-#define motorWheelLB      6
-#define motorWheelRB      7
-#define motorWheelM       8
-#define motorClaw         9
+//Motor Ports
+#define MOTOR_FOURBAR_R    2
+#define MOTOR_FOURBAR_L    3
+#define MOTOR_WHEEL_LF     4
+#define MOTOR_WHEEL_RF     5
+#define MOTOR_WHEEL_LB     6
+#define MOTOR_WHEEL_RB     7
+#define MOTOR_WHEEL_M      8
+#define MOTOR_CLAW         9
 
-//Analog
-#define sensorFourBarPot    1
+//Analog Sensor Ports
+#define SENSOR_FOURBAR_POT    1
+
+//Motor Groups
+#define MOTORGROUP_WHEELS_L    1
+#define MOTORGROUP_WHEELS_R    2
+#define MOTORGROUP_FOURBAR     3
 
 
 
@@ -39,11 +44,11 @@ extern int fourBarPreset;
 
 /**
  * Sets a group of motors to the same power and in the correct directions
- * @param motorGroup 1 for wheelsL, 2 for wheelsR, 3 for fourBar", or 4 for grabber
+ * @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, or MOTORGROUP_FOURBAR
  * @param speed the new signed speed; -127 is fully in the negative direction and
  * 127 is fully in the positive direction, with 0 being off
  */
-void motorGroupSet(int motorGroup, int speed);
+void motorGroupSet(unsigned char motorGroup, int speed);
 
 /**
  * Runs four-bar with PID to reach/maintain target height
