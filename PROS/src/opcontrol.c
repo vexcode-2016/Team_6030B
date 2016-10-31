@@ -17,6 +17,13 @@
 
 #include "main.h"
 
+///////////////////
+//// Variables ////
+///////////////////
+
+//Four-Bar
+int prongHeight = 0;
+
 /**
  * Runs the user operator control code.
  *
@@ -93,16 +100,18 @@ void operatorControl() {
             fourBarToHeight(fourBarPreset);
         }
 
-        //Grabber
-        if (joystickGetDigital(2, 7, JOY_DOWN)) {
-            motorSet(MOTOR_CLAW, -127);
+        // Servo Prongs
+        if (joystickGetDigital(2, 7, JOY_DOWN && prongHeight > -127)){
+			prongHeight -= 1;
+		}
+        else if (joystickGetDigital(2, 7, JOY_UP && prongHeight < 127)) {
+			prongHeight += 1;
         }
-        else if (joystickGetDigital(2, 7, JOY_UP)) {
-            motorSet(MOTOR_CLAW, 127);
-        }
-        else {
-            motorStop(MOTOR_CLAW);
-        }
+
+		
+		
+		
+		motorSet(SERVO_PRONGS, prongHeight);
 
         printf("\n%f", powerLevelMain()/1000);
         delay(25);
