@@ -28,14 +28,34 @@
 */
 void autonomous() {
     delay(5000);
-    motorGroupSet(MOTORGROUP_WHEELS_L, -127);
-    motorGroupSet(MOTORGROUP_WHEELS_R, -127);
+    motorGroupSet(MOTORGROUP_WHEELS_L, 127);
+    motorGroupSet(MOTORGROUP_WHEELS_R, 127);
     delay(2000);
     motorGroupSet(MOTORGROUP_WHEELS_L, 0);
     motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-    for (int i; i < 100; 1) {
-        fourBarToHeight(fourBarMax);
-    }
+	motorGroupSet(MOTOR_FOURBAR_R, 127);
+	delay(2000);
+	motorGroupSet(SERVO_PRONGS, 25);
+	delay(1000);
+	motorGroupSet(SERVO_PRONGS, 63);
+	motorGroupSet(MOTORGROUP_WHEELS_L, -127);
+	motorGroupSet(MOTORGROUP_WHEELS_R, -127);
+	delay(5000);
+	motorGroupSet(MOTORGROUP_WHEELS_L, 127);
+	motorGroupSet(MOTORGROUP_WHEELS_R, 127);
+	delay(2000);
+	motorGroupSet(MOTORGROUP_WHEELS_L, 0);
+	motorGroupSet(MOTORGROUP_WHEELS_R, 0);
+	motorGroupSet(MOTOR_FOURBAR_R, 127);
+	delay(2000);
+	motorGroupSet(SERVO_PRONGS, 25);
+	delay(1000);
+	motorGroupSet(SERVO_PRONGS, 63);
+	motorGroupSet(MOTORGROUP_WHEELS_L, -127);
+	motorGroupSet(MOTORGROUP_WHEELS_R, -127);
+	delay(5000);
+
+
     delay(1000);
     for (int i; i < 100; 1) {
         fourBarToHeight(fourBarMin);

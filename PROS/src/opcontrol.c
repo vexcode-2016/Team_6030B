@@ -101,19 +101,18 @@ void operatorControl() {
         }
 
         // Servo Prongs
-        if (joystickGetDigital(2, 7, JOY_DOWN && prongHeight > -127)){
-			prongHeight -= 1;
+		if (joystickGetDigital(2, 7, JOY_LEFT))
+			prongHeight = -120;
+		else if (joystickGetDigital(2, 7, JOY_RIGHT))
+			prongHeight = 120;
+        if (joystickGetDigital(2, 7, JOY_DOWN) && prongHeight > -126){
+			prongHeight -= 2;
 		}
-        else if (joystickGetDigital(2, 7, JOY_UP && prongHeight < 127)) {
-			prongHeight += 1;
+        else if (joystickGetDigital(2, 7, JOY_UP) && prongHeight < 126) {
+			prongHeight += 2;
         }
-
-		
-		
-		
 		motorSet(SERVO_PRONGS, prongHeight);
-
-        printf("\n%f", powerLevelMain()/1000);
+		printf("\n%d", prongHeight);
         delay(25);
     }
 }
