@@ -52,7 +52,6 @@ void motorGroupSet(unsigned char motorGroup, int speed);
 
 /**
  * Runs four-bar with PID to reach/maintain target height
- * @param target the potentiometer reading that corresponds to the target height, divided by 10; -1
- * will disable PID control but will continue recording sensor readings for derivative calculation
+ * @param target the potentiometer reading that corresponds to the target height, divided by 10
  */
 void fourBarToHeight(int target);
