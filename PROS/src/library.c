@@ -5,6 +5,9 @@
 ///////////////////
 
 //Four-Bar
+const int prongDropping = -60
+const int prongStar = 0
+const int prongDriving = 30
 const int fourBarMax = 20;
 const int fourBarFenceHigh = 50;
 const int fourBarFenceLow = 75;
