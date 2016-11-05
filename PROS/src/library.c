@@ -5,18 +5,24 @@
 ///////////////////
 
 //Four-Bar
-const int prongDropping = -60
-const int prongStar = 0
-const int prongDriving = 30
 const int fourBarMax = 20;
 const int fourBarFenceHigh = 50;
 const int fourBarFenceLow = 75;
 const int fourBarMin = 160;
-int fourBarPreset = -1;
+int fourBarTarget = -1;
 int fourBarPot = -1;
 int fourBarP = 0;
 int fourBarI = 0;
-int fourBarD = 0;
+
+//Prongs
+const int prongVertical = 100;
+const int prongStorage = 75;
+const int prongFlat = 50;
+const int prongDrop = 25;
+int prongTarget = -1;
+int prongPot = -1;
+int prongP = 0;
+int prongI = 0;
 
 ///////////////////
 //// Functions ////
@@ -43,27 +49,58 @@ void fourBarToHeight(int target) {
     
     //Read current sensor value
     fourBarPot = analogRead(SENSOR_FOURBAR_POT)/10;
-    printf(",%d", fourBarPot);
+    printf("4B: %d, ", fourBarPot);
 
     //PID control code
     const float pUp = 5;
     const float pDown = 0.25;
     const float i = 1;
 
-    fourBarP = fourBarPot - target;
-    if (abs(fourBarPot - target) > 3) {
-        fourBarI += 1;
-    }
-    else {
-        fourBarI = 0;
-    }
+    if (target != -1) {
+        fourBarP = fourBarPot - target;
+        if (abs(fourBarPot - target) > 3) {
+            fourBarI += i;
+        }
+        else {
+            fourBarI = 0;
+        }
 
-    printf(",%d", target);
-    if (target < fourBarPot) { //Needing to go up
-        motorGroupSet(3, (pUp * fourBarP) + (i * fourBarI));
+        if (target < fourBarPot) { //Needing to go up
+            motorGroupSet(MOTORGROUP_FOURBAR, (pUp * fourBarP) + (fourBarI));
+        }
+        else if (target > fourBarPot) { //Needing to go down
+            motorGroupSet(MOTORGROUP_FOURBAR, (pDown * fourBarP) - (fourBarI));
+        }
     }
-    else if (target > fourBarPot) { //Needing to go down
-        motorGroupSet(3, (pDown * fourBarP) - (i * fourBarI));
+}
+
+
+//Prong PID control
+void prongToAngle(int target) {
+
+    //Adjust target based on four-bar position
+    target += (0 * fourBarPot);
+
+    //Read current sensor value
+    prongPot = analogRead(SENSOR_PRONG_POT)/10;
+    print("PR: %d, ", prongPot - (0 * fourBarPot));
+    
+    //PID control code
+    const float p = 1;
+    const float i = 0;
+
+    if (target != -1) {
+        prongP = prongPot - target;
+        if (abs(prongPot - target) > 3) {
+            prongI += i;
+        }
+        else {
+            prongI = 0;
+        }
+
+        if (target != prongPot) {
+            motorSet(MOTOR_PRONGS, (p * prongP) + (prongI));
+        }
     }
-    printf(",%d", motorGet(MOTOR_FOURBAR_R));
+    printf("PR_MTR: %d", motorGet(MOTOR_PRONGS));
 }

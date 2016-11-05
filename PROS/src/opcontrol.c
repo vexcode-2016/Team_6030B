@@ -21,9 +21,6 @@
 //// Variables ////
 ///////////////////
 
-//Four-Bar
-int prongHeight = 0;
-
 /**
  * Runs the user operator control code.
  *
@@ -69,44 +66,47 @@ void operatorControl() {
 
         //Four-bar height presets
         if (joystickGetDigital(2, 8, JOY_UP)) {
-            fourBarPreset = fourBarMax;
+            fourBarTarget = fourBarMax;
         }
         else if (joystickGetDigital(2, 8, JOY_RIGHT)) {
-            fourBarPreset = fourBarFenceHigh;
+            fourBarTarget = fourBarFenceHigh;
         }
         else if (joystickGetDigital(2, 8, JOY_LEFT)) {
-            fourBarPreset = fourBarFenceLow;
+            fourBarTarget = fourBarFenceLow;
         }
         else if (joystickGetDigital(2, 8, JOY_DOWN)) {
-            fourBarPreset = fourBarMin;
+            fourBarTarget = fourBarMin;
         }
 
         //Four-bar control
         if (joystickGetDigital(2, 5, JOY_UP) || joystickGetDigital(2, 6, JOY_UP)) {
             motorGroupSet(MOTORGROUP_FOURBAR, 64);
-            fourBarPreset = analogRead(SENSOR_FOURBAR_POT)/10;
+            fourBarTarget = analogRead(SENSOR_FOURBAR_POT)/10;
         }
         else if (joystickGetDigital(2, 5, JOY_DOWN) || joystickGetDigital(2, 6, JOY_DOWN)) {
             motorGroupSet(MOTORGROUP_FOURBAR, -64);
-            fourBarPreset = analogRead(SENSOR_FOURBAR_POT)/10;
+            fourBarTarget = analogRead(SENSOR_FOURBAR_POT)/10;
         }
         else if (joystickGetDigital(1, 8, JOY_UP)) {
             motorGroupSet(MOTORGROUP_FOURBAR, 0);
         }
         else {
-            fourBarToHeight(fourBarPreset);
+            fourBarToHeight(fourBarTarget);
         }
 
         //Prongs
-        if (joystickGetDigital(2, 7, JOY_DOWN) && prongHeight > -126){
-			prongHeight -= 2;
+        if (joystickGetDigital(2, 7, JOY_DOWN)){
+            motorSet(MOTOR_PRONGS, 63);
 		}
-        else if (joystickGetDigital(2, 7, JOY_UP) && prongHeight < 126) {
-			prongHeight += 2;
+        else if (joystickGetDigital(2, 7, JOY_UP)) {
+            motorSet(MOTOR_PRONGS, -63);
         }
-		motorSet(SERVO_PRONGS, prongHeight);
-		printf("\n%d", prongHeight);
+        else {
+            motorStop(MOTOR_PRONGS);
+        }
+        prongToAngle(-1);
 
+        print("\n");
         delay(25);
     }
 }

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////
-//// Commonly Used Tokens               ////
+//// Preprocessor Definitions           ////
 //// #define <identifier> <token>       ////
 ////////////////////////////////////////////
 
@@ -15,6 +15,7 @@
 
 //Analog Sensor Ports
 #define SENSOR_FOURBAR_POT    1
+#define SENSOR_PRONG_POT      2
 
 //Motor Groups
 #define MOTORGROUP_WHEELS_L    1
@@ -33,7 +34,14 @@ extern const int fourBarMax;
 extern const int fourBarFenceHigh;
 extern const int fourBarFenceLow;
 extern const int fourBarMin;
-extern int fourBarPreset;
+extern int fourBarTarget;
+
+//Prongs
+extern const int prongVertical;
+extern const int prongStorage;
+extern const int prongFlat;
+extern const int prongDrop;
+extern int prongTarget;
 
 
 
@@ -55,3 +63,10 @@ void motorGroupSet(unsigned char motorGroup, int speed);
  * @param target the potentiometer reading that corresponds to the target height, divided by 10
  */
 void fourBarToHeight(int target);
+
+/**
+ * Runs prongs with PID to reach/maintain target angle
+ * @param target the potentiometer reading that corresponds to the target angle, divided by 10,
+ * at the four-bar's maximum position
+ */
+void prongToAngle(int target);

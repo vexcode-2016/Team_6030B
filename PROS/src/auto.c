@@ -42,7 +42,7 @@ void autonomous() {
     // SHAMEp = Shameful in practice (USE YOUR CABEZA!)
     // Also, think about how long the autonomous period lasts... and reconsider your delay() statements...
     // And, next time, try writing pseudocode first...
-	motorSet(SERVO_PRONGS, 63);
+	/*motorSet(SERVO_PRONGS, 63);
 	taskCreate(taskFourBarToHeight, TASK_DEFAULT_STACK_SIZE, fourBarFenceHigh, TASK_PRIORITY_DEFAULT - 1);
 	delay(2000);
 	motorGroupSet(MOTORGROUP_WHEELS_L, 127);
@@ -50,9 +50,9 @@ void autonomous() {
     delay(2000);
     motorGroupSet(MOTORGROUP_WHEELS_L, 0);
     motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-    motorSet(SERVO_PRONGS, 25);
+    //motorSet(SERVO_PRONGS, 25);
 	delay(1000);
-    motorSet(SERVO_PRONGS, 63);
+    //motorSet(SERVO_PRONGS, 63);
 	motorGroupSet(MOTORGROUP_WHEELS_L, -127);
 	motorGroupSet(MOTORGROUP_WHEELS_R, -127);
 	delay(3000);
@@ -61,13 +61,13 @@ void autonomous() {
 	delay(2000);
 	motorGroupSet(MOTORGROUP_WHEELS_L, 0);
 	motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-	motorSet(SERVO_PRONGS, 25);
+	//motorSet(SERVO_PRONGS, 25);
 	delay(2000);
-    motorSet(SERVO_PRONGS, 63);
+    //motorSet(SERVO_PRONGS, 63);
 	motorGroupSet(MOTORGROUP_WHEELS_L, -127);
 	motorGroupSet(MOTORGROUP_WHEELS_R, -127);
 	taskDelete(taskFourBarToHeight);
-	delay(5000);
+	delay(5000);*/
 
     /// If you have looked through and futilely attempted to rectify the 'SHAMEp' instances, scroll down.
 
