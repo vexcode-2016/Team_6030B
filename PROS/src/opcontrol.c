@@ -79,11 +79,11 @@ void operatorControl() {
         }
 
         //Four-bar control
-        if (joystickGetDigital(2, 5, JOY_UP) || joystickGetDigital(2, 6, JOY_UP)) {
+        if (joystickGetDigital(2, 6, JOY_UP)) {
             motorGroupSet(MOTORGROUP_FOURBAR, 64);
             fourBarTarget = analogRead(SENSOR_FOURBAR_POT)/10;
         }
-        else if (joystickGetDigital(2, 5, JOY_DOWN) || joystickGetDigital(2, 6, JOY_DOWN)) {
+        else if (joystickGetDigital(2, 6, JOY_DOWN)) {
             motorGroupSet(MOTORGROUP_FOURBAR, -64);
             fourBarTarget = analogRead(SENSOR_FOURBAR_POT)/10;
         }
@@ -95,16 +95,24 @@ void operatorControl() {
         }
 
         //Prongs
-        if (joystickGetDigital(2, 7, JOY_DOWN)){
-            motorSet(MOTOR_PRONGS, 63);
+        if (joystickGetDigital(2, 5, JOY_DOWN)){
+            motorSet(MOTOR_PRONGS, 63); //DEL
+            prongTarget = prongDrop;
 		}
+        else if (joystickGetDigital(2, 5, JOY_UP)) {
+            motorSet(MOTOR_PRONGS, -63); //DEL
+            prongTarget = prongFlat;
+        }
+        else if (joystickGetDigital(2, 7, JOY_DOWN)) {
+            prongTarget = prongStorage;
+        }
         else if (joystickGetDigital(2, 7, JOY_UP)) {
-            motorSet(MOTOR_PRONGS, -63);
+            prongTarget = prongVertical;
         }
-        else {
-            motorStop(MOTOR_PRONGS);
-        }
-        prongToAngle(-1);
+        else { //DEL
+            motorStop(MOTOR_PRONGS); //DEL
+        } //DEL
+        prongToAngle(-1); //REPLACE WITH prongTarget
 
         print("\n");
         delay(25);
