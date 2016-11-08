@@ -64,6 +64,16 @@ void operatorControl() {
             motorSet(MOTOR_WHEEL_M, 0);
         }
 
+		//Hanging
+		if (joystickGetDigital(2, 8, JOY_UP)) {
+			motorSet(MOTOR_HANG, 127);
+		}
+		else if (joystickGetDigital(2, 8, JOY_DOWN)) {
+			motorSet(MOTOR_HANG, -127);
+				
+		
+
+
         //Four-bar height presets
         if (joystickGetDigital(2, 8, JOY_UP)) {
             fourBarTarget = fourBarMax;
@@ -118,3 +128,4 @@ void operatorControl() {
         delay(25);
     }
 }
+
