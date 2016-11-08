@@ -50,7 +50,7 @@ void taskProngToHeight(int target) {
 */
 void autonomous() {
 	
-	taskCreate(taskProngToHeight, TASK_DEFAULT_STACK_SIZE, prongStorage, TASK_PRIORITY_DEFAULT - 1);
+	taskCreate(taskProngToHeight, TASK_DEFAULT_STACK_SIZE, prongFlat, TASK_PRIORITY_DEFAULT - 1);
 	delay(1000);
 	taskCreate(taskFourBarToHeight, TASK_DEFAULT_STACK_SIZE, fourBarFenceHigh, TASK_PRIORITY_DEFAULT - 1);
 	delay(2000);
@@ -60,8 +60,36 @@ void autonomous() {
     motorGroupSet(MOTORGROUP_WHEELS_L, 0);
     motorGroupSet(MOTORGROUP_WHEELS_R, 0);
 	delay(2000);
-	
+	taskDelete(taskProngToHeight);
+	taskCreate(taskProngToHeight, TASK_DEFAULT_STACK_SIZE, prongDrop, TASK_PRIORITY_DEFAULT - 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	delay(2000);
+	
 	
 
     /// If you have looked through and futilely attempted to rectify the 'SHAMEp' instances, scroll down.

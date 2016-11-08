@@ -12,6 +12,7 @@
 #define MOTOR_WHEEL_RB     7
 #define MOTOR_WHEEL_M      8
 #define MOTOR_PRONGS       9
+#define MOTOR_HANG		   10
 
 //Analog Sensor Ports
 #define SENSOR_FOURBAR_POT    1
