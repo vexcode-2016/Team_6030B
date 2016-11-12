@@ -4,15 +4,16 @@
 ////////////////////////////////////////////
 
 //Motor Ports
-#define MOTOR_FOURBAR_R    2
-#define MOTOR_FOURBAR_L    3
-#define MOTOR_WHEEL_LF     4
-#define MOTOR_WHEEL_RF     5
-#define MOTOR_WHEEL_LB     6
-#define MOTOR_WHEEL_RB     7
-#define MOTOR_WHEEL_M      8
-#define MOTOR_PRONGS       9
-#define MOTOR_HANG		   10
+#define MOTOR_WHEEL_LF      1
+#define MOTOR_WHEEL_RF      2
+#define MOTOR_WHEEL_M       3
+#define MOTOR_FOURBAR_LT    4
+#define MOTOR_FOURBAR_RT    5
+#define MOTOR_FOURBAR_LB    6
+#define MOTOR_FOURBAR_RB    7
+#define MOTOR_WHEEL_LB      8
+#define MOTOR_WHEEL_RB      9
+#define MOTOR_PRONGS        10
 
 //Analog Sensor Ports
 #define SENSOR_FOURBAR_POT    1

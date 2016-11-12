@@ -28,14 +28,14 @@ void taskFourBarToHeight(int target) {
     }
 }
 
-//prongToHeight() function optimized for tasks
-void taskProngToHeight(int target) {
+//prongToAngle() function optimized for tasks
+void taskProngToAngle(int target) {
     if (isAutonomous()) { //Since tasks aren't killed when the robot is disabled...
-        prongToHeight(target);
+        prongToAngle(target);
         delay(2); //Allow lower-priority tasks to run
     }
     else {
-        taskDelete(taskProngToHeight);
+        taskDelete(taskProngToAngle);
     }
 }
 
@@ -49,8 +49,7 @@ void taskProngToHeight(int target) {
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-	
-	taskCreate(taskProngToHeight, TASK_DEFAULT_STACK_SIZE, prongFlat, TASK_PRIORITY_DEFAULT - 1);
+	taskCreate(taskProngToAngle, TASK_DEFAULT_STACK_SIZE, prongFlat, TASK_PRIORITY_DEFAULT - 1);
 	delay(1000);
 	taskCreate(taskFourBarToHeight, TASK_DEFAULT_STACK_SIZE, fourBarFenceHigh, TASK_PRIORITY_DEFAULT - 1);
 	delay(2000);
@@ -60,96 +59,6 @@ void autonomous() {
     motorGroupSet(MOTORGROUP_WHEELS_L, 0);
     motorGroupSet(MOTORGROUP_WHEELS_R, 0);
 	delay(2000);
-	taskDelete(taskProngToHeight);
-	taskCreate(taskProngToHeight, TASK_DEFAULT_STACK_SIZE, prongDrop, TASK_PRIORITY_DEFAULT - 1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	delay(2000);
-	
-	
-
-    /// If you have looked through and futilely attempted to rectify the 'SHAMEp' instances, scroll down.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ///Try using this to run the four-bar instead of timer-based shame...
-    ///Replace double-hyphenated phrases with appropriate values
-    /// taskCreate(taskFourBarToHeight, TASK_DEFAULT_STACK_SIZE, --TARGET--HEIGHT--, TASK_PRIORITY_DEFAULT - 1);
-    /// ...
-    /// delay(--REASONABLE--AMOUNT--OF--TIME--);
-    /// ...
-    /// taskDelete(taskFourBarToHeight);
+	taskDelete(taskProngToAngle);
+	taskCreate(taskProngToAngle, TASK_DEFAULT_STACK_SIZE, prongDrop, TASK_PRIORITY_DEFAULT - 1);
 }

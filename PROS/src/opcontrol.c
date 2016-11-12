@@ -64,16 +64,6 @@ void operatorControl() {
             motorSet(MOTOR_WHEEL_M, 0);
         }
 
-		//Hanging
-		if (joystickGetDigital(2, 8, JOY_UP)) {
-			motorSet(MOTOR_HANG, 127);
-		}
-		else if (joystickGetDigital(2, 8, JOY_DOWN)) {
-			motorSet(MOTOR_HANG, -127);
-				
-		
-
-
         //Four-bar height presets
         if (joystickGetDigital(2, 8, JOY_UP)) {
             fourBarTarget = fourBarMax;
@@ -106,11 +96,9 @@ void operatorControl() {
 
         //Prongs
         if (joystickGetDigital(2, 5, JOY_DOWN)){
-            motorSet(MOTOR_PRONGS, 63); //DEL
             prongTarget = prongDrop;
 		}
         else if (joystickGetDigital(2, 5, JOY_UP)) {
-            motorSet(MOTOR_PRONGS, -63); //DEL
             prongTarget = prongFlat;
         }
         else if (joystickGetDigital(2, 7, JOY_DOWN)) {
@@ -119,13 +107,9 @@ void operatorControl() {
         else if (joystickGetDigital(2, 7, JOY_UP)) {
             prongTarget = prongVertical;
         }
-        else { //DEL
-            motorStop(MOTOR_PRONGS); //DEL
-        } //DEL
-        prongToAngle(-1); //REPLACE WITH prongTarget
+        prongToAngle(prongTarget);
 
         print("\n");
         delay(25);
     }
 }
-
