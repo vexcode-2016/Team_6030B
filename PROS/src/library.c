@@ -16,10 +16,10 @@ int fourBarP = 0;
 int fourBarI = 0;
 
 //Prongs
-const int prongVertical = 90;
-const int prongStorage = 180;
-const int prongFlat = 230;
-const int prongDrop = 300;
+const int prongVertical = 320;
+const int prongStorage = 210;
+const int prongFlat = 160;
+const int prongDrop = 120;
 int prongTarget = -1;
 int formerProngTarget = -1;
 int prongPot = -1;
@@ -89,10 +89,10 @@ void prongToAngle(int target) {
     
     //PID control code
     const float p = 1;
-    const float i = 0.25;
+    const float i = 0;
 
     if (target != -1) {
-        target -= 0.5*(fourBarPot - 215);
+        target += 0.3*(fourBarPot - 335);
         printf("PR_TRG: %d, ", target);
 
         prongP = target - prongPot;

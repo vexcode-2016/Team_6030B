@@ -95,7 +95,7 @@ void operatorControl() {
         }
 
         //Prongs
-        if (joystickGetDigital(2, 5, JOY_DOWN)){
+/*        if (joystickGetDigital(2, 5, JOY_DOWN)){
             prongTarget = prongDrop;
 		}
         else if (joystickGetDigital(2, 5, JOY_UP)) {
@@ -107,7 +107,23 @@ void operatorControl() {
         else if (joystickGetDigital(2, 7, JOY_UP)) {
             prongTarget = prongVertical;
         }
-        prongToAngle(prongTarget);
+        prongToAngle(prongTarget);*/
+
+        if (joystickGetDigital(2, 5, JOY_UP)) {
+            motorSet(MOTOR_PRONGS, 32);
+        }
+        else if (joystickGetDigital(2, 5, JOY_DOWN)) {
+            motorSet(MOTOR_PRONGS, 64);
+        }
+        else if (joystickGetDigital(2, 7, JOY_UP)) {
+            motorSet(MOTOR_PRONGS, -32);
+        }
+        else if (joystickGetDigital(2, 7, JOY_DOWN)) {
+            motorSet(MOTOR_PRONGS, -64);
+        }
+        else {
+            motorStop(MOTOR_PRONGS);
+        }
 
         print("\n");
         delay(25);
