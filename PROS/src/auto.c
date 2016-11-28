@@ -17,28 +17,6 @@
 
 #include "main.h"
 
-//fourBarToHeight() function optimized for tasks
-void taskFourBarToHeight(int target) {
-    if (isAutonomous()) { //Since tasks aren't killed when the robot is disabled...
-        fourBarToHeight(target);
-        delay(2); //Allow lower-priority tasks to run
-    }
-    else {
-        taskDelete(taskFourBarToHeight);
-    }
-}
-
-//prongToAngle() function optimized for tasks
-void taskProngToAngle(int target) {
-    if (isAutonomous()) { //Since tasks aren't killed when the robot is disabled...
-        prongToAngle(target);
-        delay(2); //Allow lower-priority tasks to run
-    }
-    else {
-        taskDelete(taskProngToAngle);
-    }
-}
-
 /**
 * Runs the user autonomous code.
 *
@@ -49,25 +27,5 @@ void taskProngToAngle(int target) {
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-/*	taskCreate(taskProngToAngle, TASK_DEFAULT_STACK_SIZE, prongFlat, TASK_PRIORITY_DEFAULT - 1);
-	delay(1000);
-	taskCreate(taskFourBarToHeight, TASK_DEFAULT_STACK_SIZE, fourBarFenceHigh, TASK_PRIORITY_DEFAULT - 1);
-	delay(2000);
-	motorGroupSet(MOTORGROUP_WHEELS_L, 127);
-    motorGroupSet(MOTORGROUP_WHEELS_R, 127);
-    delay(2000);
-    motorGroupSet(MOTORGROUP_WHEELS_L, 0);
-    motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-	delay(2000);
-	taskDelete(taskProngToAngle);
-	taskCreate(taskProngToAngle, TASK_DEFAULT_STACK_SIZE, prongDrop, TASK_PRIORITY_DEFAULT - 1);*/
 
-    motorGroupSet(MOTORGROUP_WHEELS_L, 127);
-    motorGroupSet(MOTORGROUP_WHEELS_R, 63);
-    delay(3000);
-    motorGroupSet(MOTORGROUP_WHEELS_L, 0);
-    motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-    for (int i; i < 50; i++) {
-        fourBarToHeight(fourBarFenceHigh);
-    }
 }
