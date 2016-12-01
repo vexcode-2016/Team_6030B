@@ -44,6 +44,7 @@
 #define MAIN_H_
 
 #include <API.h>
+#include <library.h>
 
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus

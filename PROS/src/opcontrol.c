@@ -30,7 +30,50 @@
  */
 void operatorControl() {
 	while (1){
-		motorSet(2, joystickGetAnalog(1, 2));
+		//drivetrain
+		if (joystickGetAnalog(1, 3)) {
+			motorSet(LEFT_WHEEL_FRONT && LEFT_WHEEL_BACK, joystickGetAnalog(1, 3));
+		}
+		if (joystickGetAnalog(1, 2)) {
+			motorSet(RIGHT_WHEEL_FRONT && RIGHT_WHEEL_BACK, joystickGetAnalog(1, 2));
+		}
+			//clapper control
+		if (joystickGetDigital(2, 5, JOY_UP)) {
+			motorSet(LEFT_CLAPPER_ARM1 && LEFT_CLAPPER_ARM2, 127);
+		}
+		if (joystickGetDigital(2, 5, JOY_UP)) {
+			motorSet(RIGHT_CLAPPER_ARM1 && RIGHT_CLAPPER_ARM2, -127);
+		}
+		if (joystickGetDigital(2, 5, JOY_DOWN)){
+			motorSet(LEFT_CLAPPER_ARM1 && LEFT_CLAPPER_ARM2, -127);
+		}
+		if (joystickGetDigital(2, 5, JOY_DOWN)){
+			motorSet(RIGHT_CLAPPER_ARM1 && RIGHT_CLAPPER_ARM2, 127);
+		}
+		if (joystickGetDigital(2, 6, JOY_UP)) {
+			motorSet(LEFT_CLAPPER, 127);
+		}
+		if (joystickGetDigital(2, 6, JOY_UP)) {
+			motorSet(RIGHT_CLAPPER, -127);
+		}
+		if (joystickGetDigital(2, 6, JOY_DOWN)){
+			motorSet(LEFT_CLAPPER, -127);
+		}
+		if (joystickGetDigital(2, 6, JOY_DOWN)){
+			motorSet(RIGHT_CLAPPER, 127);
+		}
+
+			
+
+
+	
+		
+
+		
+
+
+
+			
 	
 	
 	}
