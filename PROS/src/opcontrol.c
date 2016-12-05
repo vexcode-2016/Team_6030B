@@ -31,11 +31,11 @@
 void operatorControl() {
 	while (1){
 		//drivetrain
-		if (joystickGetAnalog(1, 3)) {
-			motorSet(LEFT_WHEEL_FRONT && LEFT_WHEEL_BACK, joystickGetAnalog(1, 3));
+		if (abs(joystickGetAnalog(1, 3)) > 15) {
+			motorSet(LEFT_WHEEL_FRONT && LEFT_WHEEL_BACK, joystickGetAnalog(1, 3)*0.25);
 		}
-		if (joystickGetAnalog(1, 2)) {
-			motorSet(RIGHT_WHEEL_FRONT && RIGHT_WHEEL_BACK, joystickGetAnalog(1, 2));
+		if (abs(joystickGetAnalog(1, 2)) > 15) {
+			motorSet(RIGHT_WHEEL_FRONT && RIGHT_WHEEL_BACK, joystickGetAnalog(1, 2)*0.25);
 		}
 			//clapper control
 		if (joystickGetDigital(2, 5, JOY_UP)) {
