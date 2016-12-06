@@ -32,49 +32,58 @@ void operatorControl() {
 	while (1){
 		//drivetrain
 		if (abs(joystickGetAnalog(1, 3)) > 15) {
-			motorSet(LEFT_WHEEL_FRONT && LEFT_WHEEL_BACK, joystickGetAnalog(1, 3)*0.25);
+			motorSet(LEFT_WHEEL_FRONT, joystickGetAnalog(1, 3));
+			motorSet(LEFT_WHEEL_BACK, joystickGetAnalog(1, 3));
+		}
+		else{
+			motorSet(RIGHT_WHEEL_FRONT, 0);
+			motorSet(RIGHT_WHEEL_BACK, 0);
 		}
 		if (abs(joystickGetAnalog(1, 2)) > 15) {
-			motorSet(RIGHT_WHEEL_FRONT && RIGHT_WHEEL_BACK, joystickGetAnalog(1, 2)*0.25);
+			motorSet(RIGHT_WHEEL_FRONT, -joystickGetAnalog(1, 2));
+			motorSet(RIGHT_WHEEL_BACK, -joystickGetAnalog(1, 2));
+		}
+		else {
+			motorSet(RIGHT_WHEEL_FRONT,0);
+			motorSet(RIGHT_WHEEL_BACK, 0);
 		}
 			//clapper control
-		if (joystickGetDigital(2, 5, JOY_UP)) {
-			motorSet(LEFT_CLAPPER_ARM1 && LEFT_CLAPPER_ARM2, 127);
+		if (abs(joystickGetAnalog(1, 3)) > 15) {
+			motorSet(ARM_LEFT, joystickGetAnalog(1, 3));
 		}
-		if (joystickGetDigital(2, 5, JOY_UP)) {
-			motorSet(RIGHT_CLAPPER_ARM1 && RIGHT_CLAPPER_ARM2, -127);
+		else {
+			motorSet(ARM_LEFT, 0);
 		}
-		if (joystickGetDigital(2, 5, JOY_DOWN)){
-			motorSet(LEFT_CLAPPER_ARM1 && LEFT_CLAPPER_ARM2, -127);
+		if (abs(joystickGetAnalog(1, 3)) > 15) {
+			motorSet(ARM_RIGHT, -joystickGetAnalog(1, 2));
 		}
-		if (joystickGetDigital(2, 5, JOY_DOWN)){
-			motorSet(RIGHT_CLAPPER_ARM1 && RIGHT_CLAPPER_ARM2, 127);
+		else {
+			motorSet(ARM_RIGHT, 0);
 		}
 		if (joystickGetDigital(2, 6, JOY_UP)) {
 			motorSet(LEFT_CLAPPER, 127);
 		}
+		else {
+			motorSet(LEFT_CLAPPER, 0);
+		}
 		if (joystickGetDigital(2, 6, JOY_UP)) {
 			motorSet(RIGHT_CLAPPER, -127);
+		}
+		else {
+			motorSet(RIGHT_CLAPPER, 0);
 		}
 		if (joystickGetDigital(2, 6, JOY_DOWN)){
 			motorSet(LEFT_CLAPPER, -127);
 		}
+		else {
+			motorSet(LEFT_CLAPPER, 0);
+		}
 		if (joystickGetDigital(2, 6, JOY_DOWN)){
 			motorSet(RIGHT_CLAPPER, 127);
 		}
+		else {
+			motorSet(RIGHT_CLAPPER, 0);
+		}
 
-			
-
-
-	
-		
-
-		
-
-
-
-			
-	
-	
 	}
 }
