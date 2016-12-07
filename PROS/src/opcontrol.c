@@ -33,50 +33,39 @@ void operatorControl() {
 
         //Drivetrain
         if (abs(joystickGetAnalog(1, 3)) > 15) {
-            motorSet(MOTOR_WHEEL_LEFT_FRONT, joystickGetAnalog(1, 3));
-            motorSet(MOTOR_WHEEL_LEFT_BACK, joystickGetAnalog(1, 3));
+            motorGroupSet(MOTORGROUP_WHEELS_L, joystickGetAnalog(1, 3));
         }
         else{
-            motorSet(MOTOR_WHEEL_LEFT_FRONT, 0);
-            motorSet(MOTOR_WHEEL_LEFT_BACK, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_L, 0);
         }
 
         if (abs(joystickGetAnalog(1, 2)) > 15) {
-            motorSet(MOTOR_WHEEL_RIGHT_FRONT, -joystickGetAnalog(1, 2));
-            motorSet(MOTOR_WHEEL_RIGHT_BACK, -joystickGetAnalog(1, 2));
+            motorGroupSet(MOTORGROUP_WHEELS_R, joystickGetAnalog(1, 2));
         }
         else {
-            motorSet(MOTOR_WHEEL_RIGHT_FRONT,0);
-            motorSet(MOTOR_WHEEL_RIGHT_BACK, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_R, 0);
         }
 
         //Arm
         if (joystickGetDigital(1,5,JOY_UP) || joystickGetDigital(1,6,JOY_UP)) {
-            motorSet(MOTOR_ARM_LEFT, joystickGetAnalog(1, 3));
+            motorGroupSet(MOTORGROUP_ARM, 127);
+        }
+        else if (joystickGetDigital(1,5,JOY_DOWN) || joystickGetDigital(1,6,JOY_DOWN)) {
+            motorGroupSet(MOTORGROUP_ARM, -127);
         }
         else {
-            motorSet(MOTOR_ARM_LEFT, 0);
-        }
-
-        if (joystickGetDigital(1,5,JOY_DOWN) || joystickGetDigital(1,6,JOY_DOWN)) {
-            motorSet(MOTOR_ARM_RIGHT, -joystickGetAnalog(1, 2));
-        }
-        else {
-            motorSet(MOTOR_ARM_RIGHT, 0);
+            motorGroupSet(MOTORGROUP_ARM, 0);
 		}
 
         //Clapper
 		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
-			motorSet(MOTOR_CLAPPER_LEFT, 127);
-            motorSet(MOTOR_CLAPPER_RIGHT, -127);
+            motorGroupSet(MOTORGROUP_CLAPPER, 127);
 		}
 		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1,8,JOY_LEFT)) {
-			motorSet(MOTOR_CLAPPER_LEFT, -127);
-            motorSet(MOTOR_CLAPPER_RIGHT, 127);
+            motorGroupSet(MOTORGROUP_CLAPPER, -127);
 		}
 		else {
-			motorSet(MOTOR_CLAPPER_LEFT, 0);
-            motorSet(MOTOR_CLAPPER_RIGHT, 0);
+            motorGroupSet(MOTORGROUP_CLAPPER, 0);
 		}
 	}
 }

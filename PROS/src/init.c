@@ -17,6 +17,8 @@
 
 #include "main.h"
 
+int imeStatus;
+
  /**
   * Runs pre-initialization code.
   *
@@ -37,4 +39,35 @@ void initializeIO() {
  * This function must exit relatively promptly, or the operatorControl() and autonomous() tasks will not start. An autonomous mode selection menu like the pre_auton() in other environments can be implemented in this task if desired.
  */
 void initialize() {
+    lcdInit(uart1);
+    lcdClear(uart1);
+    lcdSetBacklight(uart1, true);
+
+    imeStatus = imeInitializeAll();
+    if (imeStatus != 2) {
+        autonMode = AUTON_NONE;
+        lcdSetText(uart1, 1, " IME init ERROR ");
+        lcdSetText(uart1, 2, 206 + "     time     " + 174);
+        while (imeStatus != 2 && millis <= 15000) {
+            if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
+                imeStatus = imeInitializeAll();
+            else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)
+                autonMode = AUTON_TIMER;
+            else if (lcdReadButtons(uart1) == LCD_BTN_RIGHT)
+                autonMode = AUTON_NONE;
+        }
+    }
+    if (imeStatus == 2) {
+        autonMode = AUTON_NORMAL;
+        lcdSetText(uart1, 1, "IME init success");
+        lcdSetText(uart1, 2, 190 + "     time     " + 174);
+        while (millis <= 15000) {
+            if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
+                autonMode = AUTON_NORMAL;
+            else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)
+                autonMode = AUTON_TIMER;
+            else if (lcdReadButtons(uart1) == LCD_BTN_RIGHT)
+                autonMode = AUTON_NONE;
+        }
+    }
 }
