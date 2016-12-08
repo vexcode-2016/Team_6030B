@@ -59,3 +59,15 @@ extern int autonMode;
  * 127 is fully in the positive direction, with 0 being off
  */
 void motorGroupSet(unsigned char motorGroup, int speed);
+
+/**
+* Runs arm with PID to reach/maintain target angle
+* @param target the potentiometer reading that corresponds to the target height, divided by 10
+*/
+void armToAngle(int target);
+
+/**
+* Runs clapper with PID to reach/maintain target openness
+* @param target the potentiometer reading that corresponds to the target height, divided by 10
+*/
+void clapperToOpenness(int target);

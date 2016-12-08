@@ -47,7 +47,7 @@ void initialize() {
     if (imeStatus != 2) {
         autonMode = AUTON_NONE;
         lcdSetText(uart1, 1, " IME init ERROR ");
-        lcdSetText(uart1, 2, 206 + "     time     " + 174);
+        lcdPrint(uart1, 2, "%c     time     %c", 0xF8, 0xAE);
         while (imeStatus != 2 && millis <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 imeStatus = imeInitializeAll();
@@ -60,7 +60,7 @@ void initialize() {
     if (imeStatus == 2) {
         autonMode = AUTON_NORMAL;
         lcdSetText(uart1, 1, "IME init success");
-        lcdSetText(uart1, 2, 190 + "     time     " + 174);
+        lcdPrint(uart1, 2, "%c     time     %c", 0xBE, 0xAE);
         while (millis <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 autonMode = AUTON_NORMAL;
@@ -70,4 +70,6 @@ void initialize() {
                 autonMode = AUTON_NONE;
         }
     }
+    lcdSetText(uart1, 2, "");
+    lcdSetBacklight(uart1, false);
 }
