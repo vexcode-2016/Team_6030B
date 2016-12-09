@@ -18,8 +18,13 @@
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
+#define SENSOR_GYRO_BASE                3 // MOUNT AND WIRE THIS! //
 
-//IMEs
+//Digital Sensors
+#define SENSOR_BUMPER_FENCE_L           1 // MOUNT AND WIRE THIS! //
+#define SENSOR_BUMPER_FENCE_R           2 // MOUNT AND WIRE THIS! //
+
+//IMEs (I2C)
 #define SENSOR_IME_WHEEL_LF             1
 #define SENSOR_IME_WHEEL_RF             2
 
@@ -35,6 +40,14 @@
 #define AUTON_NORMAL                    1
 #define AUTON_TIMER                     2
 
+//QwikScore Modes
+#define QWIKSCORE_INACTIVE              0
+#define QWIKSCORE_GRAB                  1
+#define QWIKSCORE_RAISE                 2
+#define QWIKSCORE_ROTATE                3
+#define QWIKSCORE_DRIVE                 4
+#define QWIKSCORE_RELEASE               5
+
 
 
 ///////////////////////////////
@@ -42,21 +55,31 @@
 //// extern <type> <name>; ////
 ///////////////////////////////
 
+//Autonomous
 extern int autonMode;
 
 //Arm
-extern const int armFront = 380;
-extern const int armFence = 340;
-extern const int armBalanced = 300;
-extern const int armBack = 215;
-extern int armTarget = -1;
+extern const int armFloorGrab;
+extern const int armHighest;
+extern const int armDrop;
+extern const int armFenceGrab;
+extern int armTarget;
 
 //Clapper
-extern const int clapperClosed = 10;
-extern const int clapperStraight = 25;
-extern const int clapperOpen = 45;
-extern const int clapperBack = 335;
-extern int clapperTarget = -1;
+extern const int clapperClosed;
+extern const int clapperStraight;
+extern const int clapperOpen;
+extern const int clapperBack;
+extern int clapperTarget;
+
+//Drive-straight
+
+
+//Drive-rotate
+extern Gyro rotateGyroSensor;
+
+//QwikScore
+extern int qwikScoreMode;
 
 
 
@@ -75,13 +98,19 @@ extern int clapperTarget = -1;
 void motorGroupSet(unsigned char motorGroup, int speed);
 
 /**
-* Runs arm with PID to reach/maintain target angle
-* @param target the potentiometer reading that corresponds to the target height, divided by 10
-*/
+ * Runs arm with PID to reach/maintain target angle
+ * @param target the potentiometer reading that corresponds to the target height, divided by 10
+ */
 void armToAngle(int target);
 
 /**
-* Runs clapper with PID to reach/maintain target openness
-* @param target the potentiometer reading that corresponds to the target height, divided by 10
-*/
+ * Runs clapper with PID to reach/maintain target openness
+ * @param target the potentiometer reading that corresponds to the target height, divided by 10
+ */
 void clapperToOpenness(int target);
+
+/**
+ * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
+ * ENCLOSE IN WHILE LOOP AND RESET 'qwikScoreMode' TO 'QWIK_SCORE_INACTIVE' AFTER USE!!!
+ */
+void qwikScore();

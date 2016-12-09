@@ -58,6 +58,11 @@ void operatorControl() {
 		}
 
         //Clapper
+        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
+            clapperTarget = clapperOpen;
+        }
+        else if (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 5, JOY_UP)) clapperTarget = clapperClosed; //TEMPORARY//
+
 		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
             motorGroupSet(MOTORGROUP_CLAPPER, -85);
 		}
@@ -67,8 +72,14 @@ void operatorControl() {
 		else {
             clapperToOpenness(clapperTarget);
 		}
+
+        //QwikScore
+//        while (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 6, JOY_UP)) {
+//            qwikScore ();
+//        }
+        qwikScoreMode = QWIKSCORE_INACTIVE;
+
         armToAngle(-1);
-        clapperToOpenness(-1);
         print("\n");
 	}
 }

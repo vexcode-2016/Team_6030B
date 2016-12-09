@@ -27,6 +27,8 @@ int imeStatus;
   * The purpose of this function is solely to set the default pin modes (pinMode()) and port states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
   */
 void initializeIO() {
+    pinMode (SENSOR_BUMPER_FENCE_L, INPUT);
+    pinMode (SENSOR_BUMPER_FENCE_R, INPUT);
 }
 
 /**
@@ -42,6 +44,8 @@ void initialize() {
     lcdInit(uart1);
     lcdClear(uart1);
     lcdSetBacklight(uart1, true);
+
+    qwikScoreGyro = gyroInit(SENSOR_GYRO_BASE, 196);
 
     imeStatus = imeInitializeAll();
     if (imeStatus != 2) {
