@@ -44,6 +44,20 @@
 
 extern int autonMode;
 
+//Arm
+extern const int armFront = 380;
+extern const int armFence = 340;
+extern const int armBalanced = 300;
+extern const int armBack = 215;
+extern int armTarget = -1;
+
+//Clapper
+extern const int clapperClosed = 10;
+extern const int clapperStraight = 25;
+extern const int clapperOpen = 45;
+extern const int clapperBack = 335;
+extern int clapperTarget = -1;
+
 
 
 ////////////////////////////////

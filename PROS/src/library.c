@@ -24,6 +24,8 @@ int clapperTarget = -1;
 int clapperPot = -1;
 int clapperP = 0;
 
+
+
 ///////////////////
 //// Functions ////
 ///////////////////

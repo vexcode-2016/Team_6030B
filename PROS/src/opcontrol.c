@@ -58,14 +58,14 @@ void operatorControl() {
 		}
 
         //Clapper
-		if (joystickGetDigital(1, 7, JOY_DOWN) || joystickGetDigital(1, 8, JOY_DOWN)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, -127);
+		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
+            motorGroupSet(MOTORGROUP_CLAPPER, -85);
 		}
-		else if (joystickGetDigital(1, 7, JOY_UP) || joystickGetDigital(1,8,JOY_UP)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, 127);
+		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1, 8, JOY_LEFT)) {
+            motorGroupSet(MOTORGROUP_CLAPPER, 85);
 		}
 		else {
-            clapperToOpenness();
+            clapperToOpenness(clapperTarget);
 		}
         armToAngle(-1);
         clapperToOpenness(-1);
