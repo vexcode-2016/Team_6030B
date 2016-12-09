@@ -58,19 +58,20 @@ void operatorControl() {
 		}
 
         //Clapper
-        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
-            clapperTarget = clapperOpen;
-        }
-        else if (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 5, JOY_UP)) clapperTarget = clapperClosed; //TEMPORARY//
+//        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
+//            clapperTarget = clapperOpen;
+//        }
+//        else if (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 5, JOY_UP)) clapperTarget = clapperClosed; //TEMPORARY//
 
 		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, -85);
+            motorGroupSet(MOTORGROUP_CLAPPER, -70);
 		}
 		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1, 8, JOY_LEFT)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, 85);
+            motorGroupSet(MOTORGROUP_CLAPPER, 70);
 		}
 		else {
-            clapperToOpenness(clapperTarget);
+//            clapperToOpenness(clapperTarget);
+            motorGroupSet (MOTORGROUP_CLAPPER, 0);
 		}
 
         //QwikScore

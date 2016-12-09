@@ -27,8 +27,10 @@ int imeStatus;
   * The purpose of this function is solely to set the default pin modes (pinMode()) and port states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
   */
 void initializeIO() {
-    pinMode (SENSOR_BUMPER_FENCE_L, INPUT);
-    pinMode (SENSOR_BUMPER_FENCE_R, INPUT);
+    pinMode (SENSOR_BUMPER_FENCE_LH, INPUT);
+    pinMode (SENSOR_BUMPER_FENCE_LL, INPUT);
+    pinMode (SENSOR_BUMPER_FENCE_RH, INPUT);
+    pinMode (SENSOR_BUMPER_FENCE_RL, INPUT);
 }
 
 /**
@@ -45,14 +47,14 @@ void initialize() {
     lcdClear(uart1);
     lcdSetBacklight(uart1, true);
 
-    qwikScoreGyro = gyroInit(SENSOR_GYRO_BASE, 196);
+    rotateGyroSensor = gyroInit(SENSOR_GYRO_BASE, 196);
 
     imeStatus = imeInitializeAll();
     if (imeStatus != 2) {
         autonMode = AUTON_NONE;
         lcdSetText(uart1, 1, " IME init ERROR ");
         lcdPrint(uart1, 2, "%c     time     %c", 0xF8, 0xAE);
-        while (imeStatus != 2 && millis <= 15000) {
+        while (imeStatus != 2 && millis() <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 imeStatus = imeInitializeAll();
             else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)
@@ -65,7 +67,7 @@ void initialize() {
         autonMode = AUTON_NORMAL;
         lcdSetText(uart1, 1, "IME init success");
         lcdPrint(uart1, 2, "%c     time     %c", 0xBE, 0xAE);
-        while (millis <= 15000) {
+        while (millis() <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 autonMode = AUTON_NORMAL;
             else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)

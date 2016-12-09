@@ -4,25 +4,26 @@
 ////////////////////////////////////////////
 
 //Motors
-#define MOTOR_CLAPPER_L                 1
+
 #define MOTOR_WHEEL_LB                  2
-#define MOTOR_HANGER_L                  3
+#define MOTOR_CLAPPER_L                 3
 #define MOTOR_WHEEL_RB                  4
 #define MOTORS_ARM_L                    5   //To Power Expander A & B via Y-Cable
-#define MOTORS_ARM_R                    6   //To Power Expander C & D via Y-Cable
-#define MOTOR_HANGER_R                  7
+#define MOTOR_CLAPPER_R                 6
+#define MOTORS_ARM_R                    7   //To Power Expander C & D via Y-Cable
 #define MOTOR_WHEEL_LF                  8
 #define MOTOR_WHEEL_RF                  9
-#define MOTOR_CLAPPER_R                10
 
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
-#define SENSOR_GYRO_BASE                3 // MOUNT AND WIRE THIS! //
+#define SENSOR_GYRO_BASE                3
 
 //Digital Sensors
-#define SENSOR_BUMPER_FENCE_L           1 // MOUNT AND WIRE THIS! //
-#define SENSOR_BUMPER_FENCE_R           2 // MOUNT AND WIRE THIS! //
+#define SENSOR_BUMPER_FENCE_LH          1
+#define SENSOR_BUMPER_FENCE_LL          2
+#define SENSOR_BUMPER_FENCE_RH          3
+#define SENSOR_BUMPER_FENCE_RL          4
 
 //IMEs (I2C)
 #define SENSOR_IME_WHEEL_LF             1

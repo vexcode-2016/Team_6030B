@@ -64,8 +64,8 @@ void motorGroupSet (unsigned char motorGroup, int speed) {
         motorSet(MOTOR_CLAPPER_R, -speed);
     }
     if (motorGroup == MOTORGROUP_HANGER) {
-        motorSet(MOTOR_HANGER_L, speed);
-        motorSet(MOTOR_HANGER_R, -speed);
+        //motorSet(MOTOR_HANGER_L, speed);
+        //motorSet(MOTOR_HANGER_R, -speed);
     }
 }
 
@@ -82,7 +82,7 @@ void armToAngle (int target) {
     if (target != -1) {
         armP = target - armPot;
 
-        if (((armPot < armHighest) && (armPot < target)) || (armPot > armHighest) && (armPot > target)) { //Needing to go up
+        if (((armPot < armHighest) && (armPot < target)) || ((armPot > armHighest) && (armPot > target))) { //Needing to go up
             motorGroupSet(MOTORGROUP_ARM, (pUp * armP));
         }
         else { //Needing to go down
@@ -103,7 +103,7 @@ void clapperToOpenness (int target) {
     const float p = 0.5;
 
     if (target != -1) {
-        clapperP = clapperPot - target;
+        clapperP = target - clapperPot;
 
         motorGroupSet(MOTORGROUP_CLAPPER, p * clapperP);
 
@@ -131,7 +131,7 @@ void driveStraightish (int target) {
 void rotateToHeading (int target) {
     //Read current sensor value
     rotateGyro = gyroGet (rotateGyroSensor);
-    rotateGyro = sign (rotateGyro) * (abs (rotateGyro) % 360);
+    rotateGyro = ((rotateGyro > 0) - (rotateGyro < 0)) * (abs (rotateGyro) % 360);
     printf ("Rotate: %d, ", rotateGyro);
 
     //PID control code
@@ -170,7 +170,7 @@ void qwikScore() {
             qwikScoreMode += 1;
     }
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
-        if (!digitalRead (SENSOR_BUMPER_FENCE_L) && !digitalRead (SENSOR_BUMPER_FENCE_R)) {
+        if (!digitalRead (SENSOR_BUMPER_FENCE_LH) && !digitalRead (SENSOR_BUMPER_FENCE_LL) && !digitalRead(SENSOR_BUMPER_FENCE_RH) && !digitalRead(SENSOR_BUMPER_FENCE_RL)) {
             motorGroupSet (MOTORGROUP_WHEELS_L, 127);
             motorGroupSet (MOTORGROUP_WHEELS_R, 127);
         }
