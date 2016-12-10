@@ -54,7 +54,7 @@ void initialize() {
         autonMode = AUTON_NONE;
         lcdSetText(uart1, 1, " IME init ERROR ");
         lcdPrint(uart1, 2, "%c     time     %c", 0xF8, 0xAE);
-        while (imeStatus != 2 && millis() <= 15000) {
+        while (imeStatus != 2 && millis() <= 15) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 imeStatus = imeInitializeAll();
             else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)

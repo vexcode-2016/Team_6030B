@@ -98,16 +98,17 @@ void clapperToOpenness (int target) {
     //Read current sensor value
     clapperPot = analogRead(SENSOR_POT_CLAPPER) / 10;
     printf("Clapper: %d, ", clapperPot);
+    print
 
     //PID control code
-    const float p = 0.5;
+    const float p = 1;
 
     if (target != -1) {
         clapperP = target - clapperPot;
 
-        motorGroupSet(MOTORGROUP_CLAPPER, p * clapperP);
+        //motorGroupSet(MOTORGROUP_CLAPPER, p * clapperP);
 
-        printf("Clapper_MTR: %d, ", motorGet(MOTOR_CLAPPER_L));
+        printf("Clapper_MTR: %d, ", p * clapperP);
     }
 }
 
