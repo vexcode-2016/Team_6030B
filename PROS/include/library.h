@@ -81,6 +81,7 @@ extern Gyro rotateGyroSensor;
 
 //QwikScore
 extern int qwikScoreMode;
+extern int qwikScoreXtraIter;
 
 
 

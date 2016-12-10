@@ -38,6 +38,7 @@ int rotateP = 0;
 
 //QwikScore
 int qwikScoreMode = QWIKSCORE_INACTIVE;
+int qwikScoreXtraIter = 0;
 
 
 
@@ -148,41 +149,72 @@ void qwikScore() {
     if (qwikScoreMode == QWIKSCORE_INACTIVE)
         qwikScoreMode += 1;
     if (qwikScoreMode == QWIKSCORE_GRAB) {
-        if (abs (clapperPot - clapperClosed) > 15)
+        if (abs (clapperPot - clapperClosed) > 15) {
             clapperToOpenness (clapperClosed);
-        else
+        }
+        else if (qwikScoreXtraIter < 5) {
+            clapperToOpenness (clapperClosed);
+            qwikScoreXtraIter += 1;
+        }
+        else {
+            qwikScoreXtraIter = 0;
             qwikScoreMode += 1;
+        }
     }
     if (qwikScoreMode == QWIKSCORE_RAISE) {
-        if (abs (armPot - armHighest) > 15)
+        if (abs (armPot - armHighest) > 15) {
             armToAngle (armHighest);
-        else
+        }
+        else if (qwikScoreXtraIter < 5) {
+            armToAngle (armHighest);
+            qwikScoreXtraIter += 1;
+        }
+        else {
+            qwikScoreXtraIter = 0;
             qwikScoreMode += 1;
+        }
     }
     if (qwikScoreMode == QWIKSCORE_ROTATE) {
-        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 0 > 5)
+        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 0 > 5) {
             rotateToHeading (0);
-        else
+        }
+        else if (qwikScoreXtraIter < 5) {
+            rotateToHeading (0);
+            qwikScoreXtraIter += 1;
+        }
+        else {
+            qwikScoreXtraIter = 0;
             qwikScoreMode += 1;
+        }
     }
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
         if (!digitalRead (SENSOR_BUMPER_FENCE_LH) && !digitalRead (SENSOR_BUMPER_FENCE_LL) && !digitalRead(SENSOR_BUMPER_FENCE_RH) && !digitalRead(SENSOR_BUMPER_FENCE_RL)) {
             motorGroupSet (MOTORGROUP_WHEELS_L, 127);
             motorGroupSet (MOTORGROUP_WHEELS_R, 127);
         }
-        else
+        else {
             qwikScoreMode += 1;
+        }
     }
     if (qwikScoreMode == QWIKSCORE_ANGLE) {
-        if (abs(armPot - armDrop) > 15)
-            armToAngle(armDrop);
-        else
+        if (abs (armPot - armDrop) > 15) {
+            armToAngle (armDrop);
+        }
+        else if (qwikScoreXtraIter < 5) {
+            armToAngle (armDrop);
+            qwikScoreXtraIter += 1;
+        }
+        else {
+            qwikScoreXtraIter = 0;
             qwikScoreMode += 1;
+        }
     }
     if (qwikScoreMode == QWIKSCORE_RELEASE) {
-        if (abs (clapperPot - clapperOpen) > 15)
+        if (abs (clapperPot - clapperOpen) > 15) {
             clapperToOpenness (clapperOpen);
-        else
+        }
+        else {
             qwikScoreMode += 1;
+        }
     }
 }

@@ -50,11 +50,11 @@ void initialize() {
     rotateGyroSensor = gyroInit(SENSOR_GYRO_BASE, 196);
 
     imeStatus = imeInitializeAll();
-    if (imeStatus != 2) {
+/*    if (imeStatus != 2) {
         autonMode = AUTON_NONE;
         lcdSetText(uart1, 1, " IME init ERROR ");
         lcdPrint(uart1, 2, "%c     time     %c", 0xF8, 0xAE);
-        while (imeStatus != 2 && millis() <= 15) {
+        while (imeStatus != 2 && millis() <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 imeStatus = imeInitializeAll();
             else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)
@@ -63,11 +63,11 @@ void initialize() {
                 autonMode = AUTON_NONE;
         }
     }
-    if (imeStatus == 2) {
+    if (imeStatus == 2) {*/
         autonMode = AUTON_NORMAL;
         lcdSetText(uart1, 1, "IME init success");
         lcdPrint(uart1, 2, "%c     time     %c", 0xBE, 0xAE);
-        while (millis() <= 15) {
+        while (millis() <= 15000) {
             if (lcdReadButtons(uart1) == LCD_BTN_LEFT)
                 autonMode = AUTON_NORMAL;
             else if (lcdReadButtons(uart1) == LCD_BTN_CENTER)
@@ -75,7 +75,7 @@ void initialize() {
             else if (lcdReadButtons(uart1) == LCD_BTN_RIGHT)
                 autonMode = AUTON_NONE;
         }
-    }
+//    }
     lcdSetText(uart1, 2, "");
     lcdSetBacklight(uart1, false);
 }
