@@ -4,7 +4,6 @@
 ////////////////////////////////////////////
 
 //Motors
-
 #define MOTOR_WHEEL_LB                  2
 #define MOTOR_CLAPPER_L                 3
 #define MOTOR_WHEEL_RB                  4
@@ -47,7 +46,8 @@
 #define QWIKSCORE_RAISE                 2
 #define QWIKSCORE_ROTATE                3
 #define QWIKSCORE_DRIVE                 4
-#define QWIKSCORE_RELEASE               5
+#define QWIKSCORE_ANGLE                 5
+#define QWIKSCORE_RELEASE               6
 
 
 

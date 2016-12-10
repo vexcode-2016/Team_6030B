@@ -8,18 +8,18 @@
 int autonMode;
 
 //Arm
-const int armFloorGrab = 380;
-const int armHighest = 340;
-const int armDrop = 320;
-const int armFenceGrab = 300;
+const int armFloorGrab = 370;
+const int armHighest = 165;
+const int armDrop = 142;
+const int armFenceGrab = 87;
 int armTarget = -1;
 int armPot = -1;
 int armP = 0;
 
 //Clapper
-const int clapperClosed = 10;
+const int clapperClosed = 8;
 const int clapperStraight = 25;
-const int clapperOpen = 45;
+const int clapperOpen = 70;
 const int clapperBack = 335;
 int clapperTarget = -1;
 int clapperPot = -1;
@@ -73,23 +73,25 @@ void motorGroupSet (unsigned char motorGroup, int speed) {
 void armToAngle (int target) {
     //Read current sensor value
     armPot = analogRead(SENSOR_POT_ARM) / 10;
-    printf("Arm: %d, ", armPot);
-
-    //PID control code
-    const float pUp = 0.5;
-    const float pDown = 0.5;
+    printf("Arm: %3d, ", armPot);
 
     if (target != -1) {
-        armP = target - armPot;
+        armP = abs(target - armPot);
 
-        if (((armPot < armHighest) && (armPot < target)) || ((armPot > armHighest) && (armPot > target))) { //Needing to go up
-            motorGroupSet(MOTORGROUP_ARM, (pUp * armP));
+        if ((armPot < armHighest) && (armPot < target)) { //Up - back side
+            motorGroupSet(MOTORGROUP_ARM, -(0.75 * armP));
         }
-        else { //Needing to go down
-            motorGroupSet(MOTORGROUP_ARM, (pDown * armP));
+        else if ((armPot > armHighest) && (armPot > target)) { //Up - front side
+            motorGroupSet(MOTORGROUP_ARM, (0.75 * armP));
+        }
+        else if ((armPot < armHighest) && (armPot > target)) { //Down - back side
+            motorGroupSet(MOTORGROUP_ARM, (0.25 * armP));
+        }
+        else if ((armPot > armHighest) && (armPot < target)) { //Down - front side
+            motorGroupSet(MOTORGROUP_ARM, -(0.25 * armP));
         }
 
-        printf("Arm_MTR: %d, ", motorGet(MOTORS_ARM_L));
+        printf("Arm_MTR: %3d, ", motorGet(MOTORS_ARM_L));
     }
 }
 
@@ -97,18 +99,14 @@ void armToAngle (int target) {
 void clapperToOpenness (int target) {
     //Read current sensor value
     clapperPot = analogRead(SENSOR_POT_CLAPPER) / 10;
-    printf("Clapper: %d, ", clapperPot);
-    print
-
-    //PID control code
-    const float p = 1;
+    printf("Clapper: %3d, ", clapperPot);
 
     if (target != -1) {
-        clapperP = target - clapperPot;
+        clapperP = clapperPot - target;
 
-        //motorGroupSet(MOTORGROUP_CLAPPER, p * clapperP);
+        motorGroupSet(MOTORGROUP_CLAPPER, 1.5 * clapperP);
 
-        printf("Clapper_MTR: %d, ", p * clapperP);
+        printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
     }
 }
 
@@ -125,7 +123,7 @@ void driveStraightish (int target) {
     motorGroupSet (MOTORGROUP_WHEELS_L, p * driveP);
     motorGroupSet (MOTORGROUP_WHEELS_R, p * driveP);
 
-    printf ("Drive_MTR: %d, ", motorGet (MOTOR_WHEEL_LF));
+    printf ("Drive_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
 }
 
 //Drive-rotate PID control
@@ -133,18 +131,15 @@ void rotateToHeading (int target) {
     //Read current sensor value
     rotateGyro = gyroGet (rotateGyroSensor);
     rotateGyro = ((rotateGyro > 0) - (rotateGyro < 0)) * (abs (rotateGyro) % 360);
-    printf ("Rotate: %d, ", rotateGyro);
-
-    //PID control code
-    const float p = 0.5;
+    printf ("Rotate: %3d, ", rotateGyro);
 
     if (target != -1) {
         rotateP = target - rotateGyro;
 
-        motorGroupSet (MOTORGROUP_WHEELS_L, p * rotateP);
-        motorGroupSet (MOTORGROUP_WHEELS_R, -p * rotateP);
+        motorGroupSet (MOTORGROUP_WHEELS_L, 1 * rotateP);
+        motorGroupSet (MOTORGROUP_WHEELS_R, -1 * rotateP);
 
-        printf ("Rotate_MTR: %d, ", motorGet (MOTOR_WHEEL_LF));
+        printf ("Rotate_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
     }
 }
 
@@ -159,13 +154,13 @@ void qwikScore() {
             qwikScoreMode += 1;
     }
     if (qwikScoreMode == QWIKSCORE_RAISE) {
-        if (abs (armPot - armDrop) > 15)
-            armToAngle (armDrop);
+        if (abs (armPot - armHighest) > 15)
+            armToAngle (armHighest);
         else
             qwikScoreMode += 1;
     }
     if (qwikScoreMode == QWIKSCORE_ROTATE) {
-        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 0 > 10)
+        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 0 > 5)
             rotateToHeading (0);
         else
             qwikScoreMode += 1;
@@ -175,6 +170,12 @@ void qwikScore() {
             motorGroupSet (MOTORGROUP_WHEELS_L, 127);
             motorGroupSet (MOTORGROUP_WHEELS_R, 127);
         }
+        else
+            qwikScoreMode += 1;
+    }
+    if (qwikScoreMode == QWIKSCORE_ANGLE) {
+        if (abs(armPot - armDrop) > 15)
+            armToAngle(armDrop);
         else
             qwikScoreMode += 1;
     }

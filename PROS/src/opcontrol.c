@@ -47,40 +47,37 @@ void operatorControl() {
         }
 
         //Arm
-        if (joystickGetDigital(1,5,JOY_UP) || joystickGetDigital(1,6,JOY_UP)) {
-            motorGroupSet(MOTORGROUP_ARM, 127);
+        if (joystickGetDigital(1,7,JOY_UP) || joystickGetDigital(1,8,JOY_UP)) {
+            motorGroupSet(MOTORGROUP_ARM, 100);
+            armTarget = analogRead(SENSOR_POT_ARM) / 10;
         }
-        else if (joystickGetDigital(1,5,JOY_DOWN) || joystickGetDigital(1,6,JOY_DOWN)) {
-            motorGroupSet(MOTORGROUP_ARM, -127);
+        else if (joystickGetDigital(1,7,JOY_DOWN) || joystickGetDigital(1,8,JOY_DOWN)) {
+            motorGroupSet(MOTORGROUP_ARM, -100);
+            armTarget = analogRead(SENSOR_POT_ARM) / 10;
         }
         else {
-            motorGroupSet(MOTORGROUP_ARM, 0);
+            armToAngle(armTarget);
 		}
 
         //Clapper
-        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
-            clapperTarget = clapperOpen;
-        }
-        else if (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 5, JOY_UP)) clapperTarget = clapperClosed; //TEMPORARY//
-
 		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, -70);
+            motorGroupSet(MOTORGROUP_CLAPPER, -50);
+            clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
 		}
 		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1, 8, JOY_LEFT)) {
-            motorGroupSet(MOTORGROUP_CLAPPER, 70);
+            motorGroupSet(MOTORGROUP_CLAPPER, 50);
+            clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
 		}
 		else {
-            motorGroupSet (MOTORGROUP_CLAPPER, 0);
             clapperToOpenness(clapperTarget);
 		}
 
         //QwikScore
-//        while (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 6, JOY_UP)) {
-//            qwikScore ();
-//        }
+        while (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 6, JOY_UP)) {
+            qwikScore ();
+        }
         qwikScoreMode = QWIKSCORE_INACTIVE;
 
-        armToAngle(-1);
         print("\n");
 	}
 }
