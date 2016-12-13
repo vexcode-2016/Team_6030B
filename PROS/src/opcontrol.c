@@ -52,33 +52,49 @@ void operatorControl() {
         }
 
         //Arm (manual)
-        if (joystickGetDigital(1,7,JOY_UP) || joystickGetDigital(1,8,JOY_UP)) {
+/*        if (joystickGetDigital(1,7,JOY_UP) || joystickGetDigital(1,8,JOY_UP)) {
             motorGroupSet(MOTORGROUP_ARM, 100);
             armTarget = analogRead(SENSOR_POT_ARM) / 10;
         }
         else if (joystickGetDigital(1,7,JOY_DOWN) || joystickGetDigital(1,8,JOY_DOWN)) {
             motorGroupSet(MOTORGROUP_ARM, -100);
             armTarget = analogRead(SENSOR_POT_ARM) / 10;
+        }*/
+        if (joystickGetDigital (1, 6, JOY_UP)) {
+            motorGroupSet (MOTORGROUP_ARM, 100);
+            armTarget = analogRead (SENSOR_POT_ARM) / 10;
+        }
+        else if (joystickGetDigital (1, 6, JOY_DOWN)) {
+            motorGroupSet (MOTORGROUP_ARM, -100);
+            armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
         else {
             armToAngle(armTarget);
 		}
 
         //Clapper (manual)
-		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
+/*		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
             motorGroupSet(MOTORGROUP_CLAPPER, -50);
             clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
 		}
 		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1, 8, JOY_LEFT)) {
             motorGroupSet(MOTORGROUP_CLAPPER, 50);
             clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
-		}
+		}*/
+        if (joystickGetDigital (1, 5, JOY_DOWN)) {
+            motorGroupSet (MOTORGROUP_CLAPPER, -50);
+            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
+        }
+        else if (joystickGetDigital (1, 5, JOY_UP)) {
+            motorGroupSet (MOTORGROUP_CLAPPER, 50);
+            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
+        }
 		else {
             clapperToOpenness(clapperTarget);
 		}
 
         //Prepare to QwikScore
-        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
+/*        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
             armTarget = armFloorGrab;
             clapperTarget = clapperOpen;
         }
@@ -88,7 +104,13 @@ void operatorControl() {
             qwikScore ();
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
-        qwikScoreXtraIter = 0;
+        qwikScoreXtraIter = 0;*/
+
+        //Bedugging
+        if (joystickGetDigital (2, 5, JOY_UP))
+            armTarget = -1;
+        if (joystickGetDigital (2, 5, JOY_DOWN))
+            clapperTarget = -1;
 
         print("\n");
 	}

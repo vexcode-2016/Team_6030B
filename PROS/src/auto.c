@@ -31,14 +31,19 @@ void autonomous() {
 
     }
     else if (autonMode == AUTON_NORMAL) {
-        while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armHighest) > 15) {
+        motorGroupSet (MOTORGROUP_WHEELS_L, 64);
+        motorGroupSet (MOTORGROUP_WHEELS_R, 64);
+        while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armHighest) > 35) {
             armToAngle (armHighest);
         }
-        while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperClosed) > 15) {
-            clapperToOpenness (clapperClosed);
+        wait (1000);
+        motorGroupSet (MOTORGROUP_WHEELS_L, 0);
+        motorGroupSet (MOTORGROUP_WHEELS_R, 0);
+        for (int i = 0; i < 5; i += 1) {
+            armToAngle (armHighest);
         }
         while (1) {
-            qwikScore ();
+//            qwikScore ();
         }
     }
     else if (autonMode == AUTON_TIMER) {

@@ -83,7 +83,7 @@ void armToAngle (int target) {
             motorGroupSet(MOTORGROUP_ARM, -(0.75 * armP));
         }
         else if ((armPot > armHighest) && (armPot > target)) { //Up - front side
-            motorGroupSet(MOTORGROUP_ARM, (0.75 * armP));
+            motorGroupSet(MOTORGROUP_ARM, (0.9 * armP));
         }
         else if ((armPot < armHighest) && (armPot > target)) { //Down - back side
             motorGroupSet(MOTORGROUP_ARM, (0.25 * armP));
@@ -105,7 +105,7 @@ void clapperToOpenness (int target) {
     if (target != -1) {
         clapperP = clapperPot - target;
 
-        motorGroupSet(MOTORGROUP_CLAPPER, 1.5 * clapperP);
+        motorGroupSet(MOTORGROUP_CLAPPER, 1.25 * clapperP);
 
         printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
     }
@@ -149,7 +149,7 @@ void qwikScore() {
     if (qwikScoreMode == QWIKSCORE_INACTIVE)
         qwikScoreMode += 1;
     if (qwikScoreMode == QWIKSCORE_GRAB) {
-        if (abs (clapperPot - clapperClosed) > 15) {
+        if (abs (clapperPot - clapperClosed) > 30) {
             clapperToOpenness (clapperClosed);
         }
         else if (qwikScoreXtraIter < 5) {
@@ -162,6 +162,7 @@ void qwikScore() {
         }
     }
     if (qwikScoreMode == QWIKSCORE_RAISE) {
+        print ("Shame, ");
         if (abs (armPot - armHighest) > 15) {
             armToAngle (armHighest);
         }
@@ -175,11 +176,12 @@ void qwikScore() {
         }
     }
     if (qwikScoreMode == QWIKSCORE_ROTATE) {
-        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 0 > 5) {
-            rotateToHeading (0);
+        print ("Hola, ");
+        if (((abs (gyroGet (rotateGyroSensor))) % 360) - 180 > 10) {
+            rotateToHeading (180);
         }
         else if (qwikScoreXtraIter < 5) {
-            rotateToHeading (0);
+            rotateToHeading (180);
             qwikScoreXtraIter += 1;
         }
         else {
@@ -188,11 +190,14 @@ void qwikScore() {
         }
     }
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
-        if (!digitalRead (SENSOR_BUMPER_FENCE_LH) && !digitalRead (SENSOR_BUMPER_FENCE_LL) && !digitalRead(SENSOR_BUMPER_FENCE_RH) && !digitalRead(SENSOR_BUMPER_FENCE_RL)) {
-            motorGroupSet (MOTORGROUP_WHEELS_L, 127);
-            motorGroupSet (MOTORGROUP_WHEELS_R, 127);
+        if (digitalRead (SENSOR_BUMPER_FENCE_LH) && digitalRead (SENSOR_BUMPER_FENCE_LL) && digitalRead(SENSOR_BUMPER_FENCE_RH) && digitalRead(SENSOR_BUMPER_FENCE_RL)) {
+            print ("uno, ");
+            motorGroupSet (MOTORGROUP_WHEELS_L, -127);
+            motorGroupSet (MOTORGROUP_WHEELS_R, -127);
         }
         else {
+            motorGroupSet (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSet (MOTORGROUP_WHEELS_R, 0);
             qwikScoreMode += 1;
         }
     }
@@ -217,4 +222,5 @@ void qwikScore() {
             qwikScoreMode += 1;
         }
     }
+    print ("\n");
 }
