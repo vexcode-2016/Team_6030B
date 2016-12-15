@@ -74,7 +74,7 @@ void motorGroupSet (unsigned char motorGroup, int speed) {
 void armToAngle (int target) {
     //Read current sensor value
     armPot = analogRead(SENSOR_POT_ARM) / 10;
-    printf("Arm: %3d, ", armPot);
+    //printf("Arm: %3d, ", armPot);
 
     if (target != -1) {
         armP = abs(target - armPot);
@@ -92,7 +92,7 @@ void armToAngle (int target) {
             motorGroupSet(MOTORGROUP_ARM, -(0.25 * armP));
         }
 
-        printf("Arm_MTR: %3d, ", motorGet(MOTORS_ARM_L));
+        //printf("Arm_MTR: %3d, ", motorGet(MOTORS_ARM_L));
     }
 }
 
@@ -100,14 +100,14 @@ void armToAngle (int target) {
 void clapperToOpenness (int target) {
     //Read current sensor value
     clapperPot = analogRead(SENSOR_POT_CLAPPER) / 10;
-    printf("Clapper: %3d, ", clapperPot);
+    //printf("Clapper: %3d, ", clapperPot);
 
     if (target != -1) {
         clapperP = clapperPot - target;
 
         motorGroupSet(MOTORGROUP_CLAPPER, 1.25 * clapperP);
 
-        printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
+        //printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
     }
 }
 
@@ -124,7 +124,7 @@ void driveStraightish (int target) {
     motorGroupSet (MOTORGROUP_WHEELS_L, p * driveP);
     motorGroupSet (MOTORGROUP_WHEELS_R, p * driveP);
 
-    printf ("Drive_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
+    //printf ("Drive_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
 }
 
 //Drive-rotate PID control
@@ -132,7 +132,7 @@ void rotateToHeading (int target) {
     //Read current sensor value
     rotateGyro = gyroGet (rotateGyroSensor);
     rotateGyro = ((rotateGyro > 0) - (rotateGyro < 0)) * (abs (rotateGyro) % 360);
-    printf ("Rotate: %3d, ", rotateGyro);
+    //printf ("Rotate: %3d, ", rotateGyro);
 
     if (target != -1) {
         rotateP = target - rotateGyro;
@@ -140,7 +140,7 @@ void rotateToHeading (int target) {
         motorGroupSet (MOTORGROUP_WHEELS_L, 1 * rotateP);
         motorGroupSet (MOTORGROUP_WHEELS_R, -1 * rotateP);
 
-        printf ("Rotate_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
+        //printf ("Rotate_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
     }
 }
 
@@ -162,7 +162,7 @@ void qwikScore() {
         }
     }
     if (qwikScoreMode == QWIKSCORE_RAISE) {
-        print ("Shame, ");
+        //print ("Shame, ");
         if (abs (armPot - armHighest) > 15) {
             armToAngle (armHighest);
         }
@@ -176,7 +176,7 @@ void qwikScore() {
         }
     }
     if (qwikScoreMode == QWIKSCORE_ROTATE) {
-        print ("Hola, ");
+        //print ("Hola, ");
         if (((abs (gyroGet (rotateGyroSensor))) % 360) - 180 > 10) {
             rotateToHeading (180);
         }
@@ -191,7 +191,7 @@ void qwikScore() {
     }
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
         if (digitalRead (SENSOR_BUMPER_FENCE_LH) && digitalRead (SENSOR_BUMPER_FENCE_LL) && digitalRead(SENSOR_BUMPER_FENCE_RH) && digitalRead(SENSOR_BUMPER_FENCE_RL)) {
-            print ("uno, ");
+            //print ("uno, ");
             motorGroupSet (MOTORGROUP_WHEELS_L, -127);
             motorGroupSet (MOTORGROUP_WHEELS_R, -127);
         }
@@ -222,5 +222,5 @@ void qwikScore() {
             qwikScoreMode += 1;
         }
     }
-    print ("\n");
+    //print ("\n");
 }

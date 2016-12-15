@@ -112,6 +112,6 @@ void operatorControl() {
         if (joystickGetDigital (2, 5, JOY_DOWN))
             clapperTarget = -1;
 
-        print("\n");
+//        print("\n");
 	}
 }
