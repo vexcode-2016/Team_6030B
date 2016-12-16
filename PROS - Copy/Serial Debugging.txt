@@ -1,0 +1,5 @@
+Baud Rate:		115200
+
+Encoding:		28591 iso-8859-1 - Western European (ISO)
+
+Run PROS Upload to determine port

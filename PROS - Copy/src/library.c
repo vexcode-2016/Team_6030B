@@ -65,8 +65,8 @@ void motorGroupSet (unsigned char motorGroup, int speed) {
         motorSet(MOTOR_CLAPPER_R, -speed);
     }
     if (motorGroup == MOTORGROUP_HANGER) {
-        motorSet(MOTOR_HANGER_L, speed);
-        motorSet(MOTOR_HANGER_R, -speed);
+        //motorSet(MOTOR_HANGER_L, speed);
+        //motorSet(MOTOR_HANGER_R, -speed);
     }
 }
 
@@ -105,7 +105,7 @@ void clapperToOpenness (int target) {
     if (target != -1) {
         clapperP = clapperPot - target;
 
-        motorGroupSet(MOTORGROUP_CLAPPER, 1.1 * clapperP);
+        motorGroupSet(MOTORGROUP_CLAPPER, 1.25 * clapperP);
 
         //printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
     }
@@ -117,10 +117,12 @@ void driveStraightish (int target) {
     imeGet (SENSOR_IME_WHEEL_LF, &driveImeL);
 
     //PID control code
+    const float p = 0.5;
+
     driveP = target - driveImeL;
 
-    motorGroupSet (MOTORGROUP_WHEELS_L, 0.5 * driveP);
-    motorGroupSet (MOTORGROUP_WHEELS_R, 0.5 * driveP);
+    motorGroupSet (MOTORGROUP_WHEELS_L, p * driveP);
+    motorGroupSet (MOTORGROUP_WHEELS_R, p * driveP);
 
     //printf ("Drive_MTR: %3d, ", motorGet (MOTOR_WHEEL_LF));
 }

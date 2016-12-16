@@ -52,6 +52,14 @@ void operatorControl() {
         }
 
         //Arm (manual)
+/*        if (joystickGetDigital(1,7,JOY_UP) || joystickGetDigital(1,8,JOY_UP)) {
+            motorGroupSet(MOTORGROUP_ARM, 100);
+            armTarget = analogRead(SENSOR_POT_ARM) / 10;
+        }
+        else if (joystickGetDigital(1,7,JOY_DOWN) || joystickGetDigital(1,8,JOY_DOWN)) {
+            motorGroupSet(MOTORGROUP_ARM, -100);
+            armTarget = analogRead(SENSOR_POT_ARM) / 10;
+        }*/
         if (joystickGetDigital (1, 6, JOY_UP)) {
             motorGroupSet (MOTORGROUP_ARM, 100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
@@ -65,28 +73,25 @@ void operatorControl() {
 		}
 
         //Clapper (manual)
+/*		if (joystickGetDigital(1, 7, JOY_LEFT) || joystickGetDigital(1, 8, JOY_RIGHT)) {
+            motorGroupSet(MOTORGROUP_CLAPPER, -50);
+            clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
+		}
+		else if (joystickGetDigital(1, 7, JOY_RIGHT) || joystickGetDigital(1, 8, JOY_LEFT)) {
+            motorGroupSet(MOTORGROUP_CLAPPER, 50);
+            clapperTarget = analogRead(SENSOR_POT_CLAPPER) / 10;
+		}*/
         if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, 50);
+            motorGroupSet (MOTORGROUP_CLAPPER, -50);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
         else if (joystickGetDigital (1, 5, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, -50);
+            motorGroupSet (MOTORGROUP_CLAPPER, 50);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
 		else {
             clapperToOpenness(clapperTarget);
 		}
-
-        //Hanger
-        if (joystickGetDigital(1, 7, JOY_UP)) {
-            motorGroupSet(MOTORGROUP_HANGER, 127);
-        }
-        else if (joystickGetDigital(1, 7, JOY_DOWN)) {
-            motorGroupSet(MOTORGROUP_HANGER, -127);
-        }
-        else {
-            motorGroupSet(MOTORGROUP_HANGER, 0);
-        }
 
         //Prepare to QwikScore
 /*        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
@@ -108,5 +113,7 @@ void operatorControl() {
             clapperTarget = -1;
 
 //        print("\n");
+
+        wait(20);
 	}
 }

@@ -4,7 +4,6 @@
 ////////////////////////////////////////////
 
 //Motors
-#define MOTOR_HANGER_L                  1
 #define MOTOR_WHEEL_LB                  2
 #define MOTOR_CLAPPER_L                 3
 #define MOTOR_WHEEL_RB                  4
@@ -13,7 +12,6 @@
 #define MOTORS_ARM_R                    7   //To Power Expander C & D via Y-Cable
 #define MOTOR_WHEEL_LF                  8
 #define MOTOR_WHEEL_RF                  9
-#define MOTOR_HANGER_R                 10
 
 //Analog Sensors
 #define SENSOR_POT_ARM                  1

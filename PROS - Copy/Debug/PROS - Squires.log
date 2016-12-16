@@ -1,0 +1,15 @@
+﻿  CC -I../include -I../src auto.c
+  auto.c: In function 'autonomous':
+  auto.c:36:5: warning: statement with no effect [-Wunused-value]
+  auto.c:40:5: warning: statement with no effect [-Wunused-value]
+  auto.c:36:5: warning: 'i' is used uninitialized in this function [-Wuninitialized]
+  auto.c:40:5: warning: 'i' is used uninitialized in this function [-Wuninitialized]
+  CC -I../include -I../src init.c
+  CC -I../include -I../src library.c
+  CC -I../include -I../src opcontrol.c
+  opcontrol.c: In function 'operatorControl':
+  opcontrol.c:107:9: warning: format '%f' expects argument of type 'double', but argument 2 has type 'unsigned int' [-Wformat]
+  LN ./bin/auto.o ./bin/init.o ./bin/library.o ./bin/opcontrol.o ./firmware/libccos.a -lgcc -lm to bin/output.elf
+     text	   data	    bss	    dec	    hex	filename
+    16916	     28	   3852	  20796	   513c	./bin/output.elf
+  arm-none-eabi-objcopy ./bin/output.elf -O binary ./bin/output.bin
