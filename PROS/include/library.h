@@ -18,13 +18,19 @@
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
-#define SENSOR_GYRO_BASE                3
+#define SENSOR_GYRO                     3
+#define SENSOR_ACCEL_LX                 5
+#define SENSOR_ACCEL_LY                 6
+#define SENSOR_ACCEL_RX                 7
+#define SENSOR_ACCEL_RY                 8
 
 //Digital Sensors
-#define SENSOR_BUMPER_FENCE_LH          1
-#define SENSOR_BUMPER_FENCE_LL          2
-#define SENSOR_BUMPER_FENCE_RH          3
-#define SENSOR_BUMPER_FENCE_RL          4
+#define SENSOR_BUMPER_LF                1
+#define SENSOR_BUMPER_LB                2
+#define SENSOR_LIMIT_BL                 3
+#define SENSOR_LIMIT_BR                 4
+#define SENSOR_BUMPER_RB                5
+#define SENSOR_BUMPER_RF                6
 
 //IMEs (I2C)
 #define SENSOR_IME_WHEEL_LF             1
@@ -37,19 +43,12 @@
 #define MOTORGROUP_CLAPPER              4
 #define MOTORGROUP_HANGER               5
 
-//Autonomous Modes
-#define AUTON_NONE                      0
-#define AUTON_NORMAL                    1
-#define AUTON_TIMER                     2
-
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
 #define QWIKSCORE_GRAB                  1
-#define QWIKSCORE_RAISE                 2
-#define QWIKSCORE_ROTATE                3
-#define QWIKSCORE_DRIVE                 4
-#define QWIKSCORE_ANGLE                 5
-#define QWIKSCORE_RELEASE               6
+#define QWIKSCORE_POSITION              2
+#define QWIKSCORE_THROW                 3
+#define QWIKSCORE_DONE                  4
 
 
 
@@ -63,23 +62,24 @@ extern int autonMode;
 
 //Arm
 extern const int armFloorGrab;
-extern const int armHighest;
-extern const int armDrop;
-extern const int armFenceGrab;
+extern const int armThrow;
+extern const int armFence;
 extern int armTarget;
 
 //Clapper
-extern const int clapperClosed;
-extern const int clapperStraight;
-extern const int clapperOpen;
-extern const int clapperBack;
+extern const int clapperHold;
+extern const int clapperReady;
+extern const int clapperFence;
 extern int clapperTarget;
 
-//Drive-straight
-
-
-//Drive-rotate
-extern Gyro rotateGyroSensor;
+//Inertial Nav
+extern int aLeft[];
+extern int aForward[];
+extern int x;
+extern int y;
+extern Gyro gyro;
+extern int heading;
+extern int navTarget[];
 
 //QwikScore
 extern int qwikScoreMode;
@@ -93,25 +93,47 @@ extern int qwikScoreXtraIter;
 ////////////////////////////////
 
 /**
- * Sets a group of motors to the same power and in the correct directions
+ * Sets a group of motors to the same speed and in the correct directions with slew rate
  * @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, MOTORGROUP_ARM,
  * MOTORGROUP_CLAPPER, or MOTORGROUP_HANGER
- * @param speed the new signed speed; -127 is fully in the negative direction and
+ * @param speed the desired signed speed; -127 is fully in the negative direction and
  * 127 is fully in the positive direction, with 0 being off
  */
-void motorGroupSet(unsigned char motorGroup, int speed);
+void motorGroupSlew(unsigned char motorGroup, int speed);
+
+/**
+ * Sets the speed of the specified motor channel with slew rate
+ * @param channel the motor channel to modify from 1-10
+ * @param speed the desired signed speed; -127 is fully in the negative direction and
+ * 127 is fully in the positive direction, with 0 being off
+ */
+void motorSlew (unsigned char channel, int speed);
+
+/**
+ * Background task for slew rate control
+ * DO NOT RUN DIRECTLY AS A FUNCTION!
+ * Use ONLY when creating the background task in initialize()
+ */
+void slewControlTask (void * parameter);
 
 /**
  * Runs arm with PID to reach/maintain target angle
  * @param target the potentiometer reading that corresponds to the target height, divided by 10
  */
-void armToAngle(int target);
+void armToAngle (int target);
 
 /**
  * Runs clapper with PID to reach/maintain target openness
  * @param target the potentiometer reading that corresponds to the target height, divided by 10
  */
-void clapperToOpenness(int target);
+void clapperToOpenness (int target);
+
+/**
+* Background task for inertial navigation
+* DO NOT RUN DIRECTLY AS A FUNCTION!
+* Use ONLY when creating the background task in initialize()
+*/
+void inertialNavTask (void * parameter);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion

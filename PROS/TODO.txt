@@ -1,0 +1,19 @@
+﻿Write complete navigation algorithm (X, Y, θ)
+
+Add jumper support (auton position & skills/match selection)
+
+Create functional flow block diagrams (FFBDs) for program
+
+Write match autonomous routine
+
+Replace 'MAX' with appropriate values from actual field in inertial navigation
+
+Update Y coordinate for throwing with value from actual field
+
+Write skills autonomous routine
+
+Win skills
+
+Rejoice
+
+Use IMEs to increase navigation accuracy?

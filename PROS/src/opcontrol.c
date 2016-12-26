@@ -17,6 +17,8 @@
 
 #include "main.h"
 
+int throwRelease = 0;
+
 /**
  * Runs the user operator control code.
  *
@@ -38,39 +40,48 @@ void operatorControl() {
 
         //Drivetrain
         if (abs(joystickGetAnalog(1, 3)) > 15) {
-            motorGroupSet(MOTORGROUP_WHEELS_L, joystickGetAnalog(1, 3));
+            motorGroupSlew(MOTORGROUP_WHEELS_L, joystickGetAnalog(1, 3));
+        }
+        else if (abs (joystickGetAnalog (2, 3)) > 15) {
+            motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (2, 3));
         }
         else{
-            motorGroupSet(MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew(MOTORGROUP_WHEELS_L, 0);
         }
 
         if (abs(joystickGetAnalog(1, 2)) > 15) {
-            motorGroupSet(MOTORGROUP_WHEELS_R, joystickGetAnalog(1, 2));
+            motorGroupSlew(MOTORGROUP_WHEELS_R, joystickGetAnalog(1, 2));
+        }
+        else if (abs (joystickGetAnalog (2, 2)) > 15) {
+            motorGroupSlew (MOTORGROUP_WHEELS_R, joystickGetAnalog (2, 2));
         }
         else {
-            motorGroupSet(MOTORGROUP_WHEELS_R, 0);
+            motorGroupSlew(MOTORGROUP_WHEELS_R, 0);
         }
 
-        //Arm (manual)
-        if (joystickGetDigital (1, 6, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_ARM, 100);
+        //Arm
+        if (joystickGetDigital (2, 6, JOY_UP)) {
+            motorGroupSlew (MOTORGROUP_ARM, 100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
-        else if (joystickGetDigital (1, 6, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_ARM, -100);
+        else if (joystickGetDigital (2, 6, JOY_DOWN)) {
+            motorGroupSlew (MOTORGROUP_ARM, -100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
         else {
             armToAngle(armTarget);
 		}
+        if (throwRelease && !joystickGetDigital (1, 6, JOY_UP)) {
+            throwRelease = 0;
+        }
 
-        //Clapper (manual)
-        if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, 50);
+        //Clapper
+        if (joystickGetDigital (2, 5, JOY_DOWN)) {
+            motorGroupSlew (MOTORGROUP_CLAPPER, 40);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
-        else if (joystickGetDigital (1, 5, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, -50);
+        else if (joystickGetDigital (2, 5, JOY_UP)) {
+            motorGroupSlew (MOTORGROUP_CLAPPER, -40);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
 		else {
@@ -78,35 +89,31 @@ void operatorControl() {
 		}
 
         //Hanger
-        if (joystickGetDigital(1, 7, JOY_UP)) {
-            motorGroupSet(MOTORGROUP_HANGER, 127);
+        if (joystickGetDigital (1, 8, JOY_RIGHT)) {
+            motorGroupSlew (MOTORGROUP_HANGER, -48);
+        }
+        else if (joystickGetDigital(1, 7, JOY_UP)) {
+            motorGroupSlew(MOTORGROUP_HANGER, 127);
         }
         else if (joystickGetDigital(1, 7, JOY_DOWN)) {
-            motorGroupSet(MOTORGROUP_HANGER, -127);
+            motorGroupSlew(MOTORGROUP_HANGER, -127);
         }
         else {
-            motorGroupSet(MOTORGROUP_HANGER, 0);
-        }
-
-        //Prepare to QwikScore
-/*        if (joystickGetDigital (1, 5, JOY_DOWN) || joystickGetDigital (1, 6, JOY_DOWN)) {
-            armTarget = armFloorGrab;
-            clapperTarget = clapperOpen;
+            motorGroupSlew(MOTORGROUP_HANGER, 0);
         }
 
         //QwikScore
         while (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 6, JOY_UP)) {
             qwikScore ();
+            wait (10);
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
-        qwikScoreXtraIter = 0;*/
-
-        //Bedugging
-        if (joystickGetDigital (2, 5, JOY_UP))
-            armTarget = -1;
-        if (joystickGetDigital (2, 5, JOY_DOWN))
-            clapperTarget = -1;
-
-//        print("\n");
+        qwikScoreXtraIter = 0;
+        
+        printf ("X:%5d, ", x);
+        printf ("Y:%5d, ", y);
+        printf ("H:%3d, ", heading);
+        print ("\n");
+        wait (10);
 	}
 }

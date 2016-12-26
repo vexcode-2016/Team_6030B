@@ -27,26 +27,5 @@
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    if (autonMode == AUTON_NONE) {
 
-    }
-    else if (autonMode == AUTON_NORMAL) {
-        motorGroupSet (MOTORGROUP_WHEELS_L, 64);
-        motorGroupSet (MOTORGROUP_WHEELS_R, 64);
-        while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armHighest) > 35) {
-            armToAngle (armHighest);
-        }
-        wait (1000);
-        motorGroupSet (MOTORGROUP_WHEELS_L, 0);
-        motorGroupSet (MOTORGROUP_WHEELS_R, 0);
-        for (int i = 0; i < 5; i += 1) {
-            armToAngle (armHighest);
-        }
-        while (1) {
-//            qwikScore ();
-        }
-    }
-    else if (autonMode == AUTON_TIMER) {
-
-    }
 }
