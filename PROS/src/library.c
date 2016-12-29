@@ -27,7 +27,7 @@ int clapperP = 0;
 //Inertial nav
 int aLeft[3] = { 0, 0, 0 };
 int aForward[3] = { 0, 0, 0 };
-float theta;
+float theta = 0;
 int ax[2] = { 0, 0 };
 int vx[2] = { 0, 0 };
 int x = 0;
@@ -41,6 +41,9 @@ int posCalibrating = 0;
 int navTarget[3] = { -1, -1, -1 }; // { x, y, heading }
 int driveP = 0;
 int rotateP = 0;
+
+//IME nav
+
 
 //QwikScore
 int qwikScoreMode = QWIKSCORE_INACTIVE;
@@ -139,7 +142,7 @@ void clapperToOpenness (int target) {
     }
 }
 
-//Inertial nav (run as task)
+//Inertial navigation (run as task)
 void inertialNavTask (void * parameter) {
     while (1) {
         wait (5);
@@ -155,8 +158,8 @@ void inertialNavTask (void * parameter) {
             aLeft[1] = 0;
             aForward[1] = 0;
         }
-        aLeft[0] = aLeft[0] / 300;
-        aForward[0] = aForward[0] / 300;
+        aLeft[0] = aLeft[0] / 200;
+        aForward[0] = aForward[0] / 200;
 
         //Read heading
         heading = gyroGet (gyro) + gyroCalibration;
@@ -256,6 +259,15 @@ void inertialNavTask (void * parameter) {
         aLeft[0] = 0;
         aForward[0] = 0;
         posCalibrating = 0;
+    }
+}
+
+//IME-based navigation (run as task)
+void imeNavTask (void * parameter) {
+    while (1) {
+        wait (5);
+
+        
     }
 }
 

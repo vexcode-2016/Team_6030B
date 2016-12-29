@@ -1,4 +1,6 @@
-﻿Write complete navigation algorithm (X, Y, θ)
+﻿Use IMEs to increase navigation accuracy
+
+Write complete navigation algorithm (X, Y, θ)
 
 Add jumper support (auton position & skills/match selection)
 
@@ -15,5 +17,3 @@ Write skills autonomous routine
 Win skills
 
 Rejoice
-
-Use IMEs to increase navigation accuracy?

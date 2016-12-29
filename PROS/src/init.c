@@ -36,22 +36,24 @@ void initializeIO() {
 /**
  * Runs user initialization code.
  *
- * This function will be started in its own task with the default priority and stack size once when the robot is starting up. It is possible that the VExnet communication link maForward not be fully established at this time, so reading from the VEx Joystick maForward fail.
+ * This function will be started in its own task with the default priority and stack size once when the robot is starting up. It is possible that the VExnet communication link may not be fully established at this time, so reading from the VEX Joystick may fail.
  *
  * This function should initialize most sensors (gyro, encoders, ultrasonics), LCDs, global variables, and IMEs.
  *
  * This function must exit relatively promptly, or the operatorControl() and autonomous() tasks will not start. An autonomous mode selection menu like the pre_auton() in other environments can be implemented in this task if desired.
  */
 void initialize() {
-    gyro = gyroInit(SENSOR_GYRO, 196);
-
+    /*gyro = gyroInit(SENSOR_GYRO, 196);
     for (int i = 1; i <= 99; i += 2) {
         aLeft[2] += (analogRead (SENSOR_ACCEL_LX) + analogRead (SENSOR_ACCEL_RX));
         aForward[2] += (analogRead (SENSOR_ACCEL_LY) + analogRead (SENSOR_ACCEL_RY));
     }
     aLeft[2] = aLeft[2] / 100;
     aForward[2] = aForward[2] / 100;
-
-    taskCreate (inertialNavTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 2);
+    taskCreate (inertialNavTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 2);*/
+    
+    imeInitializeAll ();
+    taskCreate (imeNavTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 2);
+    
     taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }

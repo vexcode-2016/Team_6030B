@@ -33,8 +33,8 @@
 #define SENSOR_BUMPER_RF                6
 
 //IMEs (I2C)
-#define SENSOR_IME_WHEEL_LF             1
-#define SENSOR_IME_WHEEL_RF             2
+#define SENSOR_IME_WHEEL_LF             0
+#define SENSOR_IME_WHEEL_RF             1
 
 //Motor Groups
 #define MOTORGROUP_WHEELS_L             1
@@ -129,11 +129,18 @@ void armToAngle (int target);
 void clapperToOpenness (int target);
 
 /**
-* Background task for inertial navigation
-* DO NOT RUN DIRECTLY AS A FUNCTION!
-* Use ONLY when creating the background task in initialize()
-*/
+ * Background task for inertial navigation
+ * DO NOT RUN DIRECTLY AS A FUNCTION!
+ * Use ONLY when creating the background task in initialize()
+ */
 void inertialNavTask (void * parameter);
+
+/**
+ * Background task for IME-based navigation
+ * DO NOT RUN DIRECTLY AS A FUNCTION!
+ * Use ONLY when creating the background task in initialize()/
+ */
+void imeNavTask (void * parameter);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion

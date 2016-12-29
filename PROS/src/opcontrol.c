@@ -110,9 +110,6 @@ void operatorControl() {
         qwikScoreMode = QWIKSCORE_INACTIVE;
         qwikScoreXtraIter = 0;
         
-        printf ("X:%5d, ", x);
-        printf ("Y:%5d, ", y);
-        printf ("H:%3d, ", heading);
         print ("\n");
         wait (10);
 	}
