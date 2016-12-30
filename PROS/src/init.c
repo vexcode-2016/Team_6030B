@@ -25,12 +25,10 @@
   * The purpose of this function is solely to set the default pin modes (pinMode()) and port states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
   */
 void initializeIO() {
-    pinMode (SENSOR_BUMPER_LF, INPUT);
-    pinMode (SENSOR_BUMPER_LB, INPUT);
-    pinMode (SENSOR_LIMIT_BL, INPUT);
-    pinMode (SENSOR_LIMIT_BR, INPUT);
-    pinMode (SENSOR_BUMPER_RB, INPUT);
-    pinMode (SENSOR_BUMPER_RF, INPUT);
+    pinMode (SENSOR_BUMPER_LOW1, INPUT);
+    pinMode (SENSOR_BUMPER_LOW2, INPUT);
+    pinMode (SENSOR_BUMPER_HIGH1, INPUT);
+    pinMode (SENSOR_BUMPER_HIGH2, INPUT);
 }
 
 /**
