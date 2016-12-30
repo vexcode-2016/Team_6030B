@@ -45,7 +45,7 @@ void operatorControl() {
         else if (abs (joystickGetAnalog (2, 3)) > 15) {
             motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (2, 3));
         }
-        else{
+        else {
             motorGroupSlew(MOTORGROUP_WHEELS_L, 0);
         }
 
@@ -103,8 +103,14 @@ void operatorControl() {
         }
 
         //QwikScore
-        while (joystickGetDigital (1, 5, JOY_UP) || joystickGetDigital (1, 6, JOY_UP)) {
-            qwikScore ();
+        while (joystickGetDigital (1, 6, JOY_UP)) {
+            qwikScore (0);
+            wait (10);
+        }
+        qwikScoreMode = QWIKSCORE_INACTIVE;
+        qwikScoreXtraIter = 0;
+        while (joystickGetDigital (1, 8, JOY_UP)) {
+            qwikScore (1);
             wait (10);
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;

@@ -125,5 +125,6 @@ void robotToPosition (int left, int right);
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
  * ENCLOSE IN WHILE LOOP AND RESET 'qwikScoreMode' TO 'QWIK_SCORE_INACTIVE' AFTER USE!!!
+ * @param autoDrive whether or not the robot should autonomously rotate and drive to the fence (1 = yes, 0 = no)
  */
-void qwikScore();
+void qwikScore (int autoDrive);

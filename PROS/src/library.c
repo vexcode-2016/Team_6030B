@@ -148,7 +148,7 @@ void robotToPosition (int targetLeft, int targetRight) {
 }
 
 //QwikScore
-void qwikScore() {
+void qwikScore(int autoDrive) {
     if (qwikScoreMode == QWIKSCORE_INACTIVE) {
         motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
         motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
@@ -161,7 +161,10 @@ void qwikScore() {
         }
         else {
             qwikScoreXtraIter = 0;
-            qwikScoreMode += 1;
+            if (autoDrive)
+                qwikScoreMode += 1;
+            else
+                qwikScoreMode += 3;
         }
     }
     if (qwikScoreMode == QWIKSCORE_ROTATE) {
