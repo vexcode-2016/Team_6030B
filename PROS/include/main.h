@@ -45,7 +45,6 @@
 
 #include <API.h>
 #include <library.h>
-#include "math.h"
 
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus

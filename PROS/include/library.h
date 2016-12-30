@@ -19,18 +19,12 @@
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
 #define SENSOR_GYRO                     3
-#define SENSOR_ACCEL_LX                 5
-#define SENSOR_ACCEL_LY                 6
-#define SENSOR_ACCEL_RX                 7
-#define SENSOR_ACCEL_RY                 8
 
 //Digital Sensors
-#define SENSOR_BUMPER_LF                1
-#define SENSOR_BUMPER_LB                2
-#define SENSOR_LIMIT_BL                 3
-#define SENSOR_LIMIT_BR                 4
-#define SENSOR_BUMPER_RB                5
-#define SENSOR_BUMPER_RF                6
+#define SENSOR_BUMPER_LOW1              1
+#define SENSOR_BUMPER_LOW2              2
+#define SENSOR_BUMPER_HIGH1             3
+#define SENSOR_BUMPER_HIGH2             4
 
 //IMEs (I2C)
 #define SENSOR_IME_WHEEL_LF             0
@@ -46,9 +40,10 @@
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
 #define QWIKSCORE_GRAB                  1
-#define QWIKSCORE_POSITION              2
-#define QWIKSCORE_THROW                 3
-#define QWIKSCORE_DONE                  4
+#define QWIKSCORE_ROTATE                2
+#define QWIKSCORE_DRIVE                 3
+#define QWIKSCORE_THROW                 4
+#define QWIKSCORE_DONE                  5
 
 
 
@@ -72,18 +67,10 @@ extern const int clapperReady;
 extern const int clapperFence;
 extern int clapperTarget;
 
-//Inertial Nav
-extern int aLeft[];
-extern int aForward[];
-extern int x;
-extern int y;
-extern Gyro gyro;
-extern int heading;
-extern int navTarget[];
-
 //QwikScore
 extern int qwikScoreMode;
 extern int qwikScoreXtraIter;
+extern Gyro gyro;
 
 
 
@@ -129,18 +116,11 @@ void armToAngle (int target);
 void clapperToOpenness (int target);
 
 /**
- * Background task for inertial navigation
- * DO NOT RUN DIRECTLY AS A FUNCTION!
- * Use ONLY when creating the background task in initialize()
+ * Runs drivetrain with PID to reach target position/rotation on the field
+ * @param left the target output value for the left IME
+ * @param right the target output value for the right IME
  */
-void inertialNavTask (void * parameter);
-
-/**
- * Background task for IME-based navigation
- * DO NOT RUN DIRECTLY AS A FUNCTION!
- * Use ONLY when creating the background task in initialize()/
- */
-void imeNavTask (void * parameter);
+void robotToPosition (int left, int right);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion

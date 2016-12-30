@@ -24,30 +24,18 @@ int clapperTarget = -1;
 int clapperPot = -1;
 int clapperP = 0;
 
-//Inertial nav
-int aLeft[3] = { 0, 0, 0 };
-int aForward[3] = { 0, 0, 0 };
-float theta = 0;
-int ax[2] = { 0, 0 };
-int vx[2] = { 0, 0 };
-int x = 0;
-int ay[2] = { 0, 0 };
-int vy[2] = { 0, 0 };
-int y = 0;
-Gyro gyro;
-int gyroCalibration = 90;
-int heading = 0;
-int posCalibrating = 0;
-int navTarget[3] = { -1, -1, -1 }; // { x, y, heading }
-int driveP = 0;
-int rotateP = 0;
-
 //IME nav
-
+int driveLeft = 0;
+int driveRight = 0;
+int drivePLeft = 0;
+int drivePRight = 0;
 
 //QwikScore
 int qwikScoreMode = QWIKSCORE_INACTIVE;
 int qwikScoreXtraIter = 0;
+Gyro gyro;
+int heading = 0;
+int rotateP = 0;
 
 
 
@@ -142,132 +130,20 @@ void clapperToOpenness (int target) {
     }
 }
 
-//Inertial navigation (run as task)
-void inertialNavTask (void * parameter) {
-    while (1) {
-        wait (5);
-
-        //Read and de-noise accelerations in robot axes
-        for (int j = 1; j <= 99; j += 2) {
-            for (int i = 1; i <= 99; i += 2) {
-                aLeft[1] += analogRead (SENSOR_ACCEL_LX) + analogRead (SENSOR_ACCEL_RX);
-                aForward[1] += analogRead (SENSOR_ACCEL_LY) + analogRead (SENSOR_ACCEL_RY);
-            }
-            aLeft[0] += (aLeft[1] / 100) - aLeft[2];
-            aForward[0] += (aForward[1] / 100) - aForward[2];
-            aLeft[1] = 0;
-            aForward[1] = 0;
-        }
-        aLeft[0] = aLeft[0] / 200;
-        aForward[0] = aForward[0] / 200;
-
-        //Read heading
-        heading = gyroGet (gyro) + gyroCalibration;
-        heading = ((heading > 0) - (heading < 0)) * (abs (heading) % 360);
-        if (heading < 0) heading += 360;
-
-        //Heading & position recalibration
-        if ((digitalRead (SENSOR_BUMPER_LF) == LOW) && (digitalRead (SENSOR_BUMPER_LB) == LOW)) {
-            if (abs (heading - 90) < 15) {
-                gyroCalibration += 90 - heading;
-                posCalibrating = 1;
-                x = 0;
-            }
-            else if (abs (heading - 180) < 15) {
-                gyroCalibration += 180 - heading;
-                posCalibrating = 1;
-                y = 0;
-            }
-            else if (abs (heading - 270) < 15) {
-                gyroCalibration += 270 - heading;
-                //posCalibrating = 1;
-                //x = MAX;
-            }
-        }
-        if ((digitalRead (SENSOR_LIMIT_BL) == LOW) && (digitalRead (SENSOR_LIMIT_BR) == LOW)) {
-            if ((heading < 15) || (heading > 345)) {
-                gyroCalibration += 360 - heading;
-                posCalibrating = 1;
-                x = 0;
-            }
-            else if (abs (heading - 90) < 15) {
-                gyroCalibration += 90 - heading;
-                posCalibrating = 1;
-                y = 0;
-            }
-            else if (abs (heading - 180) < 15) {
-                gyroCalibration += 180 - heading;
-                //posCalibrating = 1;
-                //x = MAX;
-            }
-        }
-        if ((digitalRead (SENSOR_BUMPER_RF) == LOW) && (digitalRead (SENSOR_BUMPER_RB) == LOW)) {
-            if ((heading < 15) || (heading > 345)) {
-                gyroCalibration += 360 - heading;
-                posCalibrating = 1;
-                y = 0;
-            }
-            else if (abs (heading - 90) < 15) {
-                gyroCalibration += 90 - heading;
-                //posCalibrating = 1;
-                //x = MAX;
-            }
-            else if (abs (heading - 270) < 15) {
-                gyroCalibration += 270 - heading;
-                posCalibrating = 1;
-                x = 0;
-            }
-        }
-
-        //Re-read heading
-        heading = gyroGet (gyro) + gyroCalibration;
-        heading = ((heading > 0) - (heading < 0)) * (abs (heading) % 360);
-        if (heading < 0) heading += 360;
-
-        //Transform accelerations to field axes
-        theta = 90 - heading;
-        if (theta < 0) theta += 360;
-        theta = theta * (3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989 / 180);
-        ax[1] = (sin (theta) * aForward[0]) + (cos (theta) * (-aLeft[0]));
-        ay[1] = (cos (theta) * aForward[0]) + (sin (theta) * aLeft[0]);
-
-        //Velocity recalibration & calculation
-        if ((motorGet (MOTOR_WHEEL_LF) == 0) && (motorGet (MOTOR_WHEEL_RF) == 0) && (abs (motorGet (MOTORS_ARM_L)) <= 10) && (abs (motorGet (MOTOR_CLAPPER_L)) <= 10)) {
-            vx[1] = 0;
-            vy[1] = 0;
-        }
-        else {
-            vx[1] = vx[0] + ax[0];
-            vy[1] = vy[0] + ay[0];
-        }
-
-        //Position calculation
-        if (!posCalibrating) {
-            x += vx[0];
-            y += vy[0];
-        }
-        if (x < 0) x = 0;
-        //if (x > MAX) x = MAX;
-        if (y < 0) y = 0;
-        //if (y > MAX) y = MAX;
+//Drivetrain PID control
+void robotToPosition (int targetLeft, int targetRight) {
+    //Read current sensor values
+    if (imeGet (SENSOR_IME_WHEEL_LF, &driveLeft) && imeGet (SENSOR_IME_WHEEL_RF, &driveRight)) {
         
-        //Reset for next iteration
-        ax[0] = ax[1];
-        ay[0] = ay[1];
-        vx[0] = vx[1];
-        vy[0] = vy[1];
-        aLeft[0] = 0;
-        aForward[0] = 0;
-        posCalibrating = 0;
+        drivePLeft = targetLeft - driveLeft;
+        drivePRight = targetRight - driveRight;
+
+        motorGroupSlew (MOTORGROUP_WHEELS_L, 0 * drivePLeft);
+        motorGroupSlew (MOTORGROUP_WHEELS_R, 0 * drivePRight);
     }
-}
-
-//IME-based navigation (run as task)
-void imeNavTask (void * parameter) {
-    while (1) {
-        wait (5);
-
-        
+    else {
+        motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+        motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
     }
 }
 
@@ -288,21 +164,27 @@ void qwikScore() {
             qwikScoreMode += 1;
         }
     }
-    if (qwikScoreMode == QWIKSCORE_POSITION) {
+    if (qwikScoreMode == QWIKSCORE_ROTATE) {
         clapperToOpenness (clapperHold);
-        navTarget[0] = -1;
-        navTarget[1] = -1; //TODO: Update with actual y
-        navTarget[2] = 270;
-        rotateP = navTarget[2] - heading;
-        if (heading < 90) rotateP -= 360;
+        heading = gyroGet (gyro);
+        heading = ((heading > 0) - (heading < 0)) * (abs (heading) % 360);
+        if (heading < 0) heading += 360;
+        rotateP = 180 - heading;
         if (abs (rotateP) > 15) {
             motorGroupSlew (MOTORGROUP_WHEELS_L, -1.8 * rotateP);
             motorGroupSlew (MOTORGROUP_WHEELS_R, 1.8 * rotateP);
         }
-        else if ((navTarget[1] != -1) && (abs(navTarget[1] - x) >= 100)) {
-            driveP = navTarget[1] - x;
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0.01 * driveP);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0.01 * driveP);
+        else {
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+            qwikScoreXtraIter = 0;
+            qwikScoreMode += 1;
+        }
+    }
+    if (qwikScoreMode == QWIKSCORE_DRIVE) {
+        if (((digitalRead (SENSOR_BUMPER_LOW1) == HIGH) || (digitalRead (SENSOR_BUMPER_LOW2) == HIGH)) && ((digitalRead (SENSOR_BUMPER_HIGH1) == HIGH) || (digitalRead (SENSOR_BUMPER_HIGH2) == HIGH))) {
+            motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
+            motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
         }
         else {
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);

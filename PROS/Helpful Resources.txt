@@ -1,0 +1,9 @@
+PROS Documentation:
+http://pros.cs.purdue.edu/api/
+
+PID:
+http://www.simbotics.org/files/pdf/programming-pid.pdf
+
+Inertial Navigation:
+http://www.chrobotics.com/library/accel-position-velocity
+http://aerostudents.com/files/avionics/InertialNavigationSystems.pdf
