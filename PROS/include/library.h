@@ -128,3 +128,10 @@ void robotToPosition (int left, int right);
  * @param autoDrive whether or not the robot should autonomously rotate and drive to the fence (1 = yes, 0 = no)
  */
 void qwikScore (int autoDrive);
+
+/**
+ * Maintains the hang, even after the match ends
+ * If the task is running, NEVER EVER SET THE MOTOR SPEED(S) FOR THE HANGING MOTORS OUTSIDE OF THE TASK
+ * @param motorSpeed the minimum motor speed necessary for the hanging motors to maintain the hang
+ */
+void maintainHangTask (int motorSpeed);

@@ -18,6 +18,7 @@
 #include "main.h"
 
 int throwRelease = 0;
+int hanging = 0;
 
 /**
  * Runs the user operator control code.
@@ -89,16 +90,17 @@ void operatorControl() {
 		}
 
         //Hanger
-        if (joystickGetDigital (1, 8, JOY_RIGHT)) {
-            motorGroupSlew (MOTORGROUP_HANGER, -48);
+        if (joystickGetDigital (1, 8, JOY_RIGHT) && !hanging) {
+            taskCreate (maintainHangTask, TASK_DEFAULT_STACK_SIZE, -48, TASK_PRIORITY_DEFAULT + 2);
+            hanging = 1;
         }
-        else if (joystickGetDigital(1, 7, JOY_UP)) {
+        else if (joystickGetDigital(1, 7, JOY_UP) && !hanging) {
             motorGroupSlew(MOTORGROUP_HANGER, 127);
         }
-        else if (joystickGetDigital(1, 7, JOY_DOWN)) {
+        else if (joystickGetDigital(1, 7, JOY_DOWN) && !hanging) {
             motorGroupSlew(MOTORGROUP_HANGER, -127);
         }
-        else {
+        else if (!hanging) {
             motorGroupSlew(MOTORGROUP_HANGER, 0);
         }
 

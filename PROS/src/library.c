@@ -134,6 +134,7 @@ void clapperToOpenness (int target) {
 void robotToPosition (int targetLeft, int targetRight) {
     //Read current sensor values
     if (imeGet (SENSOR_IME_WHEEL_LF, &driveLeft) && imeGet (SENSOR_IME_WHEEL_RF, &driveRight)) {
+        driveRight = -driveRight;
         
         drivePLeft = targetLeft - driveLeft;
         drivePRight = targetRight - driveRight;
@@ -214,5 +215,13 @@ void qwikScore(int autoDrive) {
     if (qwikScoreMode == QWIKSCORE_DONE) {
         armToAngle (armTarget);
         clapperToOpenness (clapperTarget);
+    }
+}
+
+//End-of-match hanging (run as task)
+void maintainHangTask (int motorSpeed) {
+    while (1) {
+        motorGroupSlew (MOTORGROUP_HANGER, motorSpeed);
+        wait (5);
     }
 }
