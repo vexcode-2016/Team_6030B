@@ -89,7 +89,7 @@ void operatorControl() {
             clapperToOpenness(clapperTarget);
 		}
 
-        //Hanger
+        //Hanger (banished to Partner Controller)
         if (joystickGetDigital (2, 8, JOY_RIGHT) && !hanging) {
             //taskCreate (maintainHangTask, TASK_DEFAULT_STACK_SIZE, -127, TASK_MAX_PRIORITIES);
             //hanging = 1;
@@ -125,11 +125,6 @@ void operatorControl() {
             imeReset (SENSOR_IME_WHEEL_LF);
         else if (joystickGetDigital (1, 8, JOY_UP))
             imeReset (SENSOR_IME_WHEEL_RF);
-        else
-            robotToPosition (-1, -1);
-        printf ("WEFT: %d, ", driveLeft);
-        printf ("RITE: %d, ", driveRight);
-        printf ("TETA: %d, ", heading);
         print ("\n");
         wait (10);
 	}

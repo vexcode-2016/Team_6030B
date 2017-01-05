@@ -29,6 +29,8 @@ void initializeIO() {
     pinMode (SENSOR_BUMPER_LOW2, INPUT);
     pinMode (SENSOR_BUMPER_HIGH1, INPUT);
     pinMode (SENSOR_BUMPER_HIGH2, INPUT);
+    pinMode (JUMPER_SKILLS, INPUT);
+    pinMode (JUMPER_AUTON, INPUT);
 }
 
 /**

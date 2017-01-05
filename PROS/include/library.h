@@ -25,6 +25,8 @@
 #define SENSOR_BUMPER_LOW2              2
 #define SENSOR_BUMPER_HIGH1             3
 #define SENSOR_BUMPER_HIGH2             4
+#define JUMPER_SKILLS                  11
+#define JUMPER_AUTON                   12
 
 //IMEs (I2C)
 #define SENSOR_IME_WHEEL_LF             0
@@ -72,10 +74,6 @@ extern int qwikScoreMode;
 extern int qwikScoreXtraIter;
 extern Gyro gyro;
 
-extern int driveLeft;
-extern int driveRight;
-extern int heading;
-
 
 
 ////////////////////////////////
@@ -106,6 +104,22 @@ void motorSlew (unsigned char channel, int speed);
  * Use ONLY when creating the background task in initialize()
  */
 void slewControlTask (void * parameter);
+
+/**
+* Gets the current 32-bit count of the specified IME.
+*
+* Much like the count for a quadrature encoder, the tick count is signed and cumulative.
+* The value reflects total counts since the last reset. Different VEX Motor Encoders have a
+* different number of counts per revolution:
+*
+* * \c 240.448 for the 269 IME
+* * \c 627.2 for the 393 IME in high torque mode (factory default)
+* * \c 392 for the 393 IME in high speed mode
+*
+* @param address the IME address to fetch from 0 to IME_ADDR_MAX
+* @return the IME count
+*/
+int imeGetValue (unsigned char address);
 
 /**
  * Runs arm with PID to reach/maintain target angle

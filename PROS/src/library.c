@@ -8,6 +8,9 @@
 int slewTarget[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int slewTmp;
 
+//More sensible version of imeGet
+int imeValue;
+
 //Arm
 const int armFloorGrab = 330;
 const int armThrow = 155;
@@ -25,10 +28,10 @@ int clapperPot = -1;
 int clapperP = 0;
 
 //IME nav
-int driveLeft = 0;
-int driveRight = 0;
-int drivePLeft = 0;
-int drivePRight = 0;
+int driveLeftIME = 0;
+int driveRightIME = 0;
+int driveLeftP = 0;
+int driveRightP = 0;
 
 //QwikScore
 int qwikScoreMode = QWIKSCORE_INACTIVE;
@@ -76,7 +79,7 @@ void motorGroupSlew (unsigned char motorGroup, int speed) {
 void slewControlTask (void * parameter) {
     while (1) {
         if( isEnabled() ){
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++) { //Cycle through each motor port
                 slewTmp = motorGet (i + 1);
                 if (slewTmp != slewTarget[i]) {
                     if (slewTmp < slewTarget[i]) {
@@ -97,59 +100,48 @@ void slewControlTask (void * parameter) {
     }
 }
 
+//More sensible version of imeGet
+int imeGetValue (unsigned char address) {
+    if (!imeGet (address, &imeValue))
+        imeValue = 0;
+    return imeValue;
+}
+
 //Arm PID control
 void armToAngle (int target) {
-    //Read current sensor value
     armPot = analogRead(SENSOR_POT_ARM) / 10;
-    //printf("Arm: %3d, ", armPot);
 
     if (target != -1) {
         armP = abs(target - armPot);
 
-        if (armPot > target) { //Up
+        if (armPot > target) //Up
             motorGroupSlew(MOTORGROUP_ARM, (0.9 * armP));
-        }
-        else if (armPot < target) { //Down
+        else if (armPot < target) //Down
             motorGroupSlew(MOTORGROUP_ARM, -(0.25 * armP));
-        }
-
-        //printf("Arm_MTR: %3d, ", motorGet(MOTORS_ARM_L));
     }
 }
 
 //Clapper PID control
 void clapperToOpenness (int target) {
-    //Read current sensor value
     clapperPot = analogRead(SENSOR_POT_CLAPPER) / 10;
-    //printf("Clapper: %3d, ", clapperPot);
 
     if (target != -1) {
         clapperP = target - clapperPot;
 
         motorGroupSlew(MOTORGROUP_CLAPPER, 1 * clapperP);
-
-        //printf("Clapper_MTR: %3d, ", motorGet(MOTOR_CLAPPER_L));
     }
 }
 
 //Drivetrain PID control
 void robotToPosition (int targetLeft, int targetRight) {
-    //Read current sensor values
-    if (imeGet (SENSOR_IME_WHEEL_LF, &driveLeft) && imeGet (SENSOR_IME_WHEEL_RF, &driveRight)) {
-        driveRight = -driveRight;
-        
-        drivePLeft = targetLeft - driveLeft;
-        drivePRight = targetRight - driveRight;
+    driveLeftIME = imeGetValue (SENSOR_IME_WHEEL_LF);
+    driveRightIME = -imeGetValue (SENSOR_IME_WHEEL_RF);
 
-        if (targetLeft != -1) {
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0.2 * drivePLeft);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0.3 * drivePRight);
-        }
-    }
-    else {
-        motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-        motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-    }
+    driveLeftP = targetLeft - driveLeftIME;
+    driveRightP = targetRight - driveRightIME;
+
+    motorGroupSlew (MOTORGROUP_WHEELS_L, 0.2 * driveLeftP);
+    motorGroupSlew (MOTORGROUP_WHEELS_R, 0.3 * driveRightP);
 }
 
 //QwikScore
