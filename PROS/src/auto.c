@@ -31,26 +31,55 @@ void autonomous() {
         armToAngle (armFence);
         wait (10);
     }
-    //SAMPLE for single action
+
     while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperHold) > 30) { //Clap to free the extensions
         armToAngle (armFence);
         clapperToOpenness (clapperHold);
         wait (10);
     }
-    //END SAMPLE
-    //SAMPLE for simultaneous actions
+
     while ((abs ((analogRead (SENSOR_POT_ARM) / 10) - armFloorGrab) > 30) || (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperReady) > 30)) { //Get into ready position
         armToAngle (armFloorGrab);
         clapperToOpenness (clapperReady);
         wait (10);
     }
-    //END SAMPLE
-    //SAMPLE for drivetrain control
-    while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 0) > 30) && (abs (imeGetValue (SENSOR_IME_WHEEL_RF) - 1000) > 30)) {
-        robotToPosition (0, 1000);
-        wait (10);
+
+    if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
+
+        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
+
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 1000) > 30) && (abs (imeGetValue (SENSOR_IME_WHEEL_RF) - 0) > 30)) {
+                robotToPosition (1000, 0);
+                wait (10);
+            }
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
+        }
+        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
+
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 0) > 30) && (abs (imeGetValue (SENSOR_IME_WHEEL_RF) - 1000) > 30)) {
+                robotToPosition (0, 1000);
+                wait (10);
+            }
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
+        }
+
     }
-    motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-    motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-    //END SAMPLE
+    else if (digitalRead (JUMPER_SKILLS) == LOW) { //Jumper in 11 = programming skills (not match autonomous)
+
+        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
+
+            
+
+        }
+        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
+
+
+
+        }
+
+    }
 }

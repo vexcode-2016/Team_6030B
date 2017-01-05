@@ -1,10 +1,8 @@
-﻿Add jumper support (auton position & skills/match selection)
+﻿Write match autonomous routines
 
 Create functional flow block diagrams (FFBDs) for program
 
-Write match autonomous routine
-
-Write skills autonomous routine
+Write skills autonomous routines
 
 Win skills
 
