@@ -27,5 +27,23 @@
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-
+    while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armFence) > 30) {
+        armToAngle (armFence);
+        wait (10);
+    }
+    while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperHold) > 30) {
+        armToAngle (armFence);
+        clapperToOpenness (clapperHold);
+        wait (10);
+    }
+    while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperReady) > 30) {
+        armToAngle (armFence);
+        clapperToOpenness (clapperReady);
+        wait (10);
+    }
+    while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armFloorGrab) > 30) {
+        armToAngle (armFloorGrab);
+        clapperToOpenness (clapperReady);
+        wait (10);
+    }
 }

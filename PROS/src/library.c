@@ -74,22 +74,24 @@ void motorGroupSlew (unsigned char motorGroup, int speed) {
 
 //Slew rate control (run as task)
 void slewControlTask (void * parameter) {
-    while (isEnabled ()) {
-        for (int i = 0; i < 10; i++) {
-            slewTmp = motorGet (i + 1);
-            if (slewTmp != slewTarget[i]) {
-                if (slewTmp < slewTarget[i]) {
-                    slewTmp += 15;
-                    if (slewTmp > slewTarget[i])
-                        slewTmp = slewTarget[i];
+    while (1) {
+        if( isEnabled() ){
+            for (int i = 0; i < 10; i++) {
+                slewTmp = motorGet (i + 1);
+                if (slewTmp != slewTarget[i]) {
+                    if (slewTmp < slewTarget[i]) {
+                        slewTmp += 15;
+                        if (slewTmp > slewTarget[i])
+                            slewTmp = slewTarget[i];
+                    }
+                    if (slewTmp > slewTarget[i]) {
+                        slewTmp -= 15;
+                        if (slewTmp < slewTarget[i])
+                            slewTmp = slewTarget[i];
+                    }
                 }
-                if (slewTmp > slewTarget[i]) {
-                    slewTmp -= 15;
-                    if (slewTmp < slewTarget[i])
-                        slewTmp = slewTarget[i];
-                }
+                motorSet (i + 1, slewTmp);
             }
-            motorSet (i + 1, slewTmp);
         }
         wait (20);
     }
@@ -139,8 +141,10 @@ void robotToPosition (int targetLeft, int targetRight) {
         drivePLeft = targetLeft - driveLeft;
         drivePRight = targetRight - driveRight;
 
-        motorGroupSlew (MOTORGROUP_WHEELS_L, 0 * drivePLeft);
-        motorGroupSlew (MOTORGROUP_WHEELS_R, 0 * drivePRight);
+        if (targetLeft != -1) {
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0.2 * drivePLeft);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0.3 * drivePRight);
+        }
     }
     else {
         motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -188,7 +192,7 @@ void qwikScore(int autoDrive) {
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
         if (((digitalRead (SENSOR_BUMPER_LOW1) == HIGH) || (digitalRead (SENSOR_BUMPER_LOW2) == HIGH)) && ((digitalRead (SENSOR_BUMPER_HIGH1) == HIGH) || (digitalRead (SENSOR_BUMPER_HIGH2) == HIGH))) {
             motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
-            motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, -127);
         }
         else {
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -222,6 +226,6 @@ void qwikScore(int autoDrive) {
 void maintainHangTask (int motorSpeed) {
     while (1) {
         motorGroupSlew (MOTORGROUP_HANGER, motorSpeed);
-        wait (5);
+        //wait (5);
     }
 }

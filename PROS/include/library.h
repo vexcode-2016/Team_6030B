@@ -72,6 +72,10 @@ extern int qwikScoreMode;
 extern int qwikScoreXtraIter;
 extern Gyro gyro;
 
+extern int driveLeft;
+extern int driveRight;
+extern int heading;
+
 
 
 ////////////////////////////////

@@ -61,11 +61,11 @@ void operatorControl() {
         }
 
         //Arm
-        if (joystickGetDigital (2, 6, JOY_UP)) {
+        if (joystickGetDigital (1, 6, JOY_UP)) {
             motorGroupSlew (MOTORGROUP_ARM, 100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
-        else if (joystickGetDigital (2, 6, JOY_DOWN)) {
+        else if (joystickGetDigital (1, 6, JOY_DOWN)) {
             motorGroupSlew (MOTORGROUP_ARM, -100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
@@ -77,11 +77,11 @@ void operatorControl() {
         }
 
         //Clapper
-        if (joystickGetDigital (2, 5, JOY_DOWN)) {
+        if (joystickGetDigital (1, 5, JOY_DOWN)) {
             motorGroupSlew (MOTORGROUP_CLAPPER, 40);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
-        else if (joystickGetDigital (2, 5, JOY_UP)) {
+        else if (joystickGetDigital (1, 5, JOY_UP)) {
             motorGroupSlew (MOTORGROUP_CLAPPER, -40);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
@@ -90,14 +90,15 @@ void operatorControl() {
 		}
 
         //Hanger
-        if (joystickGetDigital (1, 8, JOY_RIGHT) && !hanging) {
-            taskCreate (maintainHangTask, TASK_DEFAULT_STACK_SIZE, -48, TASK_PRIORITY_DEFAULT + 2);
-            hanging = 1;
+        if (joystickGetDigital (2, 8, JOY_RIGHT) && !hanging) {
+            //taskCreate (maintainHangTask, TASK_DEFAULT_STACK_SIZE, -127, TASK_MAX_PRIORITIES);
+            //hanging = 1;
         }
-        else if (joystickGetDigital(1, 7, JOY_UP) && !hanging) {
+        else if (joystickGetDigital(2, 7, JOY_UP) && !hanging) {
             motorGroupSlew(MOTORGROUP_HANGER, 127);
+            clapperTarget = clapperFence;
         }
-        else if (joystickGetDigital(1, 7, JOY_DOWN) && !hanging) {
+        else if (joystickGetDigital(2, 7, JOY_DOWN) && !hanging) {
             motorGroupSlew(MOTORGROUP_HANGER, -127);
         }
         else if (!hanging) {
@@ -105,19 +106,30 @@ void operatorControl() {
         }
 
         //QwikScore
-        while (joystickGetDigital (1, 6, JOY_UP)) {
+        while (joystickGetDigital (1, 7, JOY_DOWN)) {
             qwikScore (0);
             wait (10);
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
         qwikScoreXtraIter = 0;
-        while (joystickGetDigital (1, 8, JOY_UP)) {
+        while (joystickGetDigital (1, 8, JOY_DOWN)) {
             qwikScore (1);
             wait (10);
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
         qwikScoreXtraIter = 0;
         
+        if (joystickGetDigital (1, 7, JOY_RIGHT))
+            robotToPosition (1000, 675);
+        else if (joystickGetDigital (1, 7, JOY_UP))
+            imeReset (SENSOR_IME_WHEEL_LF);
+        else if (joystickGetDigital (1, 8, JOY_UP))
+            imeReset (SENSOR_IME_WHEEL_RF);
+        else
+            robotToPosition (-1, -1);
+        printf ("WEFT: %d, ", driveLeft);
+        printf ("RITE: %d, ", driveRight);
+        printf ("TETA: %d, ", heading);
         print ("\n");
         wait (10);
 	}
