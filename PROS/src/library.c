@@ -23,6 +23,7 @@ int armP = 0;
 const int clapperHold = 20;
 const int clapperReady = 90;
 const int clapperFence = 165;
+const int clapperBack = 345;
 int clapperTarget = -1;
 int clapperPot = -1;
 int clapperP = 0;
@@ -140,8 +141,14 @@ void robotToPosition (int targetLeft, int targetRight) {
     driveLeftP = targetLeft - driveLeftIME;
     driveRightP = targetRight - driveRightIME;
 
-    motorGroupSlew (MOTORGROUP_WHEELS_L, 0.2 * driveLeftP);
-    motorGroupSlew (MOTORGROUP_WHEELS_R, 0.3 * driveRightP);
+    if (abs(driveLeftP) < 38)
+        motorGroupSlew (MOTORGROUP_WHEELS_L, (-(driveLeftP < 0)) * 15);
+    else
+        motorGroupSlew (MOTORGROUP_WHEELS_L, 0.4 * driveLeftP);
+    if (abs(driveRightP) < 50)
+        motorGroupSlew (MOTORGROUP_WHEELS_R, (-(driveRightP < 0)) * 30);
+    else
+        motorGroupSlew (MOTORGROUP_WHEELS_R, 0.6 * driveRightP);
 }
 
 //QwikScore

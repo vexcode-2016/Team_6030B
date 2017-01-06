@@ -67,6 +67,7 @@ extern int armTarget;
 extern const int clapperHold;
 extern const int clapperReady;
 extern const int clapperFence;
+extern const int clapperBack;
 extern int clapperTarget;
 
 //QwikScore

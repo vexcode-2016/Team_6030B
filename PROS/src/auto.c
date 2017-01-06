@@ -16,6 +16,7 @@
 ********************************************************************************/
 
 #include "main.h"
+int i = 0;
 
 /**
 * Runs the user autonomous code.
@@ -27,19 +28,19 @@
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armFence) > 30) { //Free the arm
-        armToAngle (armFence);
+    imeReset (SENSOR_IME_WHEEL_LF);
+    imeReset (SENSOR_IME_WHEEL_RF);
+    motorGroupSlew (MOTORGROUP_CLAPPER, 0);
+
+    while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 50)) > 30) { //Free the arm
+        print ("1\n");
+        armToAngle (armThrow - 50);
         wait (10);
     }
 
-    while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperHold) > 30) { //Clap to free the extensions
-        armToAngle (armFence);
-        clapperToOpenness (clapperHold);
-        wait (10);
-    }
-
-    while ((abs ((analogRead (SENSOR_POT_ARM) / 10) - armFloorGrab) > 30) || (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperReady) > 30)) { //Get into ready position
-        armToAngle (armFloorGrab);
+    while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperReady) > 30) { //Ready the clapper
+        print ("2\n");
+        armToAngle (armThrow - 50);
         clapperToOpenness (clapperReady);
         wait (10);
     }
@@ -48,8 +49,50 @@ void autonomous() {
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 1000) > 30) && (abs (imeGetValue (SENSOR_IME_WHEEL_RF) - 0) > 30)) {
-                robotToPosition (1000, 0);
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 650) > 15) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-200)) > 15)) { //Turn right to pick up star trio
+                print ("3\n");
+                armToAngle (armFence);
+                clapperToOpenness (clapperReady);
+                robotToPosition (650, -200);
+                wait (10);
+            }
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
+            while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armFloorGrab) > 30) { //Get into ready position
+                print ("4\n");
+                armToAngle (armFloorGrab);
+                clapperToOpenness (clapperReady);
+                wait (10);
+            }
+
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 1800) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 500) > 30)) { //Drive forward to grab star trio
+                print ("5\n");
+                armToAngle (armFloorGrab);
+                clapperToOpenness (clapperReady - 20);
+                robotToPosition (1790, 510);
+                wait (10);
+            }
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
+            while ((i < 30) || (abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 2000) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 250) > 30)) { //Hold star trio and start turning right
+                print ("6\n");
+                armToAngle (armFloorGrab);
+                clapperToOpenness (clapperHold);
+                i++;
+                robotToPosition (2100, 200);
+                wait (10);
+            }
+            i = 0;
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (-130)) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-1520)) > 30)) { //Back up to fence
+                print ("7\n");
+                armToAngle (armFloorGrab);
+                clapperToOpenness (clapperHold);
+                robotToPosition (0, -2100);
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -58,12 +101,7 @@ void autonomous() {
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 0) > 30) && (abs (imeGetValue (SENSOR_IME_WHEEL_RF) - 1000) > 30)) {
-                robotToPosition (0, 1000);
-                wait (10);
-            }
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+
 
         }
 

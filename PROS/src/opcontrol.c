@@ -125,6 +125,9 @@ void operatorControl() {
             imeReset (SENSOR_IME_WHEEL_LF);
         else if (joystickGetDigital (1, 8, JOY_UP))
             imeReset (SENSOR_IME_WHEEL_RF);
+        printf ("CLAP: %3d, ", analogRead (SENSOR_POT_CLAPPER) / 10);
+        printf ("WEFT: %d, ", imeGetValue (SENSOR_IME_WHEEL_LF));
+        printf ("RITE: %d, ", -imeGetValue (SENSOR_IME_WHEEL_RF));
         print ("\n");
         wait (10);
 	}
