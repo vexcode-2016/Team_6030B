@@ -1,9 +1,12 @@
-PROS Documentation:
+PROS documentation:
 http://pros.cs.purdue.edu/api/
+
+Joystick pictures (with button labels):
+http://www.vexrobotics.com/vexedr/products/accessories/electronics/joysticks.html
 
 PID:
 http://www.simbotics.org/files/pdf/programming-pid.pdf
 
-Inertial Navigation:
+Inertial navigation:
 http://www.chrobotics.com/library/accel-position-velocity
 http://aerostudents.com/files/avionics/InertialNavigationSystems.pdf

@@ -78,8 +78,10 @@ void operatorControl() {
 
         //Clapper
         if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSlew (MOTORGROUP_CLAPPER, 40);
-            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
+            //motorGroupSlew (MOTORGROUP_CLAPPER, 40);
+            //clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
+            clapperTarget = clapperHold;
+            clapperToOpenness (clapperTarget);
         }
         else if (joystickGetDigital (1, 5, JOY_UP)) {
             motorGroupSlew (MOTORGROUP_CLAPPER, -40);

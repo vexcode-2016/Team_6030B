@@ -141,14 +141,14 @@ void robotToPosition (int targetLeft, int targetRight) {
     driveLeftP = targetLeft - driveLeftIME;
     driveRightP = targetRight - driveRightIME;
 
-    if (abs(driveLeftP) < 38)
-        motorGroupSlew (MOTORGROUP_WHEELS_L, (-(driveLeftP < 0)) * 15);
+    if (abs(driveLeftP) < 50)
+        motorGroupSlew (MOTORGROUP_WHEELS_L, (-(driveLeftP < 0)) * 20);
     else
-        motorGroupSlew (MOTORGROUP_WHEELS_L, 0.4 * driveLeftP);
+        motorGroupSlew (MOTORGROUP_WHEELS_L, 0.3 * driveLeftP);
     if (abs(driveRightP) < 50)
-        motorGroupSlew (MOTORGROUP_WHEELS_R, (-(driveRightP < 0)) * 30);
+        motorGroupSlew (MOTORGROUP_WHEELS_R, (-(driveRightP < 0)) * 35);
     else
-        motorGroupSlew (MOTORGROUP_WHEELS_R, 0.6 * driveRightP);
+        motorGroupSlew (MOTORGROUP_WHEELS_R, 0.4 * driveRightP);
 }
 
 //QwikScore

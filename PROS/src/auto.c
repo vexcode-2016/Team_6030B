@@ -32,9 +32,9 @@ void autonomous() {
     imeReset (SENSOR_IME_WHEEL_RF);
     motorGroupSlew (MOTORGROUP_CLAPPER, 0);
 
-    while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 50)) > 30) { //Free the arm
+    while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 70)) > 30) { //Free the arm
         print ("1\n");
-        armToAngle (armThrow - 50);
+        armToAngle (armThrow - 70);
         wait (10);
     }
 
@@ -49,11 +49,11 @@ void autonomous() {
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 650) > 15) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-200)) > 15)) { //Turn right to pick up star trio
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 750) > 50) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (0)) > 30)) { //Turn 45 deg right to pick up cube
                 print ("3\n");
                 armToAngle (armFence);
                 clapperToOpenness (clapperReady);
-                robotToPosition (650, -200);
+                robotToPosition (750, 0);
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -66,37 +66,54 @@ void autonomous() {
                 wait (10);
             }
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 1800) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 500) > 30)) { //Drive forward to grab star trio
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 2750) > 300) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 1000) > 30)) { //Drive forward to grab cube
                 print ("5\n");
                 armToAngle (armFloorGrab);
-                clapperToOpenness (clapperReady - 20);
-                robotToPosition (1790, 510);
+                clapperToOpenness (clapperReady);
+                robotToPosition (2750, 1000);
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
             motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
 
-            while ((i < 30) || (abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 2000) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 250) > 30)) { //Hold star trio and start turning right
+            while (i < 30) { //Hold cube
                 print ("6\n");
                 armToAngle (armFloorGrab);
                 clapperToOpenness (clapperHold);
                 i++;
-                robotToPosition (2100, 200);
                 wait (10);
             }
             i = 0;
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (-130)) > 30) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-1520)) > 30)) { //Back up to fence
+            while (((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (2750)) > 100) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-300)) > 50)) && (i < 100)) { //Rotate in preparation for backing up
                 print ("7\n");
-                armToAngle (armFloorGrab);
+                armToAngle (armFloorGrab - 50);
                 clapperToOpenness (clapperHold);
-                robotToPosition (0, -2100);
+                robotToPosition (2750, -300);
+                i++;
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
             motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+            i = 0;
+
+            while (i < 500) {
+                print ("8\n");
+                armToAngle (armFloorGrab - 50);
+                clapperToOpenness (clapperHold);
+                motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
+                motorGroupSlew (MOTORGROUP_WHEELS_R, -127);
+                i++;
+                wait (10);
+            }
+            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
+            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
+            i = 0;
+
+            while (isAutonomous ()) {
+                qwikScore (0);
+                wait (10);
+            }
 
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
