@@ -33,6 +33,8 @@ int hanging = 0;
  */
 void operatorControl() {
 
+    imeShutdown ();
+
     //Reset QwikScore
     qwikScoreMode = QWIKSCORE_INACTIVE;
     qwikScoreXtraIter = 0;
@@ -78,10 +80,10 @@ void operatorControl() {
 
         //Clapper
         if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            //motorGroupSlew (MOTORGROUP_CLAPPER, 40);
-            //clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
-            clapperTarget = clapperHold;
-            clapperToOpenness (clapperTarget);
+            motorGroupSlew (MOTORGROUP_CLAPPER, 40);
+            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
+            //clapperTarget = clapperHold;
+            //clapperToOpenness (clapperTarget);
         }
         else if (joystickGetDigital (1, 5, JOY_UP)) {
             motorGroupSlew (MOTORGROUP_CLAPPER, -40);
@@ -109,6 +111,8 @@ void operatorControl() {
 
         //QwikScore
         while (joystickGetDigital (1, 7, JOY_DOWN)) {
+            armTarget = armFloorGrab;
+            clapperTarget = clapperReady;
             qwikScore (0);
             wait (10);
         }
@@ -128,6 +132,7 @@ void operatorControl() {
         else if (joystickGetDigital (1, 8, JOY_UP))
             imeReset (SENSOR_IME_WHEEL_RF);
         printf ("CLAP: %3d, ", analogRead (SENSOR_POT_CLAPPER) / 10);
+        printf ("ARM: %3d, ", analogRead (SENSOR_POT_ARM) / 10);
         printf ("WEFT: %d, ", imeGetValue (SENSOR_IME_WHEEL_LF));
         printf ("RITE: %d, ", -imeGetValue (SENSOR_IME_WHEEL_RF));
         print ("\n");

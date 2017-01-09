@@ -12,8 +12,8 @@ int slewTmp;
 int imeValue;
 
 //Arm
-const int armFloorGrab = 330;
-const int armThrow = 155;
+const int armFloorGrab = 345;
+const int armThrow = 140;
 const int armFence = 165;
 int armTarget = -1;
 int armPot = -1;
@@ -115,10 +115,14 @@ void armToAngle (int target) {
     if (target != -1) {
         armP = abs(target - armPot);
 
-        if (armPot > target) //Up
+        if (armPot == 25) //Failed sensor reading
+            motorGroupSlew (MOTORGROUP_ARM, 0);
+        else if (armPot > target) //Up
             motorGroupSlew(MOTORGROUP_ARM, (0.9 * armP));
         else if (armPot < target) //Down
             motorGroupSlew(MOTORGROUP_ARM, -(0.25 * armP));
+
+        printf ("ARM_MTR: %d, ", slewTarget[MOTORS_ARM_L - 1]);
     }
 }
 

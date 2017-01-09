@@ -28,8 +28,8 @@ int i = 0;
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    imeReset (SENSOR_IME_WHEEL_LF);
-    imeReset (SENSOR_IME_WHEEL_RF);
+    //imeReset (SENSOR_IME_WHEEL_LF);
+    //imeReset (SENSOR_IME_WHEEL_RF);
     motorGroupSlew (MOTORGROUP_CLAPPER, 0);
 
     while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 70)) > 30) { //Free the arm
@@ -49,11 +49,11 @@ void autonomous() {
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 750) > 50) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (0)) > 30)) { //Turn 45 deg right to pick up cube
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 850) > 50) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (0)) > 30)) { //Turn 45 deg right to pick up cube
                 print ("3\n");
                 armToAngle (armFence);
                 clapperToOpenness (clapperReady);
-                robotToPosition (750, 0);
+                robotToPosition (850, 0);
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -66,11 +66,11 @@ void autonomous() {
                 wait (10);
             }
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 2750) > 300) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 1000) > 30)) { //Drive forward to grab cube
+            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 4000) > 200) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 1500) > 30)) { //Drive forward to grab cube
                 print ("5\n");
                 armToAngle (armFloorGrab);
                 clapperToOpenness (clapperReady);
-                robotToPosition (2750, 1000);
+                robotToPosition (4000, 1500);
                 wait (10);
             }
             motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
@@ -85,11 +85,11 @@ void autonomous() {
             }
             i = 0;
 
-            while (((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (2750)) > 100) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-300)) > 50)) && (i < 100)) { //Rotate in preparation for backing up
+            while (((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (4000)) > 100) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-300)) > 50)) && (i < 100)) { //Rotate in preparation for backing up
                 print ("7\n");
                 armToAngle (armFloorGrab - 50);
                 clapperToOpenness (clapperHold);
-                robotToPosition (2750, -300);
+                robotToPosition (4000, -300);
                 i++;
                 wait (10);
             }
@@ -97,7 +97,7 @@ void autonomous() {
             motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
             i = 0;
 
-            while (i < 500) {
+            while (i < 200) {
                 print ("8\n");
                 armToAngle (armFloorGrab - 50);
                 clapperToOpenness (clapperHold);
