@@ -43,6 +43,12 @@ void initializeIO() {
  * This function must exit relatively promptly, or the operatorControl() and autonomous() tasks will not start. An autonomous mode selection menu like the pre_auton() in other environments can be implemented in this task if desired.
  */
 void initialize() {
+    //Sets communication port for JINX data and start task to parse incoming messages.
+    initJINX(stdout);
+    delay(100);
+    taskCreate(JINXRun, TASK_DEFAULT_STACK_SIZE, NULL, (TASK_PRIORITY_DEFAULT));
+    delay(100);
+    
     gyro = gyroInit (SENSOR_GYRO, 196);
     
     taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);

@@ -43,7 +43,7 @@ void operatorControl() {
 
         //Drivetrain
         if (abs(joystickGetAnalog(1, 3)) > 15) {
-            motorGroupSlew(MOTORGROUP_WHEELS_L, joystickGetAnalog(1, 3));
+            motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (1, 3));
         }
         else if (abs (joystickGetAnalog (2, 3)) > 15) {
             motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (2, 3));
