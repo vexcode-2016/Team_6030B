@@ -1,77 +1,76 @@
 #include "main.h"
 
-#define MSG "Hello JINX!"
+//Returns number parsed from character buffer
+long parseNumber(const char *numberString) {
+    char digit;
 
-//*************This space reserved for user-defined functions***************
-    //Example of user defined JINX helper function.
-    //Since it is at the top of this file, it can be called from anywhere else in this file.
-    //Good practice is to put its prototype in JINX.h, though.
-    void handleGet(JINX *inStr) {
-        //Get the first token from the sent command
-        getToken(inStr, 1);
+    int len = strlen(numberString);
 
-        //Host outgoing messages
-        char *message = (char*)malloc(sizeof(char) * (strlen(inStr->token) + 30));
-        if (strcmp(inStr->token, "DEBUG_JINX") == 0) {
-            writeJINXMessage("Asked for Debug");
-            sprintf(message, "%s, %d", inStr->token, DEBUG_JINX);
-        } else {
-            sprintf(message, "%s %s", inStr->token, " was unable to be gotten.");
-        }
-
-        //Free malloc'd string
-        writeJINXMessage(message);
-        free(message);
-        message = NULL;
+    //Catch empty string
+    if (len == 0) {
+        char errorMessage[100];
+        sprintf(errorMessage, "Error, unable to parse number: %s", numberString);
+        writeJINXData("Error", errorMessage);
     }
 
-    //Returns positive integer parsed from character buffer
-    int parseInt(const char *intString) {
-        char digit;
-
-        //Limit to 32 digit integer. Please don't send 32 digit integers
-        char tempStr[33] = "";
-
-        int len = strlen(intString);
-
-        //Catch empty string
-        if (len == 0) {
+    for (int i = 0; i < len; i++) {
+        digit = numberString[i];
+        if (((digit < '0') || (digit > '9')) && (digit != '-') && (digit != '.')) {
             char errorMessage[100];
-            sprintf(errorMessage, "Error, unable to parse integer: %s", intString);
-            writeJINXData("Error ", errorMessage);
+            sprintf(errorMessage, "Error, unable to parse number: %s", numberString);
+            writeJINXData("Error", errorMessage);
+            return -1;
         }
-
-        for (int i = 0; i < len; i++) {
-            digit = intString[i];
-            if ((digit < '0') || (digit > '9')) {
-                char errorMessage[100];
-                sprintf(errorMessage, "Error, unable to parse integer: %s", intString);
-                writeJINXData("Error", errorMessage);
-                return -1;
-            }
-
-            tempStr[i] = digit;
-        }
-
-        return atoi(tempStr);
     }
-//**************************************************************************
 
-//Example parse. User can and should replace with own body.
-void parseMessage(JINX *inStr) {
+    return atol (numberString);
+}
+
+void writeJINXDataNumeric (const char *name, double value) {
+    // if (strlen(name) + strlen(value) >= MAX_MESSAGE_SIZE + PROTOCOL_SIZE) {
+    //     fprintf(comPort, "Warning: Tried to send too large a message named %s", name);
+    //     return;
+    // }
+    char buffer[50];
+    sprintf (buffer, "%f", value);
+    buffer[49] = '\0';
+    writeJINXData (name, buffer);
+    buffer[0] = '\0';
+}
+
+void parseMessage (JINX *inStr) {
     //Echo entire recieved message
-    writeJINXMessage(inStr->command);
-    //Set inStr->token to first token (space-delimated word)
-    getToken(inStr, 0);
+    //writeJINXMessage(inStr->command);
 
-    if (strcmp(inStr->token, "Option_1") == 0) {
-        //Do option 1
-        writeJINXMessage("Option 1 chosen.");
-    } else if(strcmp(inStr->token, "get") == 0) {
-        //Call another function to handle "get"
-        handleGet(inStr);
-    } else {
-        //Do default
-        writeJINXMessage("No comparison found");
+    //Set inStr->token to first token (space-delimated word)
+    getToken (inStr, 0);
+
+    if (strcmp (inStr->token, "kill") == 0) {
+        armTarget = -1;
+        clapperTarget = -1;
+    }
+    else if (strcmp (inStr->token, "armTarget") == 0) {
+        getToken (inStr, 1);
+        armTarget = parseNumber (inStr->token);
+    }
+    else if (strcmp (inStr->token, "armKpUp") == 0) {
+        getToken (inStr, 1);
+        armKpUp = parseNumber (inStr->token);
+    }
+    else if (strcmp (inStr->token, "armKpDown") == 0) {
+        getToken (inStr, 1);
+        armKpDown = parseNumber (inStr->token);
+    }
+    else if (strcmp (inStr->token, "clapperTarget") == 0) {
+        getToken (inStr, 1);
+        clapperTarget = parseNumber (inStr->token);
+    }
+    else if (strcmp (inStr->token, "clapperKp") == 0) {
+        getToken (inStr, 1);
+        clapperKp = parseNumber (inStr->token);
+    }
+    else {
+        writeJINXMessage ("Invalid command:");
+        writeJINXMessage (inStr->token);
     }
 }

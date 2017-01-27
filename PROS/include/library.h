@@ -4,40 +4,33 @@
 ////////////////////////////////////////////
 
 //Motors
-#define MOTOR_HANGER_L                  1
 #define MOTOR_WHEEL_LB                  2
-#define MOTOR_CLAPPER_L                 3
+#define MOTORS_CLAPPER                  3   //Y-Cabled; right motor is wiring-reversed
 #define MOTOR_WHEEL_RB                  4
-#define MOTORS_ARM_L                    5   //To Power Expander A & B via Y-Cable
-#define MOTOR_CLAPPER_R                 6
-#define MOTORS_ARM_R                    7   //To Power Expander C & D via Y-Cable
+#define MOTORS_ARM_L_HIGH               5   //To Power Expander A & B via Y-Cable
+#define MOTORS_ARM_R_HIGH               6   //To Power Expander C & D via Y-Cable
+#define MOTORS_ARM_LR_LOW               7   //Y-Cabled; right-side motor is wiring-reversed
 #define MOTOR_WHEEL_LF                  8
 #define MOTOR_WHEEL_RF                  9
-#define MOTOR_HANGER_R                 10
 
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
 #define SENSOR_GYRO                     3
+#define SENSOR_ACCEL_LX                 5
+#define SENSOR_ACCEL_LY                 6
+#define SENSOR_ACCEL_RX                 7
+#define SENSOR_ACCEL_RY                 8
 
 //Digital Sensors
-#define SENSOR_BUMPER_LOW1              1
-#define SENSOR_BUMPER_LOW2              2
-#define SENSOR_BUMPER_HIGH1             3
-#define SENSOR_BUMPER_HIGH2             4
 #define JUMPER_SKILLS                  11
 #define JUMPER_AUTON                   12
-
-//IMEs (I2C)
-#define SENSOR_IME_WHEEL_LF             0
-#define SENSOR_IME_WHEEL_RF             1
 
 //Motor Groups
 #define MOTORGROUP_WHEELS_L             1
 #define MOTORGROUP_WHEELS_R             2
 #define MOTORGROUP_ARM                  3
 #define MOTORGROUP_CLAPPER              4
-#define MOTORGROUP_HANGER               5
 
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
@@ -62,6 +55,8 @@ extern const int armFloorGrab;
 extern const int armThrow;
 extern const int armFence;
 extern int armTarget;
+extern int armKpUp;
+extern int armKpDown;
 
 //Clapper
 extern const int clapperHold;
@@ -69,6 +64,7 @@ extern const int clapperReady;
 extern const int clapperFence;
 extern const int clapperBack;
 extern int clapperTarget;
+extern int clapperKp;
 
 //QwikScore
 extern int qwikScoreMode;
@@ -83,44 +79,13 @@ extern Gyro gyro;
 ////////////////////////////////
 
 /**
- * Sets a group of motors to the same speed and in the correct directions with slew rate
+ * Sets a group of motors to the same speed and in the correct directions
  * @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, MOTORGROUP_ARM,
  * MOTORGROUP_CLAPPER, or MOTORGROUP_HANGER
  * @param speed the desired signed speed; -127 is fully in the negative direction and
  * 127 is fully in the positive direction, with 0 being off
  */
-void motorGroupSlew(unsigned char motorGroup, int speed);
-
-/**
- * Sets the speed of the specified motor channel with slew rate
- * @param channel the motor channel to modify from 1-10
- * @param speed the desired signed speed; -127 is fully in the negative direction and
- * 127 is fully in the positive direction, with 0 being off
- */
-void motorSlew (unsigned char channel, int speed);
-
-/**
- * Background task for slew rate control
- * DO NOT RUN DIRECTLY AS A FUNCTION!
- * Use ONLY when creating the background task in initialize()
- */
-void slewControlTask (void * parameter);
-
-/**
-* Gets the current 32-bit count of the specified IME.
-*
-* Much like the count for a quadrature encoder, the tick count is signed and cumulative.
-* The value reflects total counts since the last reset. Different VEX Motor Encoders have a
-* different number of counts per revolution:
-*
-* * \c 240.448 for the 269 IME
-* * \c 627.2 for the 393 IME in high torque mode (factory default)
-* * \c 392 for the 393 IME in high speed mode
-*
-* @param address the IME address to fetch from 0 to IME_ADDR_MAX
-* @return the IME count
-*/
-int imeGetValue (unsigned char address);
+void motorGroupSet (unsigned char motorGroup, int speed);
 
 /**
  * Runs arm with PID to reach/maintain target angle
@@ -147,10 +112,3 @@ void robotToPosition (int left, int right);
  * @param autoDrive whether or not the robot should autonomously rotate and drive to the fence (1 = yes, 0 = no)
  */
 void qwikScore (int autoDrive);
-
-/**
- * Maintains the hang, even after the match ends
- * If the task is running, NEVER EVER SET THE MOTOR SPEED(S) FOR THE HANGING MOTORS OUTSIDE OF THE TASK
- * @param motorSpeed the minimum motor speed necessary for the hanging motors to maintain the hang
- */
-void maintainHangTask (int motorSpeed);

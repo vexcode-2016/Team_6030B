@@ -28,9 +28,7 @@ int i = 0;
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    //imeReset (SENSOR_IME_WHEEL_LF);
-    //imeReset (SENSOR_IME_WHEEL_RF);
-    motorGroupSlew (MOTORGROUP_CLAPPER, 0);
+    motorGroupSet (MOTORGROUP_CLAPPER, 0);
 
     while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 70)) > 30) { //Free the arm
         print ("1\n");
@@ -49,76 +47,8 @@ void autonomous() {
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
 
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 850) > 50) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (0)) > 30)) { //Turn 45 deg right to pick up cube
-                print ("3\n");
-                armToAngle (armFence);
-                clapperToOpenness (clapperReady);
-                robotToPosition (850, 0);
-                wait (10);
-            }
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-
-            while (abs ((analogRead (SENSOR_POT_ARM) / 10) - armFloorGrab) > 30) { //Get into ready position
-                print ("4\n");
-                armToAngle (armFloorGrab);
-                clapperToOpenness (clapperReady);
-                wait (10);
-            }
-
-            while ((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - 4000) > 200) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - 1500) > 30)) { //Drive forward to grab cube
-                print ("5\n");
-                armToAngle (armFloorGrab);
-                clapperToOpenness (clapperReady);
-                robotToPosition (4000, 1500);
-                wait (10);
-            }
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-
-            while (i < 30) { //Hold cube
-                print ("6\n");
-                armToAngle (armFloorGrab);
-                clapperToOpenness (clapperHold);
-                i++;
-                wait (10);
-            }
-            i = 0;
-
-            while (((abs (imeGetValue (SENSOR_IME_WHEEL_LF) - (4000)) > 100) || (abs (-imeGetValue (SENSOR_IME_WHEEL_RF) - (-300)) > 50)) && (i < 100)) { //Rotate in preparation for backing up
-                print ("7\n");
-                armToAngle (armFloorGrab - 50);
-                clapperToOpenness (clapperHold);
-                robotToPosition (4000, -300);
-                i++;
-                wait (10);
-            }
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-            i = 0;
-
-            while (i < 200) {
-                print ("8\n");
-                armToAngle (armFloorGrab - 50);
-                clapperToOpenness (clapperHold);
-                motorGroupSlew (MOTORGROUP_WHEELS_L, -127);
-                motorGroupSlew (MOTORGROUP_WHEELS_R, -127);
-                i++;
-                wait (10);
-            }
-            motorGroupSlew (MOTORGROUP_WHEELS_L, 0);
-            motorGroupSlew (MOTORGROUP_WHEELS_R, 0);
-            i = 0;
-
-            while (isAutonomous ()) {
-                qwikScore (0);
-                wait (10);
-            }
-
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
-
-
 
         }
 
@@ -127,12 +57,8 @@ void autonomous() {
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
 
-            
-
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
-
-
 
         }
 

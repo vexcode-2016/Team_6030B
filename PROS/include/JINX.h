@@ -2,7 +2,6 @@
 #define JINX_H
 
 //INCLUDES
-#include "main.h"
 #include <string.h>
 #include <stdarg.h>
 
@@ -97,11 +96,11 @@ void JINXRun(void* ignore);
 int setOpmode(const int mode);
 
 /**
- *@param intString: Character buffer to parse
+ *@param numberString: Character buffer to parse
  *
- *Returns integer representation of string.
+ *Returns numeric (long) representation of string.
  */
-int parseInt(const char *intString);
+long parseNumber(const char *numberString);
 
 /*
  *@param *inStr: Pointer to struct containing string command and token
@@ -110,4 +109,11 @@ int parseInt(const char *intString);
  *@return -1 on failure, 0 on success
  */
 int getToken(JINX *inStr, int tokenNum);
+
+/**
+ * Automatically converts value to a string and sends it to JINX
+ * @param name: identifier in JSON sent to Front End. Should not have any whitespace
+ * @param value: value in JSON sent to Front End. No newline characters.
+ */
+void writeJINXDataNumeric (const char *name, double value);
 #endif

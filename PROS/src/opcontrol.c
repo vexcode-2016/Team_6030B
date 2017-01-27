@@ -17,8 +17,7 @@
 
 #include "main.h"
 
-int throwRelease = 0;
-int hanging = 0;
+int dataSentToJINX = 0;
 
 /**
  * Runs the user operator control code.
@@ -33,8 +32,6 @@ int hanging = 0;
  */
 void operatorControl() {
 
-    imeShutdown ();
-
     //Reset QwikScore
     qwikScoreMode = QWIKSCORE_INACTIVE;
     qwikScoreXtraIter = 0;
@@ -42,72 +39,45 @@ void operatorControl() {
 	while (1) {
 
         //Drivetrain
-        if (abs(joystickGetAnalog(1, 3)) > 15) {
-            motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (1, 3));
-        }
-        else if (abs (joystickGetAnalog (2, 3)) > 15) {
-            motorGroupSlew (MOTORGROUP_WHEELS_L, joystickGetAnalog (2, 3));
+        if (abs (joystickGetAnalog (1, 3)) > 15) {
+            motorGroupSet (MOTORGROUP_WHEELS_L, joystickGetAnalog (1, 3));
         }
         else {
-            motorGroupSlew(MOTORGROUP_WHEELS_L, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_L, 0);
         }
 
-        if (abs(joystickGetAnalog(1, 2)) > 15) {
-            motorGroupSlew(MOTORGROUP_WHEELS_R, joystickGetAnalog(1, 2));
-        }
-        else if (abs (joystickGetAnalog (2, 2)) > 15) {
-            motorGroupSlew (MOTORGROUP_WHEELS_R, joystickGetAnalog (2, 2));
+        if (abs (joystickGetAnalog (1, 2)) > 15) {
+            motorGroupSet (MOTORGROUP_WHEELS_R, joystickGetAnalog (1, 2));
         }
         else {
-            motorGroupSlew(MOTORGROUP_WHEELS_R, 0);
+            motorGroupSet(MOTORGROUP_WHEELS_R, 0);
         }
 
         //Arm
         if (joystickGetDigital (1, 6, JOY_UP)) {
-            motorGroupSlew (MOTORGROUP_ARM, 100);
+            motorGroupSet (MOTORGROUP_ARM, 100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
         else if (joystickGetDigital (1, 6, JOY_DOWN)) {
-            motorGroupSlew (MOTORGROUP_ARM, -100);
+            motorGroupSet (MOTORGROUP_ARM, -100);
             armTarget = analogRead (SENSOR_POT_ARM) / 10;
         }
         else {
             armToAngle(armTarget);
 		}
-        if (throwRelease && !joystickGetDigital (1, 6, JOY_UP)) {
-            throwRelease = 0;
-        }
 
         //Clapper
         if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSlew (MOTORGROUP_CLAPPER, 40);
+            motorGroupSet (MOTORGROUP_CLAPPER, 100);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
-            //clapperTarget = clapperHold;
-            //clapperToOpenness (clapperTarget);
         }
         else if (joystickGetDigital (1, 5, JOY_UP)) {
-            motorGroupSlew (MOTORGROUP_CLAPPER, -40);
+            motorGroupSet (MOTORGROUP_CLAPPER, -100);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
 		else {
             clapperToOpenness(clapperTarget);
 		}
-
-        //Hanger (banished to Partner Controller)
-        if (joystickGetDigital (2, 8, JOY_RIGHT) && !hanging) {
-            //taskCreate (maintainHangTask, TASK_DEFAULT_STACK_SIZE, -127, TASK_MAX_PRIORITIES);
-            //hanging = 1;
-        }
-        else if (joystickGetDigital(2, 7, JOY_UP) && !hanging) {
-            motorGroupSlew(MOTORGROUP_HANGER, 127);
-            clapperTarget = clapperFence;
-        }
-        else if (joystickGetDigital(2, 7, JOY_DOWN) && !hanging) {
-            motorGroupSlew(MOTORGROUP_HANGER, -127);
-        }
-        else if (!hanging) {
-            motorGroupSlew(MOTORGROUP_HANGER, 0);
-        }
 
         //QwikScore
         while (joystickGetDigital (1, 7, JOY_DOWN)) {
@@ -125,17 +95,16 @@ void operatorControl() {
         qwikScoreMode = QWIKSCORE_INACTIVE;
         qwikScoreXtraIter = 0;
         
-        if (joystickGetDigital (1, 7, JOY_RIGHT))
-            robotToPosition (1000, 675);
-        else if (joystickGetDigital (1, 7, JOY_UP))
-            imeReset (SENSOR_IME_WHEEL_LF);
-        else if (joystickGetDigital (1, 8, JOY_UP))
-            imeReset (SENSOR_IME_WHEEL_RF);
-        printf ("CLAP: %3d, ", analogRead (SENSOR_POT_CLAPPER) / 10);
-        printf ("ARM: %3d, ", analogRead (SENSOR_POT_ARM) / 10);
-        printf ("WEFT: %d, ", imeGetValue (SENSOR_IME_WHEEL_LF));
-        printf ("RITE: %d, ", -imeGetValue (SENSOR_IME_WHEEL_RF));
-        print ("\n");
-        wait (10);
+        if (millis () % 1000 < 20) {
+            writeJINXDataNumeric ("clapperTarget", clapperTarget);
+            writeJINXDataNumeric ("clapperPot", analogRead (SENSOR_POT_CLAPPER) / 10);
+            writeJINXDataNumeric ("armTarget", armTarget);
+            writeJINXDataNumeric ("armPot", analogRead (SENSOR_POT_ARM) / 10);
+            dataSentToJINX = 1;
+        }
+        else {
+            dataSentToJINX = 0;
+        }
+        wait (20);
 	}
 }
