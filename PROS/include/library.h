@@ -28,7 +28,7 @@
 #define JUMPER_SKILLS                   11
 #define JUMPER_AUTON                    12
 
-//Sensor Readings
+//Current States of Systems
 #define CURRENT_ARM                     \
     analogRead(SENSOR_POT_ARM) / 10
 #define CURRENT_CLAPPER                 \
@@ -36,9 +36,9 @@
 
 //PID Loops
 #define armToAngle(target)              \
-    pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm)
+    if (target != -1) { pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm); }
 #define clapperToOpenness(target)       \
-    pid(CURRENT_CLAPPER, target, clapperKp, 0, 0, motorgroupClapper)
+    if (target != -1) { pid(CURRENT_CLAPPER, target, clapperKp, 0, 0, motorgroupClapper); }
 
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
@@ -122,13 +122,6 @@ void slewControlTask (void * parameter);
  * port numbers signify that the speed should be in reverse direction for those ports
  */
 void pid(double current, double target, double kp, double ki, double kd, const signed char *motors);
-
-/**
- * Runs drivetrain with PID to reach target position/rotation on the field
- * @param left the target output value for the left IME
- * @param right the target output value for the right IME
- */
-void robotToPosition (int left, int right);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
