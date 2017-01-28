@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef JINX_H
 #define JINX_H
 

@@ -1,3 +1,5 @@
+#pragma once
+
 ////////////////////////////////////////////
 //// Macros                             ////
 //// #define <identifier> <token>       ////
@@ -23,14 +25,20 @@
 #define SENSOR_ACCEL_RY                 8
 
 //Digital Sensors
-#define JUMPER_SKILLS                  11
-#define JUMPER_AUTON                   12
+#define JUMPER_SKILLS                   11
+#define JUMPER_AUTON                    12
 
-//Motor Groups
-#define MOTORGROUP_WHEELS_L             1
-#define MOTORGROUP_WHEELS_R             2
-#define MOTORGROUP_ARM                  3
-#define MOTORGROUP_CLAPPER              4
+//Sensor Readings
+#define CURRENT_ARM                     \
+    analogRead(SENSOR_POT_ARM) / 10
+#define CURRENT_CLAPPER                 \
+    analogRead(SENSOR_POT_CLAPPER) / 10
+
+//PID Loops
+#define armToAngle(target)              \
+    pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm)
+#define clapperToOpenness(target)       \
+    pid(CURRENT_CLAPPER, target, clapperKp, 0, 0, motorgroupClapper)
 
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
@@ -46,6 +54,12 @@
 //// Variables             ////
 //// extern <type> <name>; ////
 ///////////////////////////////
+
+//Motor groups
+extern const signed char motorgroupWheelsL[];
+extern const signed char motorgroupWheelsR[];
+extern const signed char motorgroupArm[];
+extern const signed char motorgroupClapper[];
 
 //Autonomous
 extern int autonMode;
@@ -80,40 +94,34 @@ extern Gyro gyro;
 ////////////////////////////////
 
 /**
-* Sets a group of motors to the same speed and in the correct directions with slew rate
-* @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, MOTORGROUP_ARM,
-* MOTORGROUP_CLAPPER, or MOTORGROUP_HANGER
-* @param speed the desired signed speed; -127 is fully in the negative direction and
-* 127 is fully in the positive direction, with 0 being off
-*/
-void motorGroupSet (unsigned char motorGroup, int speed);
+ * Sets the speed of the specified motor port(s) with slew rate
+ * @param ports array containing motor ports for which to set the speed; negative
+ * port numbers signify that the speed should be in reverse direction for those ports
+ * @param speed the desired signed speed; -127 is fully in the negative direction and
+ * 127 is fully in the positive direction for positive ports, with 0 being off
+ */
+void motorsSlew(const signed char *ports, int speed);
 
 /**
-* Sets the speed of the specified motor channel with slew rate
-* @param channel the motor channel to modify from 1-10
-* @param speed the desired signed speed; -127 is fully in the negative direction and
-* 127 is fully in the positive direction, with 0 being off
-*/
-void motorSlew (unsigned char channel, int speed);
-
-/**
-* Background task for slew rate control
-* DO NOT RUN DIRECTLY AS A FUNCTION!
-* Use ONLY when creating the background task in initialize()
-*/
+ * Background task for slew rate control
+ * DO NOT RUN DIRECTLY AS A FUNCTION!
+ * Use ONLY when creating the background task in initialize()
+ */
 void slewControlTask (void * parameter);
 
 /**
- * Runs arm with PID to reach/maintain target angle
- * @param target the potentiometer reading that corresponds to the target height, divided by 10
+ * Function for easy PID loop implementation
+ * Recommended to create a macro for each different PID loop that will be used
+ * @param current value representing the current state of the system (generally a sensor reading)
+ * @param target value representing the desired state of the system; must
+ * use the same units as current
+ * @param kp constant representing influence of proportional calculation on motor speed
+ * @param ki constant representing influence of integral calculation on motor speed
+ * @param kd constant representing influence of derivative calculation on motor speed
+ * @param motors array containing motor ports for which to set the speed; negative
+ * port numbers signify that the speed should be in reverse direction for those ports
  */
-void armToAngle (int target);
-
-/**
- * Runs clapper with PID to reach/maintain target openness
- * @param target the potentiometer reading that corresponds to the target height, divided by 10
- */
-void clapperToOpenness (int target);
+void pid(double current, double target, double kp, double ki, double kd, const signed char *motors);
 
 /**
  * Runs drivetrain with PID to reach target position/rotation on the field

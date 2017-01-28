@@ -17,7 +17,6 @@
 
 #include "main.h"
 
-int dataSentToJINX = 0;
 int armManual = 0;
 
 /**
@@ -32,69 +31,50 @@ int armManual = 0;
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
-
     //Reset QwikScore
     qwikScoreMode = QWIKSCORE_INACTIVE;
     qwikScoreXtraIter = 0;
 
-	while (1) {
-
+    while (1) {
         //Drivetrain
-        if (abs (joystickGetAnalog (1, 3)) > 15) {
-            motorGroupSet (MOTORGROUP_WHEELS_L, joystickGetAnalog (1, 3));
-        }
-        else {
-            motorGroupSet(MOTORGROUP_WHEELS_L, 0);
-        }
-
-        if (abs (joystickGetAnalog (1, 2)) > 15) {
-            motorGroupSet (MOTORGROUP_WHEELS_R, joystickGetAnalog (1, 2));
-        }
-        else {
-            motorGroupSet(MOTORGROUP_WHEELS_R, 0);
-        }
+        motorsSlew(motorgroupWheelsL, abs(joystickGetAnalog(1, 3)) > 15 ? joystickGetAnalog(1, 3) : 0);
+        motorsSlew(motorgroupWheelsR, abs(joystickGetAnalog(1, 2)) > 15 ? joystickGetAnalog(1, 2) : 0);
 
         //Arm
-        if (joystickGetDigital (1, 6, JOY_UP)) {
-            if (analogRead (SENSOR_POT_ARM) / 10 < armNoMoreUp) {
-                motorGroupSet (MOTORGROUP_ARM, 100);
-            }
-            else {
-                armTarget = armNoMoreUp;
-                armToAngle (armScore);
+        if (joystickGetDigital(1, 6, JOY_UP)) {
+            if (CURRENT_ARM < armNoMoreUp) {
+                motorsSlew(motorgroupArm, 100);
+            } else {
+                armTarget = armScore;
+                armToAngle(armScore);
             }
             armManual = 1;
-        }
-        else if (joystickGetDigital (1, 6, JOY_DOWN)) {
-            if (analogRead (SENSOR_POT_ARM) / 10 > armNoMoreDown) {
-                motorGroupSet (MOTORGROUP_ARM, -50);
-            }
-            else {
+        } else if (joystickGetDigital(1, 6, JOY_DOWN)) {
+            if (CURRENT_ARM > armNoMoreDown) {
+                motorsSlew(motorgroupArm, -50);
+            } else {
                 armTarget = armFloorGrab;
-                armToAngle (armFloorGrab);
+                armToAngle(armFloorGrab);
             }
             armManual = 1;
-        }
-        else {
-            if (armManual && abs (motorGet (MOTORS_ARM_LR_LOW)) <= 15 && motorGet (MOTORS_ARM_LR_LOW) != 0)
-                armTarget = analogRead (SENSOR_POT_ARM) / 10;
-            else if (armManual && motorGet (MOTORS_ARM_LR_LOW) == 0)
+        } else {
+            if (armManual && abs(motorGet(MOTORS_ARM_LR_LOW)) <= 15 && motorGet(MOTORS_ARM_LR_LOW) != 0)
+                armTarget = CURRENT_ARM;
+            else if (armManual && motorGet(MOTORS_ARM_LR_LOW) == 0)
                 armManual = 0;
-            armToAngle (armTarget);
-		}
+            armToAngle(armTarget);
+        }
 
         //Clapper
-        if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, 50);
-            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
-        }
-        else if (joystickGetDigital (1, 5, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, -50);
-            clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
-        }
-		else {
+        if (joystickGetDigital(1, 5, JOY_DOWN)) {
+            motorsSlew(motorgroupClapper, 50);
+            clapperTarget = CURRENT_CLAPPER;
+        } else if (joystickGetDigital(1, 5, JOY_UP)) {
+            motorsSlew(motorgroupClapper, -50);
+            clapperTarget = CURRENT_CLAPPER;
+        } else {
             clapperToOpenness(clapperTarget);
-		}
+        }
 
         //QwikScore
 /*        while (joystickGetDigital (1, 7, JOY_DOWN)) {
@@ -111,17 +91,13 @@ void operatorControl() {
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
         qwikScoreXtraIter = 0;*/
-        
-        if (millis () % 1000 < 20 && !dataSentToJINX) {
-            writeJINXDataNumeric ("clapperTarget", clapperTarget);
-            writeJINXDataNumeric ("clapperPot", analogRead (SENSOR_POT_CLAPPER) / 10);
-            writeJINXDataNumeric ("armTarget", armTarget);
-            writeJINXDataNumeric ("armPot", analogRead (SENSOR_POT_ARM) / 10);
-            dataSentToJINX = 1;
+
+        if (millis() % 1000 < 20) {
+            writeJINXDataNumeric("armCurrent", CURRENT_ARM);
+            writeJINXDataNumeric("armTarget", armTarget);
+            writeJINXDataNumeric("clapperCurrent", CURRENT_CLAPPER);
+            writeJINXDataNumeric("clapperTarget", clapperTarget);
         }
-        else {
-            dataSentToJINX = 0;
-        }
-        wait (20);
-	}
+        wait(20);
+    }
 }

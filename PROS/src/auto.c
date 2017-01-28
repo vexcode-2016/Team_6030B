@@ -28,8 +28,6 @@ int i = 0;
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    motorGroupSet (MOTORGROUP_CLAPPER, 0);
-
     if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile

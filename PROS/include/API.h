@@ -1,3 +1,5 @@
+#pragma once
+
 /** @file API.h
  * @brief Provides the high-level user functionality intended for use by typical VEX Cortex
  * programmers.
