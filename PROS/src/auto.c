@@ -30,19 +30,6 @@ int i = 0;
 void autonomous() {
     motorGroupSet (MOTORGROUP_CLAPPER, 0);
 
-    while (abs((analogRead (SENSOR_POT_ARM) / 10) - (armThrow - 70)) > 30) { //Free the arm
-        print ("1\n");
-        armToAngle (armThrow - 70);
-        wait (10);
-    }
-
-    while (abs ((analogRead (SENSOR_POT_CLAPPER) / 10) - clapperReady) > 30) { //Ready the clapper
-        print ("2\n");
-        armToAngle (armThrow - 50);
-        clapperToOpenness (clapperReady);
-        wait (10);
-    }
-
     if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile

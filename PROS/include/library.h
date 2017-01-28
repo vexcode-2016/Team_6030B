@@ -52,11 +52,12 @@ extern int autonMode;
 
 //Arm
 extern const int armFloorGrab;
-extern const int armThrow;
-extern const int armFence;
+extern const int armNoMoreDown;
+extern const int armScore;
+extern const int armNoMoreUp;
 extern int armTarget;
-extern int armKpUp;
-extern int armKpDown;
+extern double armKpUp;
+extern double armKpDown;
 
 //Clapper
 extern const int clapperHold;
@@ -64,7 +65,7 @@ extern const int clapperReady;
 extern const int clapperFence;
 extern const int clapperBack;
 extern int clapperTarget;
-extern int clapperKp;
+extern double clapperKp;
 
 //QwikScore
 extern int qwikScoreMode;
@@ -79,13 +80,28 @@ extern Gyro gyro;
 ////////////////////////////////
 
 /**
- * Sets a group of motors to the same speed and in the correct directions
- * @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, MOTORGROUP_ARM,
- * MOTORGROUP_CLAPPER, or MOTORGROUP_HANGER
- * @param speed the desired signed speed; -127 is fully in the negative direction and
- * 127 is fully in the positive direction, with 0 being off
- */
+* Sets a group of motors to the same speed and in the correct directions with slew rate
+* @param motorGroup MOTORGROUP_WHEELS_L, MOTORGROUP_WHEELS_R, MOTORGROUP_ARM,
+* MOTORGROUP_CLAPPER, or MOTORGROUP_HANGER
+* @param speed the desired signed speed; -127 is fully in the negative direction and
+* 127 is fully in the positive direction, with 0 being off
+*/
 void motorGroupSet (unsigned char motorGroup, int speed);
+
+/**
+* Sets the speed of the specified motor channel with slew rate
+* @param channel the motor channel to modify from 1-10
+* @param speed the desired signed speed; -127 is fully in the negative direction and
+* 127 is fully in the positive direction, with 0 being off
+*/
+void motorSlew (unsigned char channel, int speed);
+
+/**
+* Background task for slew rate control
+* DO NOT RUN DIRECTLY AS A FUNCTION!
+* Use ONLY when creating the background task in initialize()
+*/
+void slewControlTask (void * parameter);
 
 /**
  * Runs arm with PID to reach/maintain target angle

@@ -18,6 +18,7 @@
 #include "main.h"
 
 int dataSentToJINX = 0;
+int armManual = 0;
 
 /**
  * Runs the user operator control code.
@@ -55,24 +56,40 @@ void operatorControl() {
 
         //Arm
         if (joystickGetDigital (1, 6, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_ARM, 100);
-            armTarget = analogRead (SENSOR_POT_ARM) / 10;
+            if (analogRead (SENSOR_POT_ARM) / 10 < armNoMoreUp) {
+                motorGroupSet (MOTORGROUP_ARM, 100);
+            }
+            else {
+                armTarget = armNoMoreUp;
+                armToAngle (armScore);
+            }
+            armManual = 1;
         }
         else if (joystickGetDigital (1, 6, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_ARM, -100);
-            armTarget = analogRead (SENSOR_POT_ARM) / 10;
+            if (analogRead (SENSOR_POT_ARM) / 10 > armNoMoreDown) {
+                motorGroupSet (MOTORGROUP_ARM, -50);
+            }
+            else {
+                armTarget = armFloorGrab;
+                armToAngle (armFloorGrab);
+            }
+            armManual = 1;
         }
         else {
-            armToAngle(armTarget);
+            if (armManual && abs (motorGet (MOTORS_ARM_LR_LOW)) <= 15 && motorGet (MOTORS_ARM_LR_LOW) != 0)
+                armTarget = analogRead (SENSOR_POT_ARM) / 10;
+            else if (armManual && motorGet (MOTORS_ARM_LR_LOW) == 0)
+                armManual = 0;
+            armToAngle (armTarget);
 		}
 
         //Clapper
         if (joystickGetDigital (1, 5, JOY_DOWN)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, 100);
+            motorGroupSet (MOTORGROUP_CLAPPER, 50);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
         else if (joystickGetDigital (1, 5, JOY_UP)) {
-            motorGroupSet (MOTORGROUP_CLAPPER, -100);
+            motorGroupSet (MOTORGROUP_CLAPPER, -50);
             clapperTarget = analogRead (SENSOR_POT_CLAPPER) / 10;
         }
 		else {
@@ -80,7 +97,7 @@ void operatorControl() {
 		}
 
         //QwikScore
-        while (joystickGetDigital (1, 7, JOY_DOWN)) {
+/*        while (joystickGetDigital (1, 7, JOY_DOWN)) {
             armTarget = armFloorGrab;
             clapperTarget = clapperReady;
             qwikScore (0);
@@ -93,9 +110,9 @@ void operatorControl() {
             wait (10);
         }
         qwikScoreMode = QWIKSCORE_INACTIVE;
-        qwikScoreXtraIter = 0;
+        qwikScoreXtraIter = 0;*/
         
-        if (millis () % 1000 < 20) {
+        if (millis () % 1000 < 20 && !dataSentToJINX) {
             writeJINXDataNumeric ("clapperTarget", clapperTarget);
             writeJINXDataNumeric ("clapperPot", analogRead (SENSOR_POT_CLAPPER) / 10);
             writeJINXDataNumeric ("armTarget", armTarget);

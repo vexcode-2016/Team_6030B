@@ -51,4 +51,6 @@ void initialize() {
     analogCalibrate (SENSOR_ACCEL_LY);
     analogCalibrate (SENSOR_ACCEL_RX);
     analogCalibrate (SENSOR_ACCEL_RY);
+
+    taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }

@@ -4,14 +4,19 @@
 //// Variables ////
 ///////////////////
 
+//Slew rate control
+int slewTarget[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int slewTmp;
+
 //Arm
-const int armFloorGrab = 345;
-const int armThrow = 140;
-const int armFence = 165;
+const int armFloorGrab = 47;
+const int armNoMoreDown = 82;
+const int armScore = 235;
+const int armNoMoreUp = 180;
 int armTarget = -1;
 int armPot = -1;
-int armKpUp = 0;
-int armKpDown = 0;
+double armKpUp = 2;
+double armKpDown = 0;
 int armP = 0;
 
 //Clapper
@@ -21,7 +26,7 @@ const int clapperFence = 165;
 const int clapperBack = 345;
 int clapperTarget = -1;
 int clapperPot = -1;
-int clapperKp = 0;
+double clapperKp = 0;
 int clapperP = 0;
 
 //QwikScore
@@ -37,23 +42,53 @@ int rotateP = 0;
 //// Functions ////
 ///////////////////
 
-//Motor grouping
+//Slew rate commanding - individual motors
+void motorSlew (unsigned char channel, int speed) {
+    slewTarget[channel - 1] = speed;
+}
+
+//Slew rate commanding - motor groups
 void motorGroupSet (unsigned char motorGroup, int speed) {
     if (motorGroup == MOTORGROUP_WHEELS_L) {
-        motorSet (MOTOR_WHEEL_LF, speed);
-        motorSet (MOTOR_WHEEL_LB, speed);
+        motorSlew (MOTOR_WHEEL_LF, speed);
+        motorSlew (MOTOR_WHEEL_LB, speed);
     }
     if (motorGroup == MOTORGROUP_WHEELS_R) {
-        motorSet (MOTOR_WHEEL_RF, -speed);
-        motorSet (MOTOR_WHEEL_RB, -speed);
+        motorSlew (MOTOR_WHEEL_RF, -speed);
+        motorSlew (MOTOR_WHEEL_RB, -speed);
     }
     if (motorGroup == MOTORGROUP_ARM) {
-        motorSet (MOTORS_ARM_L_HIGH, speed);
-        motorSet (MOTORS_ARM_R_HIGH, -speed);
-        motorSet (MOTORS_ARM_LR_LOW, speed);
+        motorSlew (MOTORS_ARM_L_HIGH, speed);
+        motorSlew (MOTORS_ARM_R_HIGH, -speed);
+        motorSlew (MOTORS_ARM_LR_LOW, speed);
     }
     if (motorGroup == MOTORGROUP_CLAPPER) {
-        motorSet (MOTORS_CLAPPER, speed);
+        motorSlew (MOTORS_CLAPPER, speed);
+    }
+}
+
+//Slew rate control (run as task)
+void slewControlTask (void * parameter) {
+    while (1) {
+        if (isEnabled ()) {
+            for (int i = 0; i < 10; i++) { //Cycle through each motor port
+                slewTmp = motorGet (i + 1);
+                if (slewTmp != slewTarget[i]) {
+                    if (slewTmp < slewTarget[i]) {
+                        slewTmp += 15;
+                        if (slewTmp > slewTarget[i])
+                            slewTmp = slewTarget[i];
+                    }
+                    if (slewTmp > slewTarget[i]) {
+                        slewTmp -= 15;
+                        if (slewTmp < slewTarget[i])
+                            slewTmp = slewTarget[i];
+                    }
+                }
+                motorSet (i + 1, slewTmp);
+            }
+        }
+        wait (20);
     }
 }
 
@@ -70,6 +105,9 @@ void armToAngle (int target) {
         else if (armP < 0) //Down
             motorGroupSet (MOTORGROUP_ARM, armKpDown * armP);
     }
+    else {
+        motorGroupSet (MOTORGROUP_ARM, 0);
+    }
 }
 
 //Clapper PID control
@@ -81,10 +119,13 @@ void clapperToOpenness (int target) {
 
         motorGroupSet (MOTORGROUP_CLAPPER, clapperKp * clapperP);
     }
+    else {
+        motorGroupSet (MOTORGROUP_CLAPPER, 0);
+    }
 }
 
 //QwikScore
-void qwikScore(int autoDrive) {
+/*void qwikScore(int autoDrive) {
     if (qwikScoreMode == QWIKSCORE_INACTIVE) {
         motorGroupSet (MOTORGROUP_WHEELS_L, 0);
         motorGroupSet (MOTORGROUP_WHEELS_R, 0);
@@ -142,4 +183,4 @@ void qwikScore(int autoDrive) {
         armToAngle (armTarget);
         clapperToOpenness (clapperTarget);
     }
-}
+}*/
