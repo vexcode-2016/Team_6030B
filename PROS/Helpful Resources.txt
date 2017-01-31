@@ -1,12 +1,18 @@
 PROS documentation:
 http://pros.cs.purdue.edu/api/
+http://pros.cs.purdue.edu/tutorials/
 
 Joystick pictures (with button labels):
 http://www.vexrobotics.com/vexedr/products/accessories/electronics/joysticks.html
 
 PID:
-http://www.simbotics.org/files/pdf/programming-pid.pdf
+http://georgegillard.com/documents/2-introduction-to-pid-controllers
+https://www.vexforum.com/index.php/conversation/post/55644
 
 Inertial navigation:
 http://www.chrobotics.com/library/accel-position-velocity
 http://aerostudents.com/files/avionics/InertialNavigationSystems.pdf
+
+Kalman filter:
+http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/
+https://github.com/JMarple/BNSLibrary

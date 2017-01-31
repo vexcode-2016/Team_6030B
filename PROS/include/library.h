@@ -1,9 +1,8 @@
 #pragma once
 
-////////////////////////////////////////////
-//// Macros                             ////
-//// #define <identifier> <token>       ////
-////////////////////////////////////////////
+////////////////
+//// Macros ////
+////////////////
 
 //Motors
 #define MOTOR_WHEEL_LB                  2
@@ -30,9 +29,9 @@
 
 //Current States of Systems
 #define CURRENT_ARM                     \
-    analogRead(SENSOR_POT_ARM) / 10
+    (analogRead(SENSOR_POT_ARM) / 10)
 #define CURRENT_CLAPPER                 \
-    analogRead(SENSOR_POT_CLAPPER) / 10
+    (analogRead(SENSOR_POT_CLAPPER) / 10)
 
 //PID Loops
 #define armToAngle(target)              \
@@ -50,12 +49,11 @@
 
 
 
-///////////////////////////////
-//// Variables             ////
-//// extern <type> <name>; ////
-///////////////////////////////
+///////////////////
+//// Variables ////
+///////////////////
 
-//Motor groups
+//Motor Groups
 extern const signed char motorgroupWheelsL[];
 extern const signed char motorgroupWheelsR[];
 extern const signed char motorgroupArm[];
@@ -63,6 +61,9 @@ extern const signed char motorgroupClapper[];
 
 //Autonomous
 extern int autonMode;
+
+//Drivetrain
+extern Gyro driveGyro;
 
 //Arm
 extern const int armFloorGrab;
@@ -84,14 +85,12 @@ extern double clapperKp;
 //QwikScore
 extern int qwikScoreMode;
 extern int qwikScoreXtraIter;
-extern Gyro gyro;
 
 
 
-////////////////////////////////
-//// Functions              ////
-//// <type> <name>(<args>); ////
-////////////////////////////////
+///////////////////
+//// Functions ////
+///////////////////
 
 /**
  * Sets the speed of the specified motor port(s) with slew rate

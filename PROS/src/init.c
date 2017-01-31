@@ -45,7 +45,7 @@ void initialize() {
     taskCreate(JINXRun, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
     delay(100);
     
-    gyro = gyroInit (SENSOR_GYRO, 196);
+    driveGyro = gyroInit (SENSOR_GYRO, 196);
 
     analogCalibrate (SENSOR_ACCEL_LX);
     analogCalibrate (SENSOR_ACCEL_LY);

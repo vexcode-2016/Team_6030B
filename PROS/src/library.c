@@ -3,10 +3,10 @@
 //////////////////////
 //// Motor Groups ////
 //////////////////////
-const signed char motorgroupWheelsL[] = {MOTOR_WHEEL_LF, MOTOR_WHEEL_LB};
-const signed char motorgroupWheelsR[] = {-MOTOR_WHEEL_RF, -MOTOR_WHEEL_RB};
-const signed char motorgroupArm[] = {MOTORS_ARM_L_HIGH, -MOTORS_ARM_R_HIGH, MOTORS_ARM_LR_LOW};
-const signed char motorgroupClapper[] = {MOTORS_CLAPPER};
+const signed char motorgroupWheelsL[] = {MOTOR_WHEEL_LF, MOTOR_WHEEL_LB, 20};
+const signed char motorgroupWheelsR[] = {-MOTOR_WHEEL_RF, -MOTOR_WHEEL_RB, 20};
+const signed char motorgroupArm[] = {MOTORS_ARM_L_HIGH, -MOTORS_ARM_R_HIGH, MOTORS_ARM_LR_LOW, 20};
+const signed char motorgroupClapper[] = {-MOTORS_CLAPPER, 20};
 
 
 
@@ -18,14 +18,17 @@ const signed char motorgroupClapper[] = {MOTORS_CLAPPER};
 int slewTarget[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int slewTmp;
 
+//Drivetrain
+Gyro driveGyro;
+
 //Arm
 const int armFloorGrab = 47;
 const int armNoMoreDown = 82;
 const int armScore = 235;
 const int armNoMoreUp = 180;
 int armTarget = -1;
-double armKpUp = 2;
-double armKpDown = 0;
+double armKpUp = 3;
+double armKpDown = 0.5;
 
 //Clapper
 const int clapperHold = 20;
@@ -33,12 +36,11 @@ const int clapperReady = 90;
 const int clapperFence = 165;
 const int clapperBack = 345;
 int clapperTarget = -1;
-double clapperKp = 0;
+double clapperKp = 0.8;
 
 //QwikScore
 int qwikScoreMode = QWIKSCORE_INACTIVE;
 int qwikScoreXtraIter = 0;
-Gyro gyro;
 int heading = 0;
 int rotateP = 0;
 
@@ -51,23 +53,24 @@ int rotateP = 0;
 //Slew rate commanding
 void motorsSlew(const signed char *ports, int speed) {
     signed char port;
-    for (int i = 0; i < sizeof(ports); i++) {
+    int i = 0;
+    while(ports[i] != 20){
         port = ports[i];
         if ((port >= 1) && (port <= 10)) { //1 <= port <= 10
             slewTarget[port - 1] = speed;
-        }
-        else if ((port >= -10) && (port <= -1)) { //-10 <= port <= -1
+        } else if ((port >= -10) && (port <= -1)) { //-10 <= port <= -1
             slewTarget[-port - 1] = -speed;
         }
+        i++;
     }
 }
 
 //Slew rate control (run as task)
-void slewControlTask (void * parameter) {
+void slewControlTask(void * parameter) {
     while (1) {
-        if (isEnabled ()) {
+        if (isEnabled()) {
             for (int i = 0; i < 10; i++) { //Cycle through each motor port
-                slewTmp = motorGet (i + 1);
+                slewTmp = motorGet(i + 1);
                 if (slewTmp != slewTarget[i]) {
                     if (slewTmp < slewTarget[i]) {
                         slewTmp += 15;
@@ -80,10 +83,10 @@ void slewControlTask (void * parameter) {
                             slewTmp = slewTarget[i];
                     }
                 }
-                motorSet (i + 1, slewTmp);
+                motorSet(i + 1, slewTmp);
             }
         }
-        wait (20);
+        wait(20);
     }
 }
 

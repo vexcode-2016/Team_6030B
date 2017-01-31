@@ -18,6 +18,7 @@
 #include "main.h"
 
 int armManual = 0;
+int clapperManual = 0;
 
 /**
  * Runs the user operator control code.
@@ -44,6 +45,7 @@ void operatorControl() {
         if (joystickGetDigital(1, 6, JOY_UP)) {
             if (CURRENT_ARM < armNoMoreUp) {
                 motorsSlew(motorgroupArm, 100);
+                armTarget = CURRENT_ARM;
             } else {
                 armTarget = armScore;
                 armToAngle(armScore);
@@ -52,28 +54,35 @@ void operatorControl() {
         } else if (joystickGetDigital(1, 6, JOY_DOWN)) {
             if (CURRENT_ARM > armNoMoreDown) {
                 motorsSlew(motorgroupArm, -50);
+                armTarget = CURRENT_ARM;
             } else {
                 armTarget = armFloorGrab;
                 armToAngle(armFloorGrab);
             }
             armManual = 1;
         } else {
-            if (armManual && abs(motorGet(MOTORS_ARM_LR_LOW)) <= 15 && motorGet(MOTORS_ARM_LR_LOW) != 0)
-                armTarget = CURRENT_ARM;
-            else if (armManual && motorGet(MOTORS_ARM_LR_LOW) == 0)
-                armManual = 0;
             armToAngle(armTarget);
+            if (armManual && motorGet(MOTORS_ARM_LR_LOW) >= -15 && motorGet(MOTORS_ARM_LR_LOW) <= 15) {
+                armTarget = CURRENT_ARM;
+                armManual = 0;
+            }
         }
 
         //Clapper
         if (joystickGetDigital(1, 5, JOY_DOWN)) {
             motorsSlew(motorgroupClapper, 50);
             clapperTarget = CURRENT_CLAPPER;
+            clapperManual = 1;
         } else if (joystickGetDigital(1, 5, JOY_UP)) {
             motorsSlew(motorgroupClapper, -50);
             clapperTarget = CURRENT_CLAPPER;
+            clapperManual = 1;
         } else {
             clapperToOpenness(clapperTarget);
+            if (clapperManual && motorGet(MOTORS_CLAPPER) >= -15 && motorGet(MOTORS_CLAPPER) <= 15) {
+                clapperTarget = CURRENT_CLAPPER;
+                clapperManual = 0;
+            }
         }
 
         //QwikScore
