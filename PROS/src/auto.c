@@ -31,7 +31,10 @@ void autonomous() {
     if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
-
+            while (1) {
+                clapperToOpenness(clapperOpenWide);
+                wait(10);
+            }
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
 

@@ -77,8 +77,7 @@ extern double armKpDown;
 //Clapper
 extern const int clapperHold;
 extern const int clapperReady;
-extern const int clapperFence;
-extern const int clapperBack;
+extern const int clapperOpenWide;
 extern int clapperTarget;
 extern double clapperKp;
 

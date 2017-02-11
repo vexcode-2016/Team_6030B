@@ -19,6 +19,8 @@
 
 int armManual = 0;
 int clapperManual = 0;
+int clapperClamping = -1;
+int pressed7D = 0;
 
 /**
  * Runs the user operator control code.
@@ -47,8 +49,8 @@ void operatorControl() {
                 motorsSlew(motorgroupArm, 100);
                 armTarget = CURRENT_ARM;
             } else {
+                motorsSlew(motorgroupArm, 0);
                 armTarget = armScore;
-                armToAngle(armScore);
             }
             armManual = 1;
         } else if (joystickGetDigital(1, 6, JOY_DOWN)) {
@@ -57,7 +59,7 @@ void operatorControl() {
                 armTarget = CURRENT_ARM;
             } else {
                 armTarget = armFloorGrab;
-                armToAngle(armFloorGrab);
+                armToAngle(armTarget);
             }
             armManual = 1;
         } else {
@@ -69,12 +71,18 @@ void operatorControl() {
         }
 
         //Clapper
-        if (joystickGetDigital(1, 5, JOY_DOWN)) {
-            motorsSlew(motorgroupClapper, 50);
+        if (joystickGetDigital(1, 7, JOY_DOWN) && !pressed7D) {
+            clapperClamping = -clapperClamping;
+            pressed7D = 1;
+        }
+        if (clapperClamping == 1) { //Serious clamping mode
+            clapperToOpenness(clapperHold);
+        } else if (joystickGetDigital(1, 5, JOY_DOWN)) { //Open
+            motorsSlew(motorgroupClapper, -50);
             clapperTarget = CURRENT_CLAPPER;
             clapperManual = 1;
-        } else if (joystickGetDigital(1, 5, JOY_UP)) {
-            motorsSlew(motorgroupClapper, -50);
+        } else if (joystickGetDigital(1, 5, JOY_UP)) { //Close
+            motorsSlew(motorgroupClapper, 40);
             clapperTarget = CURRENT_CLAPPER;
             clapperManual = 1;
         } else {
@@ -83,6 +91,9 @@ void operatorControl() {
                 clapperTarget = CURRENT_CLAPPER;
                 clapperManual = 0;
             }
+        }
+        if (!joystickGetDigital(1, 7, JOY_DOWN) && pressed7D) {
+            pressed7D = 0;
         }
 
         //QwikScore

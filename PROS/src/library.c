@@ -23,18 +23,17 @@ Gyro driveGyro;
 
 //Arm
 const int armFloorGrab = 47;
-const int armNoMoreDown = 82;
+const int armNoMoreDown = 60;
 const int armScore = 235;
-const int armNoMoreUp = 180;
+const int armNoMoreUp = 200;
 int armTarget = -1;
 double armKpUp = 3;
 double armKpDown = 0.5;
 
 //Clapper
-const int clapperHold = 20;
-const int clapperReady = 90;
-const int clapperFence = 165;
-const int clapperBack = 345;
+const int clapperHold = 275;
+const int clapperReady = 153;
+const int clapperOpenWide = 136;
 int clapperTarget = -1;
 double clapperKp = 0.8;
 
