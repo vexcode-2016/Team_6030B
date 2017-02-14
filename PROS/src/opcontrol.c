@@ -44,7 +44,10 @@ void operatorControl() {
         motorsSlew(motorgroupWheelsR, abs(joystickGetAnalog(1, 2)) > 15 ? joystickGetAnalog(1, 2) : 0);
 
         //Arm
-        if (joystickGetDigital(1, 6, JOY_UP)) {
+        if (abs(CURRENT_PITCH_DELTA) > 100000000000000000) {
+            armTarget = armFloorGrab;
+            armToAngle(armFloorGrab);
+        } else if (joystickGetDigital(1, 6, JOY_UP)) {
             if (CURRENT_ARM < armNoMoreUp) {
                 motorsSlew(motorgroupArm, 100);
                 armTarget = CURRENT_ARM;
@@ -117,6 +120,7 @@ void operatorControl() {
             writeJINXDataNumeric("armTarget", armTarget);
             writeJINXDataNumeric("clapperCurrent", CURRENT_CLAPPER);
             writeJINXDataNumeric("clapperTarget", clapperTarget);
+            writeJINXDataNumeric("pitchDelta", CURRENT_PITCH_DELTA);
         }
         wait(20);
     }

@@ -17,7 +17,7 @@
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
-#define SENSOR_GYRO                     3
+#define SENSOR_GYRO_PITCH               3
 #define SENSOR_ACCEL_LX                 5
 #define SENSOR_ACCEL_LY                 6
 #define SENSOR_ACCEL_RX                 7
@@ -32,6 +32,8 @@
     (analogRead(SENSOR_POT_ARM) / 10)
 #define CURRENT_CLAPPER                 \
     (analogRead(SENSOR_POT_CLAPPER) / 10)
+#define CURRENT_PITCH_DELTA             \
+    (analogReadCalibrated(SENSOR_GYRO_PITCH))
 
 //PID Loops
 #define armToAngle(target)              \
@@ -61,9 +63,6 @@ extern const signed char motorgroupClapper[];
 
 //Autonomous
 extern int autonMode;
-
-//Drivetrain
-extern Gyro driveGyro;
 
 //Arm
 extern const int armFloorGrab;

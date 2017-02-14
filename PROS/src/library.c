@@ -18,9 +18,6 @@ const signed char motorgroupClapper[] = {-MOTORS_CLAPPER, 20};
 int slewTarget[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int slewTmp;
 
-//Drivetrain
-Gyro driveGyro;
-
 //Arm
 const int armFloorGrab = 47;
 const int armNoMoreDown = 60;

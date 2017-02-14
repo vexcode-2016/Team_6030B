@@ -16,7 +16,6 @@
 ********************************************************************************/
 
 #include "main.h"
-int i = 0;
 
 /**
 * Runs the user autonomous code.
@@ -31,10 +30,18 @@ void autonomous() {
     if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
 
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
-            while (1) {
+            int startTime = millis();
+            while (millis() - startTime < 2000) {
                 clapperToOpenness(clapperOpenWide);
                 wait(10);
             }
+            while (millis() - startTime < 5000) {
+                motorsSlew(motorgroupWheelsL, 127);
+                motorsSlew(motorgroupWheelsR, 127);
+                wait(10);
+            }
+            motorsSlew(motorgroupWheelsL, 0);
+            motorsSlew(motorgroupWheelsR, 0);
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
 

@@ -44,13 +44,13 @@ void initialize() {
     delay(100);
     taskCreate(JINXRun, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
     delay(100);
-    
-    driveGyro = gyroInit (SENSOR_GYRO, 196);
 
     analogCalibrate (SENSOR_ACCEL_LX);
     analogCalibrate (SENSOR_ACCEL_LY);
     analogCalibrate (SENSOR_ACCEL_RX);
     analogCalibrate (SENSOR_ACCEL_RY);
+
+    analogCalibrate(SENSOR_GYRO_TIP);
 
     taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }
