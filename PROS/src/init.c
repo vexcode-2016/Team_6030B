@@ -50,7 +50,7 @@ void initialize() {
     analogCalibrate (SENSOR_ACCEL_RX);
     analogCalibrate (SENSOR_ACCEL_RY);
 
-    analogCalibrate(SENSOR_GYRO_TIP);
+    analogCalibrate(SENSOR_GYRO_PITCH);
 
     taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }
