@@ -17,6 +17,44 @@
 
 #include "main.h"
 
+
+void autoTimerBased() {
+clapperToOpenness(clapperOpenWide);//deploy claw
+wait(500);
+
+motorsSlew(motorgroupWheelsL, 127);//drive to cube
+motorsSlew(motorgroupWheelsR, 127);
+wait(500);
+motorsSlew(motorgroupWheelsL, 0);
+motorsSlew(motorgroupWheelsR, 0);
+
+clapperToOpenness(clapperHold);//grab cube
+wait(250);
+
+armToAngle(armHoldCube);//raise arme so cube doesnt drag
+wait(250);
+
+motorsSlew(motorgroupWheelsL, -127);//turn to score
+wait(1000);
+
+motorsSlew(motorgroupWheelsL, -127);
+motorsSlew(motorgroupWheelsR, -127);//back up to fence
+wait(250);
+
+motorsSlew(motorgroupWheelsL, 0);
+motorsSlew(motorgroupWheelsR, 0);
+wait(250);
+
+armToAngle(armScore);//raise arm
+wait(1000);
+
+clapperToOpenness(clapperOpenWide);//drop cube
+wait(2000);
+
+armToAngle(armFloorGrab);//lower arm
+wait(2000);
+}
+
 /**
 * Runs the user autonomous code.
 *
@@ -28,9 +66,9 @@
 */
 void autonomous() {
     if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
-
+        autoTimerBased();
         if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
-            int startTime = millis();
+      /*      int startTime = millis();
             while (millis() - startTime < 2000) {
                 clapperToOpenness(clapperOpenWide);
                 wait(10);
@@ -41,7 +79,7 @@ void autonomous() {
                 wait(10);
             }
             motorsSlew(motorgroupWheelsL, 0);
-            motorsSlew(motorgroupWheelsR, 0);
+            motorsSlew(motorgroupWheelsR, 0);*/
         }
         else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
 

@@ -20,6 +20,7 @@ int slewTmp;
 
 //Arm
 const int armFloorGrab = 47;
+const int armHoldCube = 75;
 const int armNoMoreDown = 60;
 const int armScore = 235;
 const int armNoMoreUp = 200;
@@ -138,7 +139,7 @@ void pid(double current, double target, double kp, double ki, double kd, const s
         }
     }
     if (qwikScoreMode == QWIKSCORE_DRIVE) {
-        
+
     }
     if (qwikScoreMode == QWIKSCORE_THROW) {
         if ((analogRead(SENSOR_POT_ARM) / 10) > (armThrow + 30)) {

@@ -66,6 +66,7 @@ extern int autonMode;
 
 //Arm
 extern const int armFloorGrab;
+extern const int armHoldCube;
 extern const int armNoMoreDown;
 extern const int armScore;
 extern const int armNoMoreUp;
