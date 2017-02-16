@@ -18,7 +18,7 @@
 #include "main.h"
 
 
-void autoTimerBased() {
+void autonTimerBased() {
 clapperToOpenness(clapperOpenWide);//deploy claw
 wait(500);
 
@@ -65,34 +65,36 @@ wait(2000);
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
-    if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11 = match autonomous (not programming skills)
-        autoTimerBased();
-        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
-      /*      int startTime = millis();
+    if (digitalRead (JUMPER_SKILLS) == HIGH) { //No jumper in 11
+        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12
+            int startTime = millis();
             while (millis() - startTime < 2000) {
                 clapperToOpenness(clapperOpenWide);
                 wait(10);
             }
-            while (millis() - startTime < 5000) {
-                motorsSlew(motorgroupWheelsL, 127);
-                motorsSlew(motorgroupWheelsR, 127);
-                wait(10);
-            }
-            motorsSlew(motorgroupWheelsL, 0);
-            motorsSlew(motorgroupWheelsR, 0);*/
         }
-        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
-
+        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12
+          int startTime = millis();
+          while (millis() - startTime < 2000) {
+              clapperToOpenness(clapperOpenWide);
+              wait(10);
+          }
+          while (millis() - startTime < 5000) {
+              motorsSlew(motorgroupWheelsL, 127);
+              motorsSlew(motorgroupWheelsR, 127);
+              wait(10);
+          }
+          motorsSlew(motorgroupWheelsL, 0);
+          motorsSlew(motorgroupWheelsR, 0);
         }
-
     }
-    else if (digitalRead (JUMPER_SKILLS) == LOW) { //Jumper in 11 = programming skills (not match autonomous)
+    else if (digitalRead (JUMPER_SKILLS) == LOW) { //Jumper in 11
 
-        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12 = left starting tile
+        if (digitalRead (JUMPER_AUTON) == HIGH) { //No jumper in 12
 
         }
-        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12 = right starting tile
-
+        else if (digitalRead (JUMPER_AUTON) == LOW) { //Jumper in 12
+            autonTimerBased();
         }
 
     }
