@@ -35,12 +35,6 @@
 #define CURRENT_PITCH_DELTA             \
     (analogReadCalibrated(SENSOR_GYRO_PITCH))
 
-//PID Loops
-#define armToAngle(target)              \
-    if (target != -1) { pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm); }
-#define clapperToOpenness(target)       \
-    if (target != -1) { pid(CURRENT_CLAPPER, target, clapperKp, 0, 0, motorgroupClapper); }
-
 //QwikScore Modes
 #define QWIKSCORE_INACTIVE              0
 #define QWIKSCORE_GRAB                  1
@@ -48,6 +42,17 @@
 #define QWIKSCORE_DRIVE                 3
 #define QWIKSCORE_THROW                 4
 #define QWIKSCORE_DONE                  5
+
+
+
+//////////////////
+//// Typedefs ////
+//////////////////
+typedef struct {
+    unsigned char(*fn)(double);
+    double arg;
+    unsigned char group;
+} AutonWrappable;
 
 
 
@@ -62,7 +67,7 @@ extern const signed char motorgroupArm[];
 extern const signed char motorgroupClapper[];
 
 //Autonomous
-extern int autonMode;
+extern AutonWrappable autonDoNothing;
 
 //Arm
 extern const int armFloorGrab;
@@ -118,8 +123,20 @@ void slewControlTask (void * parameter);
  * @param kd constant representing influence of derivative calculation on motor speed
  * @param motors array containing motor ports for which to set the speed; negative
  * port numbers signify that the speed should be in reverse direction for those ports
+ * @param tolerance the margin of error around the target for which 1 will be returned
+ * @return 1 if (current) is within (tolerance) of (target) or 0 otherwise
  */
-void pid(double current, double target, double kp, double ki, double kd, const signed char *motors);
+unsigned char pid(double current, double target, double kp, double ki, double kd, const signed char *motors, double tolerance);
+
+/**
+ * TODO: Add documentation
+ */
+unsigned char armToAngle(double target);
+
+/**
+ * TODO: Add documentation
+ */
+unsigned char clapperToOpenness(double target);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
@@ -127,3 +144,18 @@ void pid(double current, double target, double kp, double ki, double kd, const s
  * @param autoDrive whether or not the robot should autonomously rotate and drive to the fence (1 = yes, 0 = no)
  */
 void qwikScore (int autoDrive);
+
+/**
+ * Wrapper for using functions constantly needing rerunning in autonomous mode where there is typically no infinite loop
+ * Supports simultaneous use of up to 5 child functions at a time
+ * Child functions must return 1 on success and accept a double as the only argument
+ * Grouping system: child functions are assigned to 'groups' of functions sharing the same identifier;
+ * each group's functions will stop executing once at least 1 function in the group returns 1;
+ * 0 is not a valid group identifier; it will cause the child function to execute until all groups' executions stop
+ * @param uno AutonWrappable struct representing the first child function
+ * @param dos AutonWrappable struct representing the second child function
+ * @param tres AutonWrappable struct representing the third child function
+ * @param cuatro AutonWrappable struct representing the fourth child function
+ * @param cinco AutonWrappable struct representing the fifth child function
+ */
+void autonWrapper(AutonWrappable *uno, AutonWrappable *dos, AutonWrappable *tres, AutonWrappable *cuatro, AutonWrappable *cinco);

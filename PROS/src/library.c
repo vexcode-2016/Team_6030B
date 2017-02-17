@@ -88,7 +88,7 @@ void slewControlTask(void * parameter) {
 }
 
 //Generic PID control
-void pid(double current, double target, double kp, double ki, double kd, const signed char *motors) {
+unsigned char pid(double current, double target, double kp, double ki, double kd, const signed char *motors, double tolerance) {
     //Proportional
     double p = target - current;
 
@@ -99,6 +99,23 @@ void pid(double current, double target, double kp, double ki, double kd, const s
 
 
     motorsSlew(motors, kp * p);
+    if (abs(p) <= tolerance) { return 1; } else { return 0; }
+}
+
+//Mechanism-specific PID loops
+unsigned char armToAngle(double target) {
+    if (target != -1) {
+        return pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm, 20);
+    } else {
+        return 0;
+    }
+}
+unsigned char clapperToOpenness(double target) {
+    if (target != -1) {
+        return pid(CURRENT_CLAPPER, target, clapperKp, 0, 0, motorgroupClapper, 20);
+    } else {
+        return 0;
+    }
 }
 
 //QwikScore
@@ -161,3 +178,15 @@ void pid(double current, double target, double kp, double ki, double kd, const s
         clapperToOpenness (clapperTarget);
     }
 }*/
+
+//Autonomous optimization for functions
+void autonWrapper(AutonWrappable *uno, AutonWrappable *dos, AutonWrappable *tres, AutonWrappable *cuatro, AutonWrappable *cinco) {
+    while ((uno->fn)(uno->arg) != 1 && (dos->fn)(dos->arg) != 1 && (tres->fn)(tres->arg) != 1 && (cuatro->fn)(cuatro->arg) != 1 && (cinco->fn)(cinco->arg) != 1) {
+        wait(20);
+    }
+    ///TODO: Implement grouping system
+}
+unsigned char doNothing(double arbitraryValue) {
+    return 1;
+}
+AutonWrappable autonDoNothing = {.fn = doNothing, .arg = 0, .group = 0};

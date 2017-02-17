@@ -27,22 +27,21 @@ void initJINX (FILE* port) {
     }
 }
 
-bool setComPort (FILE* port) {
+bool setComPort(FILE* port) {
     //If the port is either of the UARTs, set up the pins correctly for serial data
     if (port == uart1 || port == uart2) {
-        usartInit (port, 115200, SERIAL_8N1);
+        usartInit(port, 115200, SERIAL_8N1);
         comPort = port;
         return true;
 
         //Port is set to STDOUT by default, but still allow users to specify it if they wish.
-    }
-    else if (port == stdout) {
+    } else if (port == stdout) {
         comPort = port;
         return true;
     }
 
 #if(DEBUG_JINX)
-    printf ("Failed to open specified port for JINX (setComPort(FILE* port))\n");
+    printf("Failed to open specified port for JINX (setComPort(FILE* port))\n");
 #endif
 
     return false;
@@ -69,13 +68,13 @@ void writeJINXData (const char *name, const char *value) {
     writeJINXSerial (message);
 }
 
-int readLine (JINX *inStr) {
+int readLine(JINX *inStr) {
     if (inStr->command != NULL) {
-        free (inStr->command);
+        free(inStr->command);
     }
 
-    inStr->command = (char*) malloc (MAX_IN_SIZE + 1);
-    writeJINXSerial ("Trying to readline");
+    inStr->command = (char*) malloc(MAX_IN_SIZE + 1);
+    writeJINXSerial("Trying to readline");
     //Terminating character to specify end of line/message
     char term = '\n';
 
@@ -86,7 +85,7 @@ int readLine (JINX *inStr) {
     int bufferIndex = 0;
 
     //Get character from serial. If first character is terminator, quit immediately
-    while (((get = fgetc (comPort)) != term) && (bufferIndex < MAX_IN_SIZE)) {
+    while (((get = fgetc(comPort)) != term) && (bufferIndex < MAX_IN_SIZE)) {
         inStr->command[bufferIndex++] = get;
     }
 
@@ -100,15 +99,15 @@ int readLine (JINX *inStr) {
 
 //Get tokenNumth token of incoming string, and put it in inStr.token
 //Do not pass a null pointer!
-int getToken (JINX *inStr, int tokenNum) {
+int getToken(JINX *inStr, int tokenNum) {
     //writeJINXMessage("Trying to get token\n");
     if (inStr->token != NULL) {
-        free (inStr->token);
+        free(inStr->token);
     }
 
     //Check for invalid token request
     if ((tokenNum < 0) || (tokenNum > MAX_IN_SIZE)) {
-        inStr->token = (char*) malloc (1);
+        inStr->token = (char*) malloc(1);
         (inStr->token)[0] = '\0';
 
         return -1;
@@ -122,9 +121,9 @@ int getToken (JINX *inStr, int tokenNum) {
 
     //Until we pass the desired number of tokens, move to the next token start
     while (tokenCount++ < tokenNum) {
-        beginStr = strchr (beginStr, ' ');
+        beginStr = strchr(beginStr, ' ');
         if (++beginStr == NULL) {
-            inStr->token = (char*) malloc (1);
+            inStr->token = (char*) malloc(1);
             (inStr->token)[0] = '\0';
 
             return -1;
@@ -132,31 +131,31 @@ int getToken (JINX *inStr, int tokenNum) {
     }
 
     //Token should be terminated by a space or the null character
-    if ((endStr = strchr (beginStr, ' ')) == NULL) {
-        endStr = strchr (beginStr, NULL);
+    if ((endStr = strchr(beginStr, ' ')) == NULL) {
+        endStr = strchr(beginStr, NULL);
     }
 
     //Set the token
-    inStr->token = (char*) malloc (endStr - beginStr + 1);  //+1 for null terminator
-    strncpy (inStr->token, beginStr, endStr - beginStr);
+    inStr->token = (char*) malloc(endStr - beginStr + 1);  //+1 for null terminator
+    strncpy(inStr->token, beginStr, endStr - beginStr);
     (inStr->token)[endStr - beginStr] = '\0';
 
     return 0;
 }
 
-void JINXRun (void* ignore) {
+void JINXRun(void* ignore) {
     int del = 500;
     JINX inStr;
     inStr.command = NULL;
     inStr.token = NULL;
     //setOpmode(1);
     //Read the garbage. Assume run before serial communications open
-    delay (1000);
-    while (fcount (comPort) > 0) {
-        fgetc (comPort);
-        writeJINXSerial ("Trashing garbage\n");
+    delay(1000);
+    while (fcount(comPort) > 0) {
+        fgetc(comPort);
+        writeJINXSerial("Trashing garbage\n");
     };
-    writeJINXSerial ("finished trashing garbage\n");
+    writeJINXSerial("finished trashing garbage\n");
 
     while (true) {
         //#if DEBUG_JINX
@@ -164,9 +163,8 @@ void JINXRun (void* ignore) {
         //#endif
 
         //Get message, save in inStr, then parse.
-        readLine (&inStr);
-        parseMessage (&inStr);
-        delay (del);
+        readLine(&inStr);
+        parseMessage(&inStr);
+        delay(del);
     }
-
 }
