@@ -49,8 +49,8 @@
 //// Typedefs ////
 //////////////////
 typedef struct {
-    unsigned char(*fn)(double);
-    double arg;
+    unsigned char(*fn)(short);
+    short arg;
     unsigned char group;
 } AutonWrappable;
 
@@ -131,12 +131,12 @@ unsigned char pid(double current, double target, double kp, double ki, double kd
 /**
  * TODO: Add documentation
  */
-unsigned char armToAngle(double target);
+unsigned char armToAngle(short target);
 
 /**
  * TODO: Add documentation
  */
-unsigned char clapperToOpenness(double target);
+unsigned char clapperToOpenness(short target);
 
 /**
  * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
