@@ -44,9 +44,7 @@ void operatorControl() {
         motorsSlew(motorgroupWheelsR, abs(joystickGetAnalog(1, 2)) > 15 ? joystickGetAnalog(1, 2) : 0);
 
         //Arm
-        if ((abs(joystickGetAnalog(1,3)) > 15 || abs(joystickGetAnalog(1,2)) > 15) && CURRENT_ARM > armNoMoreDown && CURRENT_PITCH_DELTA < 0) {
-            motorsSlew(motorgroupArm, -50);
-        } else if (joystickGetDigital(1, 6, JOY_UP)) {
+        if (joystickGetDigital(1, 6, JOY_UP)) {
             if (CURRENT_ARM < armNoMoreUp) {
                 motorsSlew(motorgroupArm, 100);
                 armTarget = CURRENT_ARM;

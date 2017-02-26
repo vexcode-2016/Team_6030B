@@ -19,11 +19,11 @@ int slewTarget[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int slewTmp;
 
 //Arm
-const int armFloorGrab = 47;
+const int armFloorGrab = 50;
 const int armNoMoreDown = 60;
 const int armHoldCube = 80;
 const int armScore = 235;
-const int armNoMoreUp = 200;
+const int armNoMoreUp = 230;
 int armTarget = -1;
 double armKpUp = 3;
 double armKpDown = 0.5;

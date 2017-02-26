@@ -86,7 +86,7 @@ void autonTimerBased() {
     autonWrapper(&autonArmReady,        &autonClapperOpen,      &autonDoNothing,                &autonDoNothing,                &autonDoNothing); //Lower arm
     print("SEIS");
 }
-void autonZackTimer() {
+void autonZackTimer(char leftPosOneRightNegOne) {
     AutonWrappable autonArmScore = {.fn = armToAngle,.arg = armScore,.group = 1};
 
     clapperToOpenness(clapperOpenWide);//deploy claw
@@ -105,8 +105,8 @@ void autonZackTimer() {
     //armToAngle(armHoldCube);//raise arme so cube doesnt drag
     //wait(250);
     
-    motorsSlew(motorgroupWheelsL, 100);//turn to score
-    motorsSlew(motorgroupWheelsR, -100);
+    motorsSlew(motorgroupWheelsL, leftPosOneRightNegOne * 100);//turn to score
+    motorsSlew(motorgroupWheelsR, leftPosOneRightNegOne * -100);
     wait(800);
 
     motorsSlew(motorgroupWheelsL, -100);
@@ -169,9 +169,9 @@ void autonomous() {
     } else if (digitalRead(JUMPER_SKILLS) == LOW) { //Jumper in 11
 
         if (digitalRead(JUMPER_AUTON) == HIGH) { //No jumper in 12
-            autonZackTimer();
+            autonZackTimer(1);
         } else if (digitalRead(JUMPER_AUTON) == LOW) { //Jumper in 12
-            autonTimerBased();
+            autonZackTimer(-1);
         }
 
     }
