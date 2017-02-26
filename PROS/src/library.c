@@ -35,12 +35,6 @@ const int clapperOpenWide = 136;
 int clapperTarget = -1;
 double clapperKp = 0.8;
 
-//QwikScore
-int qwikScoreMode = QWIKSCORE_INACTIVE;
-int qwikScoreXtraIter = 0;
-int heading = 0;
-int rotateP = 0;
-
 
 
 ///////////////////
@@ -126,81 +120,18 @@ unsigned char clapperToOpenness(short target) {
     }
 }
 
-//QwikScore
-/*void qwikScore(int autoDrive) {
-    if (qwikScoreMode == QWIKSCORE_INACTIVE) {
-        motorsSlew (motorgroupWheelsL, 0);
-        motorsSlew (motorgroupWheelsR, 0);
-        qwikScoreMode += 1;
-    }
-    if (qwikScoreMode == QWIKSCORE_GRAB) {
-        if (qwikScoreXtraIter < 30) {
-            clapperToOpenness (clapperHold);
-            qwikScoreXtraIter += 1;
-        }
-        else {
-            qwikScoreXtraIter = 0;
-            if (autoDrive)
-                qwikScoreMode += 1;
-            else
-                qwikScoreMode += 3;
-        }
-    }
-    if (qwikScoreMode == QWIKSCORE_ROTATE) {
-        clapperToOpenness (clapperHold);
-        heading = gyroGet (gyro);
-        heading = ((heading > 0) - (heading < 0)) * (abs (heading) % 360);
-        if (heading < 0) heading += 360;
-        rotateP = 180 - heading;
-        if (abs (rotateP) > 15) {
-            motorsSlew (motorgroupWheelsL, -1.8 * rotateP);
-            motorsSlew (motorgroupWheelsR, 1.8 * rotateP);
-        }
-        else {
-            motorsSlew (motorgroupWheelsL, 0);
-            motorsSlew (motorgroupWheelsR, 0);
-            qwikScoreXtraIter = 0;
-            qwikScoreMode += 1;
-        }
-    }
-    if (qwikScoreMode == QWIKSCORE_DRIVE) {
-
-    }
-    if (qwikScoreMode == QWIKSCORE_THROW) {
-        if ((analogRead(SENSOR_POT_ARM) / 10) > (armThrow + 30)) {
-            clapperToOpenness (clapperHold);
-            motorsSlew (motorgroupArm, 127);
-        }
-        else if ((analogRead (SENSOR_POT_ARM) / 10) > armThrow) {
-            motorsSlew (motorgroupClapper, 127);
-        }
-        else {
-            clapperTarget = clapperReady;
-            armTarget = armFloorGrab;
-            qwikScoreXtraIter = 0;
-            qwikScoreMode += 1;
-        }
-    }
-    if (qwikScoreMode == QWIKSCORE_DONE) {
-        armToAngle (armTarget);
-        clapperToOpenness (clapperTarget);
-    }
-}*/
-
 //Autonomous optimization for functions
 void autonWrapper(AutonWrappable *uno, AutonWrappable *dos, AutonWrappable *tres, AutonWrappable *cuatro, AutonWrappable *cinco) {
-    unsigned char done = 1;
-    //while (((uno->fn)(uno->arg) != 1) || ((dos->fn)(dos->arg) != 1) || ((tres->fn)(tres->arg) != 1) || ((cuatro->fn)(cuatro->arg) != 1) || ((cinco->fn)(cinco->arg) != 1)) {
-    while (!done) {
-        done = 1;
-        done = ((uno->fn)(uno->arg) & 1);
-        done = ((dos->fn)(dos->arg) & 1);
-        done = ((tres->fn)(tres->arg) & 1);
-        done = ((cuatro->fn)(cuatro->arg) & 1);
-        done = ((cinco->fn)(cinco->arg) & 1);
+    unsigned char done = 0;
+    while (done != 5) {
+        done = 0;
+        done += ((uno->fn)(uno->arg) == 1);
+        done += ((dos->fn)(dos->arg) == 1);
+        done += ((tres->fn)(tres->arg) == 1);
+        done += ((cuatro->fn)(cuatro->arg) == 1);
+        done += ((cinco->fn)(cinco->arg)== 1);
         wait(20);
     }
-    print("CONCLUDED\n");
     ///TODO: Implement grouping system
 }
 unsigned char doNothing(short arbitraryValue) {

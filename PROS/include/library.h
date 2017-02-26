@@ -23,10 +23,6 @@
 #define SENSOR_ACCEL_RX                 7
 #define SENSOR_ACCEL_RY                 8
 
-//Digital Sensors
-#define JUMPER_SKILLS                   11
-#define JUMPER_AUTON                    12
-
 //Current States of Systems
 #define CURRENT_ARM                     \
     (analogRead(SENSOR_POT_ARM) / 10)
@@ -34,14 +30,6 @@
     (analogRead(SENSOR_POT_CLAPPER) / 10)
 #define CURRENT_PITCH_DELTA             \
     (analogReadCalibrated(SENSOR_GYRO_PITCH))
-
-//QwikScore Modes
-#define QWIKSCORE_INACTIVE              0
-#define QWIKSCORE_GRAB                  1
-#define QWIKSCORE_ROTATE                2
-#define QWIKSCORE_DRIVE                 3
-#define QWIKSCORE_THROW                 4
-#define QWIKSCORE_DONE                  5
 
 
 
@@ -85,10 +73,6 @@ extern const int clapperReady;
 extern const int clapperOpenWide;
 extern int clapperTarget;
 extern double clapperKp;
-
-//QwikScore
-extern int qwikScoreMode;
-extern int qwikScoreXtraIter;
 
 
 
@@ -139,18 +123,11 @@ unsigned char armToAngle(short target);
 unsigned char clapperToOpenness(short target);
 
 /**
- * Closes the clapper, raises the arm, rotates, and drives as necessary to score in 1 graceful motion
- * ENCLOSE IN WHILE LOOP AND RESET 'qwikScoreMode' TO 'QWIK_SCORE_INACTIVE' AFTER USE!!!
- * @param autoDrive whether or not the robot should autonomously rotate and drive to the fence (1 = yes, 0 = no)
- */
-void qwikScore (int autoDrive);
-
-/**
  * Wrapper for using functions constantly needing rerunning in autonomous mode where there is typically no infinite loop
  * Supports simultaneous use of up to 5 child functions at a time
- * Child functions must return 1 on success and accept a double as the only argument
+ * Child functions must return 1 on success and accept a short as the only argument
  * Grouping system: child functions are assigned to 'groups' of functions sharing the same identifier;
- * each group's functions will stop executing once at least 1 function in the group returns 1;
+ * [WIP] each group's functions will stop executing once at least 1 function in the group returns 1;
  * 0 is not a valid group identifier; it will cause the child function to execute until all groups' executions stop
  * @param uno AutonWrappable struct representing the first child function
  * @param dos AutonWrappable struct representing the second child function
