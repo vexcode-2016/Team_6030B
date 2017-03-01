@@ -46,8 +46,10 @@
 #define MAIN_H_
 
 #include <API.h>
-#include "JINX.h"
 #include "library.h"
+#include "JINX.h"
+#include "inertialNav.h"
+
 
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
