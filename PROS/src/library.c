@@ -29,7 +29,7 @@ double armKpUp = 3;
 double armKpDown = 0.5;
 
 //Clapper
-const int clapperHold = 275;
+const int clapperHold = 260;
 const int clapperReady = 153;
 const int clapperOpenWide = 136;
 int clapperTarget = -1;
@@ -82,7 +82,7 @@ void slewControlTask(void * parameter) {
 }
 
 //Generic PID control
-unsigned char pid(double current, double target, double kp, double ki, double kd, const signed char *motors, double tolerance) {
+unsigned char pid(float current, float target, float kp, float ki, float kd, const signed char *motors, float tolerance) {
     //Proportional
     double p = target - current;
 
@@ -97,14 +97,14 @@ unsigned char pid(double current, double target, double kp, double ki, double kd
 }
 
 //Mechanism-specific PID loops
-unsigned char armToAngle(short target) {
+unsigned char armToAngle(float target) {
     if (target != -1) {
         return pid(CURRENT_ARM, target, (target > CURRENT_ARM) ? armKpUp : armKpDown, 0, 0, motorgroupArm, 20);
     } else {
         return 0;
     }
 }
-unsigned char clapperToOpenness(short target) {
+unsigned char clapperToOpenness(float target) {
     if (target == clapperHold) {
         motorsSlew(motorgroupClapper, 40);
         if (motorGet(MOTORS_CLAPPER) == 40) {
@@ -121,20 +121,20 @@ unsigned char clapperToOpenness(short target) {
 }
 
 //Autonomous optimization for functions
-void autonWrapper(AutonWrappable *uno, AutonWrappable *dos, AutonWrappable *tres, AutonWrappable *cuatro, AutonWrappable *cinco) {
+void autonWrapper(AutonWrappable uno, AutonWrappable dos, AutonWrappable tres, AutonWrappable cuatro, AutonWrappable cinco) {
     unsigned char done = 0;
     while (done != 5) {
         done = 0;
-        done += ((uno->fn)(uno->arg) == 1);
-        done += ((dos->fn)(dos->arg) == 1);
-        done += ((tres->fn)(tres->arg) == 1);
-        done += ((cuatro->fn)(cuatro->arg) == 1);
-        done += ((cinco->fn)(cinco->arg)== 1);
+        done += ((uno.fn)(uno.arg) == 1);
+        done += ((dos.fn)(dos.arg) == 1);
+        done += ((tres.fn)(tres.arg) == 1);
+        done += ((cuatro.fn)(cuatro.arg) == 1);
+        done += ((cinco.fn)(cinco.arg)== 1);
         wait(20);
     }
     ///TODO: Implement grouping system
 }
-unsigned char doNothing(short arbitraryValue) {
+unsigned char doNothing(float arbitraryValue) {
     return 1;
 }
 AutonWrappable autonDoNothing = {.fn = doNothing, .arg = 0, .group = 0};

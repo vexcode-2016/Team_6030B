@@ -34,10 +34,6 @@ int pressed7D = 0;
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
-    //Reset QwikScore
-    qwikScoreMode = QWIKSCORE_INACTIVE;
-    qwikScoreXtraIter = 0;
-
     while (1) {
         //Drivetrain
         motorsSlew(motorgroupWheelsL, abs(joystickGetAnalog(1, 3)) > 15 ? joystickGetAnalog(1, 3) : 0);
@@ -78,10 +74,10 @@ void operatorControl() {
         if (clapperClamping == 1) { //Serious clamping mode
             clapperToOpenness(clapperHold);
         } else if (joystickGetDigital(1, 5, JOY_DOWN)) { //Open
-            motorsSlew(motorgroupClapper, -50);
+            motorsSlew(motorgroupClapper, -60);
             clapperTarget = CURRENT_CLAPPER;
             clapperManual = 1;
-        } else if (joystickGetDigital(1, 5, JOY_UP)) { //Close
+        } else if (joystickGetDigital(1, 5, JOY_UP) && CURRENT_CLAPPER < clapperHold) { //Close
             motorsSlew(motorgroupClapper, 40);
             clapperTarget = CURRENT_CLAPPER;
             clapperManual = 1;
@@ -96,28 +92,11 @@ void operatorControl() {
             pressed7D = 0;
         }
 
-        //QwikScore
-/*        while (joystickGetDigital (1, 7, JOY_DOWN)) {
-            armTarget = armFloorGrab;
-            clapperTarget = clapperReady;
-            qwikScore (0);
-            wait (10);
-        }
-        qwikScoreMode = QWIKSCORE_INACTIVE;
-        qwikScoreXtraIter = 0;
-        while (joystickGetDigital (1, 8, JOY_DOWN)) {
-            qwikScore (1);
-            wait (10);
-        }
-        qwikScoreMode = QWIKSCORE_INACTIVE;
-        qwikScoreXtraIter = 0;*/
-
         if (millis() % 1000 < 20) {
             writeJINXDataNumeric("armCurrent", CURRENT_ARM);
             writeJINXDataNumeric("armTarget", armTarget);
             writeJINXDataNumeric("clapperCurrent", CURRENT_CLAPPER);
             writeJINXDataNumeric("clapperTarget", clapperTarget);
-            writeJINXDataNumeric("pitchDelta", CURRENT_PITCH_DELTA);
         }
         wait(20);
     }

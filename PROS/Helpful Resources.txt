@@ -10,8 +10,11 @@ http://georgegillard.com/documents/2-introduction-to-pid-controllers
 https://www.vexforum.com/index.php/conversation/post/55644
 
 Inertial navigation:
-http://www.chrobotics.com/library/accel-position-velocity
-http://aerostudents.com/files/avionics/InertialNavigationSystems.pdf
+    Basics:
+    http://www.chrobotics.com/library/accel-position-velocity
+    http://aerostudents.com/files/avionics/InertialNavigationSystems.pdf
+    Fancily filtered (advanced):
+    http://scholarworks.uvm.edu/cgi/viewcontent.cgi?article=1449&context=graddis
 
 Kalman filter:
 http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/

@@ -17,7 +17,7 @@
 //Analog Sensors
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
-#define SENSOR_GYRO_PITCH               3
+#define SENSOR_GYRO_YAW                 3
 #define SENSOR_ACCEL_LX                 5
 #define SENSOR_ACCEL_LY                 6
 #define SENSOR_ACCEL_RX                 7
@@ -37,8 +37,8 @@
 //// Typedefs ////
 //////////////////
 typedef struct {
-    unsigned char(*fn)(short);
-    short arg;
+    unsigned char(*fn)(float);
+    float arg;
     unsigned char group;
 } AutonWrappable;
 
@@ -110,22 +110,22 @@ void slewControlTask (void * parameter);
  * @param tolerance the margin of error around the target for which 1 will be returned
  * @return 1 if (current) is within (tolerance) of (target) or 0 otherwise
  */
-unsigned char pid(double current, double target, double kp, double ki, double kd, const signed char *motors, double tolerance);
+unsigned char pid(float current, float target, float kp, float ki, float kd, const signed char *motors, float tolerance);
 
 /**
  * TODO: Add documentation
  */
-unsigned char armToAngle(short target);
+unsigned char armToAngle(float target);
 
 /**
  * TODO: Add documentation
  */
-unsigned char clapperToOpenness(short target);
+unsigned char clapperToOpenness(float target);
 
 /**
  * Wrapper for using functions constantly needing rerunning in autonomous mode where there is typically no infinite loop
  * Supports simultaneous use of up to 5 child functions at a time
- * Child functions must return 1 on success and accept a short as the only argument
+ * Child functions must return 1 on success and accept a float as the only argument
  * Grouping system: child functions are assigned to 'groups' of functions sharing the same identifier;
  * [WIP] each group's functions will stop executing once at least 1 function in the group returns 1;
  * 0 is not a valid group identifier; it will cause the child function to execute until all groups' executions stop
@@ -135,4 +135,4 @@ unsigned char clapperToOpenness(short target);
  * @param cuatro AutonWrappable struct representing the fourth child function
  * @param cinco AutonWrappable struct representing the fifth child function
  */
-void autonWrapper(AutonWrappable *uno, AutonWrappable *dos, AutonWrappable *tres, AutonWrappable *cuatro, AutonWrappable *cinco);
+void autonWrapper(AutonWrappable uno, AutonWrappable dos, AutonWrappable tres, AutonWrappable cuatro, AutonWrappable cinco);

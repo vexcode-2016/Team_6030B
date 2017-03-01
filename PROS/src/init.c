@@ -25,8 +25,8 @@
   * The purpose of this function is solely to set the default pin modes (pinMode()) and port states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
   */
 void initializeIO() {
-    pinMode (JUMPER_SKILLS, INPUT);
-    pinMode (JUMPER_AUTON, INPUT);
+    pinMode (11, INPUT);
+    pinMode (12, INPUT);
 }
 
 /**
@@ -45,12 +45,11 @@ void initialize() {
     taskCreate(JINXRun, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
     delay(100);
 
-    analogCalibrate (SENSOR_ACCEL_LX);
-    analogCalibrate (SENSOR_ACCEL_LY);
-    analogCalibrate (SENSOR_ACCEL_RX);
-    analogCalibrate (SENSOR_ACCEL_RY);
+    analogCalibrate(SENSOR_ACCEL_LX);
+    analogCalibrate(SENSOR_ACCEL_LY);
+    analogCalibrate(SENSOR_ACCEL_RX);
+    analogCalibrate(SENSOR_ACCEL_RY);
+    analogCalibrate(SENSOR_GYRO_YAW);
 
-    analogCalibrate(SENSOR_GYRO_PITCH);
-
-    taskCreate (slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
+    taskCreate(slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }

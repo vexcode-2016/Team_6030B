@@ -24,10 +24,10 @@ void autonTimerReset() {
 unsigned long autonTimerGet() {
     return millis() - autonTimerStart;
 }
-unsigned char driveShamefullyL(short directionAndStopTime) {
+unsigned char driveShamefullyL(float directionAndStopTime) {
     int motorSpeed = ((directionAndStopTime > 0) - (directionAndStopTime < 0)) * (127);
     int stopTime = abs(directionAndStopTime);
-    if (autonMillis() < stopTime) {
+    if (autonTimerGet() < stopTime) {
         motorsSlew(motorgroupWheelsL, motorSpeed);
     } else {
         motorsSlew(motorgroupWheelsL, 0);
@@ -36,10 +36,10 @@ unsigned char driveShamefullyL(short directionAndStopTime) {
     }
     return 0;
 }
-unsigned char driveShamefullyR(short directionAndStopTime) {
+unsigned char driveShamefullyR(float directionAndStopTime) {
     int motorSpeed = ((directionAndStopTime > 0) - (directionAndStopTime < 0)) * (127);
     int stopTime = abs(directionAndStopTime);
-    if (autonMillis() < stopTime) {
+    if (autonTimerGet() < stopTime) {
         motorsSlew(motorgroupWheelsR, motorSpeed);
     } else {
         motorsSlew(motorgroupWheelsR, 0);
@@ -66,17 +66,20 @@ void autonTimerBased() {
     AutonWrappable autonDriveLBackUpToFence = {.fn = driveShamefullyL, .arg = -1200, .group = 3};
     AutonWrappable autonDriveRBackUpToFence = {.fn = driveShamefullyR, .arg = -1200, .group = 4};
 
-    //           ARM                    CLAPPER                 LEFT WHEELS                     RIGHT WHEELS                    UNASSIGNED
+    //           ARM                   CLAPPER                LEFT WHEELS                    RIGHT WHEELS                   UNASSIGNED
+    autonWrapper(autonArmScore,        autonDoNothing,        autonDoNothing,                autonDoNothing,                autonDoNothing); //Lift arm to deploy clapper
+    autonWrapper(autonArmScore,        autonClapperOpen,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Deploy clapper
     autonTimerReset();
-    autonWrapper(&autonDoNothing,       &autonClapperOpen,      &autonDriveLToCube,             &autonDriveRToCube,             &autonDoNothing); //Drive to cube
-    autonWrapper(&autonDoNothing,       &autonClapperHold,      &autonDoNothing,                &autonDoNothing,                &autonDoNothing); //Grab cube
+    autonWrapper(autonArmReady,        autonClapperOpen,      autonDriveLToCube,             autonDriveRToCube,             autonDoNothing); //Drive to cube
+    autonWrapper(autonDoNothing,       autonClapperHold,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Grab cube
+    //for (int i = 0; i < 10; i++) { print("SHAME\n"); wait(5); }
     autonTimerReset();
-    autonWrapper(&autonDoNothing,       &autonClapperHold,      &autonDriveLTurnToScore,        &autonDoNothing,                &autonDoNothing); //Turn to score
+    autonWrapper(autonArmHoldCube,     autonClapperHold,      autonDriveLTurnToScore,        autonDriveRTurnToScore,        autonDoNothing); //Turn to score
     autonTimerReset();
-    autonWrapper(&autonDoNothing,       &autonClapperHold,      &autonDriveLBackUpToFence,      &autonDriveRBackUpToFence,      &autonDoNothing); //Back up to fence
-    autonWrapper(&autonArmScore,        &autonClapperHold,      &autonDoNothing,                &autonDoNothing,                &autonDoNothing); //Raise arm
-    autonWrapper(&autonArmScore,        &autonClapperOpen,      &autonDoNothing,                &autonDoNothing,                &autonDoNothing); //Drop cube
-    autonWrapper(&autonArmReady,        &autonClapperOpen,      &autonDoNothing,                &autonDoNothing,                &autonDoNothing); //Lower arm
+    autonWrapper(autonArmHoldCube,     autonClapperHold,      autonDriveLBackUpToFence,      autonDriveRBackUpToFence,      autonDoNothing); //Back up to fence
+    autonWrapper(autonArmScore,        autonClapperHold,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Raise arm
+    autonWrapper(autonArmScore,        autonClapperOpen,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Drop cube
+    autonWrapper(autonArmReady,        autonClapperOpen,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Lower arm
 }
 
 void autonZackTimer(char leftPosOneRightNegOne) {
@@ -141,8 +144,8 @@ void autonomous() {
     } else if ((digitalRead(11) == LOW) && (digitalRead(12) == HIGH)) { //Jumper in 11 only
         autonTimerBased();
     } else if ((digitalRead(11) == HIGH) && (digitalRead(12) == LOW)) { //Jumper in 12 only
-        autonZackTimer(1);
+        
     } else if ((digitalRead(11) == LOW) && (digitalRead(12) == LOW)) { //Jumpers in 11 and 12
-        autonZackTimer(-1);
+        
     }
 }
