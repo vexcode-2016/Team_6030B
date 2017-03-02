@@ -34,6 +34,9 @@ int pressed7D = 0;
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
+    //taskCreate(inertialNavTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT + 2);
+    armTarget = -1;
+    clapperTarget = -1;
     while (1) {
         //Drivetrain
         motorsSlew(motorgroupWheelsL, abs(joystickGetAnalog(1, 3)) > 15 ? joystickGetAnalog(1, 3) : 0);

@@ -18,10 +18,10 @@
 #define SENSOR_POT_ARM                  1
 #define SENSOR_POT_CLAPPER              2
 #define SENSOR_GYRO_YAW                 3
-#define SENSOR_ACCEL_LX                 5
-#define SENSOR_ACCEL_LY                 6
-#define SENSOR_ACCEL_RX                 7
-#define SENSOR_ACCEL_RY                 8
+#define SENSOR_ACCEL_X                  5
+#define SENSOR_ACCEL_Y                  6
+#define SENSOR_ACCEL_Z                  7 //Move cable from SENSOR_ACCEL_RX
+//remove cable for SENSOR_ACCEL_RY from 8
 
 //Current States of Systems
 #define CURRENT_ARM                     \
@@ -59,7 +59,6 @@ extern AutonWrappable autonDoNothing;
 
 //Arm
 extern const int armFloorGrab;
-extern const int armHoldCube;
 extern const int armNoMoreDown;
 extern const int armScore;
 extern const int armNoMoreUp;
@@ -116,6 +115,8 @@ unsigned char pid(float current, float target, float kp, float ki, float kd, con
  * TODO: Add documentation
  */
 unsigned char armToAngle(float target);
+
+unsigned char armHoldCube(float arbitraryValue);
 
 /**
  * TODO: Add documentation

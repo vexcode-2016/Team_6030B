@@ -51,7 +51,7 @@ unsigned char driveShamefullyR(float directionAndStopTime) {
 void autonTimerBased() {
     //Arm
     AutonWrappable autonArmReady = {.fn = armToAngle, .arg = armFloorGrab, .group = 1};
-    AutonWrappable autonArmHoldCube = {.fn = armToAngle, .arg = armHoldCube, .group = 1};
+    AutonWrappable autonArmHoldCube = {.fn = armHoldCube, .arg = 0, .group = 1};
     AutonWrappable autonArmScore = {.fn = armToAngle, .arg = armScore, .group = 1};
 
     //Clapper
@@ -62,7 +62,7 @@ void autonTimerBased() {
     AutonWrappable autonDriveLToCube = {.fn = driveShamefullyL, .arg = 1100, .group = 3};
     AutonWrappable autonDriveRToCube = {.fn = driveShamefullyR, .arg = 1100, .group = 4};
     AutonWrappable autonDriveLTurnToScore = {.fn = driveShamefullyL, .arg = 800, .group = 3};
-    AutonWrappable autonDriveRTurnToScore = {.fn = driveShamefullyR,.arg = -800,.group = 3};
+    AutonWrappable autonDriveRTurnToScore = {.fn = driveShamefullyR, .arg = -800,.group = 3};
     AutonWrappable autonDriveLBackUpToFence = {.fn = driveShamefullyL, .arg = -1200, .group = 3};
     AutonWrappable autonDriveRBackUpToFence = {.fn = driveShamefullyR, .arg = -1200, .group = 4};
 
@@ -71,10 +71,21 @@ void autonTimerBased() {
     autonWrapper(autonArmScore,        autonClapperOpen,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Deploy clapper
     autonTimerReset();
     autonWrapper(autonArmReady,        autonClapperOpen,      autonDriveLToCube,             autonDriveRToCube,             autonDoNothing); //Drive to cube
-    autonWrapper(autonDoNothing,       autonClapperHold,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Grab cube
-    //for (int i = 0; i < 10; i++) { print("SHAME\n"); wait(5); }
+    for (int i = 0; i < 10; i++) {
+        print("SHAME0");
+        wait(5);
+    }
+    autonWrapper(autonArmReady,        autonClapperHold,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Grab cube
+    for (int i = 0; i < 10; i++) {
+        print("SHAME1");
+        wait(5);
+    }
     autonTimerReset();
     autonWrapper(autonArmHoldCube,     autonClapperHold,      autonDriveLTurnToScore,        autonDriveRTurnToScore,        autonDoNothing); //Turn to score
+    for (int i = 0; i < 10; i++) {
+        print("SHAME2");
+        wait(5);
+    }
     autonTimerReset();
     autonWrapper(autonArmHoldCube,     autonClapperHold,      autonDriveLBackUpToFence,      autonDriveRBackUpToFence,      autonDoNothing); //Back up to fence
     autonWrapper(autonArmScore,        autonClapperHold,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Raise arm

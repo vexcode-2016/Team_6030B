@@ -21,7 +21,6 @@ int slewTmp;
 //Arm
 const int armFloorGrab = 50;
 const int armNoMoreDown = 60;
-const int armHoldCube = 80;
 const int armScore = 235;
 const int armNoMoreUp = 230;
 int armTarget = -1;
@@ -104,10 +103,21 @@ unsigned char armToAngle(float target) {
         return 0;
     }
 }
+unsigned char armHoldCubeGoingUp = 1;
+unsigned char armHoldCube(float arbitraryValue) {
+    if (CURRENT_ARM < 80 && armHoldCubeGoingUp) {
+        motorsSlew(motorgroupArm, 100);
+        return 0;
+    } else {
+        armHoldCubeGoingUp = 0;
+        armTarget = CURRENT_ARM;
+        return armToAngle(armTarget);
+    }
+}
 unsigned char clapperToOpenness(float target) {
     if (target == clapperHold) {
         motorsSlew(motorgroupClapper, 40);
-        if (motorGet(MOTORS_CLAPPER) == 40) {
+        if (motorGet(MOTORS_CLAPPER) == -40) {
             return 1;
         }
         else {

@@ -45,11 +45,8 @@ void initialize() {
     taskCreate(JINXRun, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
     delay(100);
 
-    analogCalibrate(SENSOR_ACCEL_LX);
-    analogCalibrate(SENSOR_ACCEL_LY);
-    analogCalibrate(SENSOR_ACCEL_RX);
-    analogCalibrate(SENSOR_ACCEL_RY);
     analogCalibrate(SENSOR_GYRO_YAW);
+    accelInit();
 
     taskCreate(slewControlTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT - 1);
 }

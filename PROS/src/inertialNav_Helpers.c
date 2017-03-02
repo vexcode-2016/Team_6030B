@@ -31,11 +31,11 @@ Vector vectorCoeff(float coeff, Vector vector) {
     product.z = coeff * vector.z;
     return product;
 }
-Vector vectorIntegrate(Vector vector, Vector * storageVar) {
+Vector vectorIntegrate(Vector vector, float time, Vector * storageVar) {
     Vector integral;
-    integral.x = (storageVar->x += vector.x);
-    integral.y = (storageVar->y += vector.y);
-    integral.z = (storageVar->z += vector.z);
+    integral.x = (storageVar->x += (vector.x * time));
+    integral.y = (storageVar->y += (vector.y * time));
+    integral.z = (storageVar->z += (vector.z * time));
     return integral;
 }
 
@@ -53,6 +53,37 @@ Quaternion quatDifferentiate(Vector w, Quaternion q) {
     dqdt.z = 0.5 * ((w.z * q.w) + (w.x * q.y) - (w.y * q.x));
     return dqdt;
 }
-Quaternion quatIntegrate(Quaternion quat, Quaternion * storageVar) {
+Quaternion quatIntegrate(Quaternion quat, float time, Quaternion * storageVar) {
+    Quaternion integral;
+    integral.w = (storageVar->w += (quat.w * time));
+    integral.x = (storageVar->x += (quat.x * time));
+    integral.y = (storageVar->y += (quat.y * time));
+    integral.z = (storageVar->z += (quat.z * time));
+    return integral;
+}
 
+//Accelerometers
+short accelZero;
+float accelMultiplier;
+void accelInit() {
+    long calibration = 0;
+    for (char i = 0; i < 100; i++) {
+        calibration += analogRead(SENSOR_ACCEL_X);
+        calibration += analogRead(SENSOR_ACCEL_Y);
+        wait(5);
+    }
+    accelZero = calibration / 200; //Analog reading corresponding to 0g of acceleration
+    calibration = 0;
+    for (char i = 0; i < 100; i++) {
+        calibration += (analogRead(SENSOR_ACCEL_Z) - accelZero);
+        wait(5);
+    }
+    accelMultiplier = (calibration / 100) / 9.8; //Multiplier to convert from analog reading to m/s^2
+}
+Vector accelRead() {
+    Vector reading;
+    reading.x = (analogRead(SENSOR_ACCEL_X) - accelZero) * accelMultiplier;
+    reading.y = (analogRead(SENSOR_ACCEL_Y) - accelZero) * accelMultiplier;
+    reading.z = (analogRead(SENSOR_ACCEL_Z) - accelZero) * accelMultiplier;
+    return reading;
 }
