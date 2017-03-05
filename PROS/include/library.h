@@ -20,7 +20,7 @@
 #define SENSOR_GYRO_YAW                 3
 #define SENSOR_ACCEL_X                  5
 #define SENSOR_ACCEL_Y                  6
-#define SENSOR_ACCEL_Z                  7 //Move cable from SENSOR_ACCEL_RX
+#define SENSOR_ACCEL_Z                  7
 //remove cable for SENSOR_ACCEL_RY from 8
 
 //Current States of Systems

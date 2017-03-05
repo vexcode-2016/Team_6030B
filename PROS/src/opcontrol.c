@@ -35,6 +35,11 @@ int pressed7D = 0;
  */
 void operatorControl() {
     //taskCreate(inertialNavTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT + 2);
+    motorsSlew(motorgroupWheelsL, 0);
+    motorsSlew(motorgroupWheelsR, 0);
+    motorsSlew(motorgroupArm, 0);
+    motorsSlew(motorgroupClapper, 0);
+    motorStopAll();
     armTarget = -1;
     clapperTarget = -1;
     while (1) {

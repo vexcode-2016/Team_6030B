@@ -48,7 +48,7 @@ unsigned char driveShamefullyR(float directionAndStopTime) {
     }
     return 0;
 }
-void autonTimerBased() {
+void autonTimerBased(int leftPosRightNeg) {
     //Arm
     AutonWrappable autonArmReady = {.fn = armToAngle, .arg = armFloorGrab, .group = 1};
     AutonWrappable autonArmHoldCube = {.fn = armHoldCube, .arg = 0, .group = 1};
@@ -61,8 +61,8 @@ void autonTimerBased() {
     //Drivetrain (shamefully controlled)
     AutonWrappable autonDriveLToCube = {.fn = driveShamefullyL, .arg = 1100, .group = 3};
     AutonWrappable autonDriveRToCube = {.fn = driveShamefullyR, .arg = 1100, .group = 4};
-    AutonWrappable autonDriveLTurnToScore = {.fn = driveShamefullyL, .arg = 800, .group = 3};
-    AutonWrappable autonDriveRTurnToScore = {.fn = driveShamefullyR, .arg = -800,.group = 3};
+    AutonWrappable autonDriveLTurnToScore = {.fn = driveShamefullyL, .arg = leftPosRightNeg * 800, .group = 3};
+    AutonWrappable autonDriveRTurnToScore = {.fn = driveShamefullyR, .arg = -leftPosRightNeg * 800,.group = 3};
     AutonWrappable autonDriveLBackUpToFence = {.fn = driveShamefullyL, .arg = -1200, .group = 3};
     AutonWrappable autonDriveRBackUpToFence = {.fn = driveShamefullyR, .arg = -1200, .group = 4};
 
@@ -93,53 +93,6 @@ void autonTimerBased() {
     autonWrapper(autonArmReady,        autonClapperOpen,      autonDoNothing,                autonDoNothing,                autonDoNothing); //Lower arm
 }
 
-void autonZackTimer(char leftPosOneRightNegOne) {
-    clapperToOpenness(clapperOpenWide);//deploy claw
-    wait(500);
-    clapperToOpenness(clapperOpenWide);
-
-    motorsSlew(motorgroupWheelsL, 127);//drive to cube
-    motorsSlew(motorgroupWheelsR, 127);
-    wait(1100);
-    motorsSlew(motorgroupWheelsL, 0);
-    motorsSlew(motorgroupWheelsR, 0);
-
-    motorsSlew(motorgroupClapper, 60);//grab cube
-    wait(250);
-
-    //armToAngle(armHoldCube);//raise arme so cube doesnt drag
-    //wait(250);
-    
-    motorsSlew(motorgroupWheelsL, leftPosOneRightNegOne * 100);//turn to score
-    motorsSlew(motorgroupWheelsR, leftPosOneRightNegOne * -100);
-    wait(800);
-
-    motorsSlew(motorgroupWheelsL, -100);
-    motorsSlew(motorgroupWheelsR, -100);//back up to fence
-    wait(1200);
-
-    motorsSlew(motorgroupWheelsL, 0);
-    motorsSlew(motorgroupWheelsR, 0);
-    wait(250);
-
-    int autonShame = millis();
-    while (millis() - autonShame < 1500) {
-        armToAngle(armScore);
-        wait(10);
-    }
-    while (millis() - autonShame < 3000) {
-        armToAngle(armScore);
-        clapperToOpenness(clapperOpenWide);
-        wait(10);
-    }
-    motorsSlew(motorgroupClapper, 0);
-    while (millis() - autonShame < 4500) {
-        armToAngle(armFloorGrab);
-        wait(10);
-    }
-    motorsSlew(motorgroupArm, 0);
-}
-
 /**
 * Runs the user autonomous code.
 *
@@ -150,13 +103,33 @@ void autonZackTimer(char leftPosOneRightNegOne) {
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
+    motorsSlew(motorgroupWheelsL, 0);
+    motorsSlew(motorgroupWheelsR, 0);
+    motorsSlew(motorgroupArm, 0);
+    motorsSlew(motorgroupClapper, 0);
+    motorStopAll();
+
     if ((digitalRead(11) == HIGH) && (digitalRead(11) == HIGH)) { //No jumper in 11 or 12
 
-    } else if ((digitalRead(11) == LOW) && (digitalRead(12) == HIGH)) { //Jumper in 11 only
-        autonTimerBased();
-    } else if ((digitalRead(11) == HIGH) && (digitalRead(12) == LOW)) { //Jumper in 12 only
-        
-    } else if ((digitalRead(11) == LOW) && (digitalRead(12) == LOW)) { //Jumpers in 11 and 12
-        
+    }
+    if ((digitalRead(11) == LOW) && (digitalRead(12) == HIGH)) { //Jumper in 11 only
+        autonTimerBased(1);
+    }
+    if ((digitalRead(11) == HIGH) && (digitalRead(12) == LOW)) { //Jumper in 12 only
+        autonTimerBased(-1);
+    }
+    if ((digitalRead(11) == LOW) && (digitalRead(12) == LOW)) { //Jumpers in 11 and 12
+        AutonWrappable autonArmScore = {.fn = armToAngle,.arg = armScore,.group = 1};
+        AutonWrappable autonClapperOpen = {.fn = clapperToOpenness,.arg = clapperOpenWide,.group = 2};
+
+        motorsSlew(motorgroupWheelsL, -100);
+        motorsSlew(motorgroupWheelsR, -100);
+        wait(2000);
+        motorsSlew(motorgroupWheelsL, 0);
+        motorsSlew(motorgroupWheelsR, 0);
+
+        autonWrapper(autonArmScore, autonDoNothing, autonDoNothing, autonDoNothing, autonDoNothing);
+        autonWrapper(autonArmScore, autonClapperOpen, autonDoNothing, autonDoNothing, autonDoNothing);
+
     }
 }

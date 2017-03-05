@@ -32,7 +32,7 @@ const int clapperHold = 260;
 const int clapperReady = 153;
 const int clapperOpenWide = 136;
 int clapperTarget = -1;
-double clapperKp = 0.8;
+double clapperKp = 1;
 
 
 

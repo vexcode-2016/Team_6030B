@@ -64,6 +64,7 @@ void inertialNavTask(void * parameter) {
         ECF();
         ZUPT();
         if (millis() % 1000 < 5 && joystickGetDigital(1, 8, JOY_DOWN)) {
+            printf("[NAV] Raw :: ( %5f , %5f , %5f , %5f )\n", analogReadCalibrated(SENSOR_GYRO_YAW), analogRead(SENSOR_ACCEL_X), analogRead(SENSOR_ACCEL_Y), analogRead(SENSOR_ACCEL_Z));
             printf("[NAV] Att :: ( %5f , %5f , %5f , %5f )\n", attitude.w, attitude.x, attitude.y, attitude.z);
             printf("[NAV] Vel :: ( %5f , %5f , %5f )\n", velocity.x, velocity.y, velocity.z);
             printf("[NAV] Pos :: ( %5f , %5f , %5f )\n", position.x, position.y, position.z);
